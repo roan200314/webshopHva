@@ -124,7 +124,7 @@ export class Root extends LitElement {
         });
 
         if (result) {
-            alert("Succesfully logged in!");
+            alert("Successfully logged in!");
 
             await this.getWelcome();
 
@@ -147,7 +147,7 @@ export class Root extends LitElement {
         });
 
         if (result) {
-            alert("Succesfully registered!");
+            alert("Successfully registered!");
 
             this._currentPage = RouterPage.Login;
         } else {
