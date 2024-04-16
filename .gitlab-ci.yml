@@ -1,6 +1,6 @@
 variables:
     DEPLOY_MKDOCS: "true"
-    DEPLOY_HIC: "false"
+    DEPLOY_HIC: "true"
 
 include:
     - ".gitlab-ci.mkdocs.yml"
