@@ -20,7 +20,13 @@ hic:
         - npm run test
         - npm run build
         - lftp -e "
-            TODO"
+            set net:max-retries 3;
+            set ssl:verify-certificate no;
+            set ftp:ssl-allow yes;
+            set sftp:auto-confirm yes;
+            open -u $HIC_SFTP_USERNAME,$HIC_SFTP_PASSWORD $HIC_SFTP_HOST;
+            mirror --transfer-all -Rv dist/api/. ./$HIC_ENVIRONMENT/app/ --ignore-time --parallel=10;
+            mirror --transfer-all -Rv dist/web/. ./$HIC_ENVIRONMENT/wwwroot/ --ignore-time --parallel=10;"
         - 'wget --header="Authorization: $HIC_API_KEY" $HIC_API_URL/$HIC_ENVIRONMENT/Restart'
     artifacts:
         paths:
