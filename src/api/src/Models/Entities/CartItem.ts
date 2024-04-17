@@ -5,6 +5,7 @@ import {
     ManyToOne,
 } from "typeorm";
 import { User } from "./User";
+import { OrderItem } from "./OrderItem";
 
 @Entity("CartItem")
 export class CartItem {
@@ -13,6 +14,9 @@ export class CartItem {
 
     @Column({ type: "integer", default: 0 })
     public amount: number;
+
+    @ManyToOne(() => OrderItem)
+    public item: OrderItem;
 
     @ManyToOne(() => User, user => user.cart)
     public user: User;

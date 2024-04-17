@@ -5,9 +5,11 @@ import { DataSource } from "typeorm";
 import { AppController } from "../Controllers/AppController";
 import { AppService } from "../Services/AppService";
 import { DatabaseModule } from "./DatabaseModule";
+import { CartItemModule } from "./CartItemModule";
+import { OrderModule } from "./OrderModule";
 
 @Module({
-    imports: [DatabaseModule, AuthModule, UserModule],
+    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule],
     controllers: [AppController],
     providers: [AppService],
 })

@@ -5,9 +5,10 @@ import { AuthGuard } from "../Auth/auth.guard";
 import { APP_GUARD } from "@nestjs/core";
 import { UserService } from "../Services/UserService";
 import { UserController } from "../Controllers/UserController";
+import { CartItemModule } from "./CartItemModule";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User])],
+    imports: [TypeOrmModule.forFeature([User]), CartItemModule],
     providers: [
         UserService,
         {

@@ -81,7 +81,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/logout`, {
             method: "get",
-            headers: { ...headers, authorization: token },
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
@@ -107,7 +107,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/hello`, {
             method: "get",
-            headers: { ...headers, authorization: token },
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
@@ -133,7 +133,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/cart/${id}`, {
             method: "post",
-            headers: { ...headers, authorization: token },
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
