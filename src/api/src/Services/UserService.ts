@@ -36,6 +36,7 @@ export class UserService {
     public async registerUser(createUserDto: CreateUserDto): Promise<void> {
         const user: User = new User();
         user.email = createUserDto.email;
+        user.name = createUserDto.name;
         user.password = createUserDto.password;
 
         // Generate a hash of the password
@@ -89,6 +90,7 @@ export class UserService {
      */
     public async getAllUsers(): Promise<UserDto[]> {
         const users: User[] = await this.usersRepository.find();
+        console.log(users);
         return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
 
