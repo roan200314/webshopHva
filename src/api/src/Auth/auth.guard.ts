@@ -36,6 +36,7 @@ export class AuthGuard implements CanActivate {
             context.getHandler(),
             context.getClass(),
         ]);
+
         if (isPublic) {
             return true;
         }
@@ -54,6 +55,7 @@ export class AuthGuard implements CanActivate {
             request["user"] = await this.jwtService.verifyAsync(token, {
                 secret: process.env.JWT_SECRET_KEY,
             });
+
         } catch {
             throw new UnauthorizedException();
         }
