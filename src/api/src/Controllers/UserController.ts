@@ -11,9 +11,9 @@ export class UserController {
 
     @HttpCode(HttpStatus.OK)
     @Get("hello")
-    @ApiOperation({ summary: "Creates a custom welcome message" })
-    @ApiResponse({ status: 200, description: "Welcome message" })
     @ApiBearerAuth()
+    @ApiOperation({ summary: "Retrieves basic welcome information" })
+    @ApiResponse({ status: 200, description: "Welcome Information" })
     public async getWelcome(@Request() req): Promise<UserHelloResponse> {
         return {
             email: req.user.email,
