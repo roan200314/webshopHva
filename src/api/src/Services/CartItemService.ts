@@ -25,6 +25,7 @@ export class CartItemService {
     public async addOrderItemToCart(userId: number, orderItemId: number): Promise<number> {
         const cartItem: CartItem | undefined = await this.cartItemRepository.findOne({
             where: {
+                user: {id: userId},
                 item: {id: orderItemId}
             }
         });
