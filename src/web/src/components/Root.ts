@@ -249,7 +249,7 @@ export class Root extends LitElement {
         }
 
         return html`
-            <h1>Welkom op de Luca Stars webshop!</h1>
+            <h1>Welkom op de webshop</h1>
 
             ${this._isLoggedIn
                 ? nothing
@@ -269,6 +269,7 @@ export class Root extends LitElement {
             <div class="order-item">
                 <h2>${orderItem.name}</h2>
                 <p>${orderItem.description}</p>
+                <p>€${orderItem.price}</p>
                 ${this._isLoggedIn
                     ? html`<button @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}>
                           Toevoegen aan winkelmandje

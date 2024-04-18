@@ -13,7 +13,7 @@ export const users: UserData[] = [
         id: 1,
         email: "test@test.nl",
         name: "test",
-        password: "$2b$10$GCObbpQrqu1kuaKex6aW8e4SnmC6w8ykffdvLStHNCFq8QECGMzBW", // test
+        password: "1", // test
     },
 ];
 
@@ -42,4 +42,11 @@ export const orderItems: OrderItem[] = [
         price: 30,
         imageURLs: ["https://via.placeholder.com/150"],
     },
+    {
+        id: 4,
+        name: "avatar",
+        description: "Goonatar",
+        price: 69,
+        imageURLs: ["https://via.placeholder.com/150"],
+    }
 ];
