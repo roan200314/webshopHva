@@ -20,7 +20,7 @@ import { OrderItem } from "../Models/Entities/OrderItem";
                 password: process.env.DATABASE_PASSWORD,
                 database: process.env.DATABASE_NAME,
                 entities: [User, Address, CartItem, Order, OrderItem],
-                synchronize: false,
+                synchronize: true,
                 autoLoadEntities: false,
                 logging: false,
             }),
