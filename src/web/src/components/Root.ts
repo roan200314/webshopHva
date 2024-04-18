@@ -11,6 +11,7 @@ enum RouterPage {
     Home = "orderItems",
     Login = "login",
     Register = "register",
+    products = "product",
 }
 
 /**
@@ -230,7 +231,7 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderLogoutInNav()}
+                    ${this.renderProductInNav()} ${this.renderLogoutInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -353,6 +354,19 @@ export class Root extends LitElement {
         >
             <button>Inloggen</button>
         </div>`;
+    }
+
+    /**
+     * Renders the product button in the navigation
+     */
+    private renderProductInNav(): TemplateResult {
+        return html`
+            <div>
+                <a href="../product-page.html">
+                    <button>Products</button>
+                </a>
+            </div>
+        `;
     }
 
     /**
