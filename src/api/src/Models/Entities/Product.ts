@@ -2,21 +2,15 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 import { Category } from "./Category";
 
 @Entity()
-export class OrderItem {
+export class Product {
     @PrimaryGeneratedColumn()
     public id: number;
 
     @Column()
-    public name: string;
+    public maxPerCustomer: number;
 
     @Column()
-    public description: string;
-
-    @Column("decimal")
-    public price: number;
-
-    @Column("simple-array")
-    public imageURLs: string[];
+    public inStock: number;
 
     @ManyToOne(() => Category)
     @JoinColumn()

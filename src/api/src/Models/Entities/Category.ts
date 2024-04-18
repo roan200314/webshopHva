@@ -1,8 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Category } from "./Category";
 
 @Entity()
-export class OrderItem {
+export class Category {
     @PrimaryGeneratedColumn()
     public id: number;
 
@@ -12,13 +11,7 @@ export class OrderItem {
     @Column()
     public description: string;
 
-    @Column("decimal")
-    public price: number;
-
-    @Column("simple-array")
-    public imageURLs: string[];
-
     @ManyToOne(() => Category)
     @JoinColumn()
-    public category: Category;
+    public subCategory: Category;
 }

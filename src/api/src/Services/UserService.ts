@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
-import { User } from "../Models/Entities/User";
 import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { plainToClass } from "class-transformer";
 import { UserDto } from "../Models/Dto/User/UserDto";
+import { UserData } from "../Models/Entities/UserData";
 
 /**
  * A service handles user related operations including registration and login.
@@ -22,8 +22,8 @@ export class UserService {
      * @param {Repository<User>} usersRepository - A repository to perform various operations on user data.
      */
     public constructor(
-        @InjectRepository(User)
-        private usersRepository: Repository<User>,
+        @InjectRepository(UserData)
+        private usersRepository: Repository<UserData>,
     ) {
     }
 
@@ -34,7 +34,7 @@ export class UserService {
      * @return {Promise<void>}
      */
     public async registerUser(createUserDto: CreateUserDto): Promise<void> {
-        const user: User = new User();
+        const user: UserData = new UserData();
         user.email = createUserDto.email;
         user.name = createUserDto.name;
         user.password = createUserDto.password;
@@ -52,10 +52,10 @@ export class UserService {
      * @param {LoginUserDto} loginUserDto - DTO containing the user's login details.
      * @return {Promise<User>} - Returns user representation if login is successful, null otherwise.
      */
-    public async loginUser(loginUserDto: LoginUserDto): Promise<User> {
+    public async loginUser(loginUserDto: LoginUserDto): Promise<UserData> {
         const { email, password } = loginUserDto;
         // Find the user with the provided username
-        const user: User = await this.usersRepository.findOne({
+        const user: UserData = await this.usersRepository.findOne({
             where: { email },
         });
 
@@ -79,7 +79,7 @@ export class UserService {
      * @param {string} email - The email of the user to find.
      * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
      */
-    public async findOne(email: string): Promise<User | undefined> {
+    public async findOne(email: string): Promise<UserData | undefined> {
         return this.usersRepository.findOne({ where: { email } });
     }
 
@@ -89,9 +89,9 @@ export class UserService {
      * @return {Promise<UserDto[]>} - An array of user representation.
      */
     public async getAllUsers(): Promise<UserDto[]> {
-        const users: User[] = await this.usersRepository.find();
+        const users: UserData[] = await this.usersRepository.find();
         console.log(users);
-        return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
+        return users.map((user: UserData) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
 
     /**
@@ -101,7 +101,7 @@ export class UserService {
      * @return {Promise<boolean>} - Returns true if user exists, false otherwise.
      */
     public async checkIfUserExists(email: string): Promise<boolean> {
-        const user: User = await this.usersRepository.findOne({
+        const user: UserData = await this.usersRepository.findOne({
             where: { email },
         });
         return !!user;

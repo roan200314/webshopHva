@@ -1,28 +1,19 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne,
-} from "typeorm";
-import { User } from "./User";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("Address")
+@Entity()
 export class Address {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column({ type: "varchar", length: 255, nullable: false })
+    @Column()
     public street: string;
 
-    @Column({ type: "varchar", length: 255, nullable: false })
+    @Column()
     public city: string;
 
-    @Column({ type: "varchar", length: 255, nullable: false })
+    @Column()
     public zip: string;
 
-    @Column({ type: "varchar", length: 255, nullable: false })
+    @Column()
     public country: string;
-
-    @ManyToOne(() => User, user => user.addresses)
-    public user: User;
 }

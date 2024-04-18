@@ -1,24 +1,15 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    OneToMany,
-    ManyToOne,
-} from "typeorm";
-import { User } from "./User";
 import { OrderItem } from "./OrderItem";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("Order")
+@Entity()
 export class Order {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @OneToMany(_ => OrderItem, orderItem => orderItem.order, { cascade: true })
+    @ManyToMany(() => OrderItem)
+    @JoinTable()
     public products: OrderItem[];
 
-    @Column({ type: "varchar", length: 255, nullable: false })
+    @Column()
     public status: string;
-
-    @ManyToOne(() => User, user => user.orders)
-    public user: User;
 }
