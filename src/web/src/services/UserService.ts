@@ -68,32 +68,6 @@ export class UserService {
     }
 
     /**
-     * Handles user logout
-     *
-     * @returns `true` when successful, otherwise `false`.
-     */
-    public async logout(): Promise<boolean> {
-        const token: string | undefined = this._tokenService.getToken();
-
-        if (!token) {
-            return false;
-        }
-
-        const response: Response = await fetch(`${viteConfiguration.API_URL}users/logout`, {
-            method: "get",
-            headers: { ...headers, authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-            console.error(response);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Handles user welcome message containing user and cart data. Requires a valid token.
      *
      * @returns Object with user and cart data when successful, otherwise `undefined`.

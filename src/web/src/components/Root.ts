@@ -177,9 +177,7 @@ export class Root extends LitElement {
     /**
      * Handler for the logout button
      */
-    private async clickLogoutButton(): Promise<void> {
-        await this._userService.logout();
-
+    private clickLogoutButton(): void {
         this._tokenService.removeToken();
 
         this._isLoggedIn = false;
