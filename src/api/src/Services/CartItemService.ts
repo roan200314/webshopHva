@@ -21,4 +21,27 @@ export class CartItemService {
 
         return userCartItems.map(cartItem => cartItem.item.name);
     }
+
+    public async addOrderItemToCart(userId: number, orderItemId: number): Promise<number> {
+        const cartItem: CartItem | undefined = await this.cartItemRepository.findOne({
+            where: {
+                item: {id: orderItemId}
+            }
+        });
+
+        if (cartItem) {
+            cartItem.amount += 1;
+            await this.cartItemRepository.save(cartItem);
+
+            return cartItem.amount;
+        } else {
+            await this.cartItemRepository.save({
+                user: {id: userId},
+                item: {id: orderItemId},
+                amount: 1
+            });
+
+            return 1;
+        }
+    }
 }
