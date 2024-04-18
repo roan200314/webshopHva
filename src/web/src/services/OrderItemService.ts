@@ -10,7 +10,7 @@ export class OrderItemService {
      * @returns A list of all order items when successful, otherwise `undefined`.
      */
     public async getAll(): Promise<OrderItem[] | undefined> {
-        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems`, {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/all`, {
             method: "get",
         });
 

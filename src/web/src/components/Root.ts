@@ -125,7 +125,7 @@ export class Root extends LitElement {
         });
 
         if (result) {
-            alert("Succesfully logged in!");
+            alert("Successfully logged in!");
 
             await this.getWelcome();
 
@@ -148,7 +148,7 @@ export class Root extends LitElement {
         });
 
         if (result) {
-            alert("Succesfully registered!");
+            alert("Successfully registered!");
 
             this._currentPage = RouterPage.Login;
         } else {
@@ -178,9 +178,7 @@ export class Root extends LitElement {
     /**
      * Handler for the logout button
      */
-    private async clickLogoutButton(): Promise<void> {
-        await this._userService.logout();
-
+    private clickLogoutButton(): void {
         this._tokenService.removeToken();
 
         this._isLoggedIn = false;

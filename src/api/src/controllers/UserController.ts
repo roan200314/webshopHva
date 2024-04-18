@@ -122,14 +122,12 @@ export class UserController {
         );
 
         const response: UserHelloResponse = {
-            name: userData.name,
-            cartItems: cartItemNames,
             email: userData.email,
+            cartItems: cartItemNames,
         };
 
         res.json(response);
     }
-
 
     /**
      * Add a order item to the cart of the user

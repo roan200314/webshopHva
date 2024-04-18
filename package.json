@@ -10,7 +10,8 @@
     ],
     "scripts": {
         "dev": "run-p dev:api dev:web",
-        "dev:api": "npm run dev -w src/api",
+        "format": "prettier --write \"src/**/*.ts\"",
+        "dev:api": "npm run start:dev -w src/api",
         "dev:web": "npm run dev -w src/web",
         "build": "run-p build:api build:web",
         "build:api": "npm run build -w src/api",

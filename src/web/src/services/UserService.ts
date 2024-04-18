@@ -21,7 +21,7 @@ export class UserService {
      * @returns `true` when successful, otherwise `false`.
      */
     public async login(formData: UserLoginFormModel): Promise<boolean> {
-        const response: Response = await fetch(`${viteConfiguration.API_URL}users/login`, {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/login`, {
             method: "post",
             headers: headers,
             body: JSON.stringify(formData),
@@ -33,10 +33,10 @@ export class UserService {
             return false;
         }
 
-        const json: { token: string | undefined } = await response.json();
+        const json: { access_token: string | undefined } = await response.json();
 
-        if (json.token) {
-            this._tokenService.setToken(json.token);
+        if (json.access_token) {
+            this._tokenService.setToken(json.access_token);
 
             return true;
         }
@@ -52,36 +52,10 @@ export class UserService {
      * @returns `true` when successful, otherwise `false`.
      */
     public async register(formData: UserRegisterFormModel): Promise<boolean> {
-        const response: Response = await fetch(`${viteConfiguration.API_URL}users/register`, {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/register`, {
             method: "post",
             headers: headers,
             body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-            console.error(response);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Handles user logout
-     *
-     * @returns `true` when successful, otherwise `false`.
-     */
-    public async logout(): Promise<boolean> {
-        const token: string | undefined = this._tokenService.getToken();
-
-        if (!token) {
-            return false;
-        }
-
-        const response: Response = await fetch(`${viteConfiguration.API_URL}users/logout`, {
-            method: "get",
-            headers: { ...headers, authorization: token },
         });
 
         if (!response.ok) {
@@ -107,7 +81,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/hello`, {
             method: "get",
-            headers: { ...headers, authorization: token },
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
@@ -133,7 +107,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/cart/${id}`, {
             method: "post",
-            headers: { ...headers, authorization: token },
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {

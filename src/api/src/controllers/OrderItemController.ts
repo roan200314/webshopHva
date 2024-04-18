@@ -1,17 +1,20 @@
-import { Request, Response } from "express";
-import { orderItems } from "../fakeDatabase";
+import { Controller, Get } from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { OrderService } from "../Services/OrderService";
+import { Public } from "../Auth/Decorators/public.decorator";
+import { OrderItem } from "../Models/Entities/OrderItem";
 
-/**
- * Handles all endpoints related to the Order Item resource
- */
+@ApiTags("OrderItems")
+@Controller("orderItems")
 export class OrderItemController {
-    /**
-     * Get all order items
-     * 
-     * @param _ Request object (unused)
-     * @param res Response object
-     */
-    public getAll(_: Request, res: Response): void {
-        res.json(orderItems);
+    public constructor(private orderService: OrderService) {
+    }
+
+    @Public()
+    @Get("all")
+    @ApiOperation({ summary: "Retrieves all available order items" })
+    @ApiResponse({ status: 200, description: "Order Items" })
+    public async getAllOrderItems(): Promise<OrderItem[]> {
+        return this.orderService.getAllOrderItems();
     }
 }
