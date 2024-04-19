@@ -58,7 +58,7 @@ export class UserService {
         const { email, password } = loginUserDto;
         // Find the user with the provided username
         const user: User = await this.usersRepository.findOne({
-            where: { email },
+            where: { email: email },
         });
 
         // If no such user exists, return null
