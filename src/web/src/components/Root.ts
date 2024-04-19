@@ -49,6 +49,12 @@ export class Root extends LitElement {
             cursor: pointer;
         }
 
+        .order-item {
+            box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center
+        }
+
         .form {
             display: flex;
             flex-direction: column;
@@ -146,6 +152,7 @@ export class Root extends LitElement {
         const result: boolean = await this._userService.register({
             email: this._email,
             firstname: this._firstname,
+            lastname: this._lastname,
             password: this._password,
             name: this._name,
         });
