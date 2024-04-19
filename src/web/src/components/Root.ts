@@ -146,6 +146,7 @@ export class Root extends LitElement {
         const result: boolean = await this._userService.register({
             email: this._email,
             firstname: this._firstname,
+            lastname: this._lastname,
             password: this._password,
             name: this._name,
         });
