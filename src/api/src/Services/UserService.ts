@@ -38,6 +38,7 @@ export class UserService {
         user.email = createUserDto.email;
         user.name = createUserDto.name;
         user.firstName = createUserDto.firstname;
+        user.lastName = createUserDto.lastname;
         user.password = createUserDto.password;
 
         // Generate a hash of the password

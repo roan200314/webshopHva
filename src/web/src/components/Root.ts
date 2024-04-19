@@ -81,6 +81,7 @@ export class Root extends LitElement {
     private _password: string = "";
     private _name: string = "";
     private _firstname: string = "";
+    private _lastname: string = "";
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -318,6 +319,8 @@ export class Root extends LitElement {
                     <input type="text" id="name" value=${this._name} @change=${this.onChangeName} />
                     <label for="voornaam">Voornaam</label>
                     <input type="text" id="firstname" value=${this._firstname} @change=${this.onChangeFirstName} />
+                    <label for="achternaam">Achternaam</label>
+                    <input type="text" id="lastname" value=${this._lastname} @change=${this.onChangeLastName} />
                 </div>
 
                 ${this.renderEmail()} ${this.renderPassword()}
@@ -464,5 +467,8 @@ export class Root extends LitElement {
     }
     private onChangeFirstName(event: InputEvent): void {
         this._firstname = (event.target as HTMLInputElement).value;
+    }
+    private onChangeLastName(event: InputEvent): void {
+        this._lastname = (event.target as HTMLInputElement).value;
     }
 }
