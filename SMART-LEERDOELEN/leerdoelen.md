@@ -1,33 +1,16 @@
+## Toekomstgericht organiseren
 
-## Ethiek in gegevensbeheer
-Specifiek: Ik wil mijn begrip van privacykwesties vergroten en leren hoe ik gegevens op een ethisch verantwoorde manier kan beheren.
+Binnen de komende vijf weken zal ik mijn begrip van privacykwesties vergroten en leren hoe ik gegevens op een ethisch verantwoorde manier kan beheren door het bekijken van ten minste vijf educatieve video's en het uitvoeren van online onderzoek naar ethische richtlijnen. Dit zal mijn professionele ontwikkeling bevorderen en mijn vermogen verbeteren om mijn werk op een ethisch verantwoorde manier uit te voeren.
 
-**Meetbaar:** Ik zal ten minste vijf educatieve video's bekijken en online onderzoek doen naar ethische richtlijnen met betrekking tot gegevensbeheer.
+## Onderzoekend probleemoplossen
 
-**Acceptabel:** Dit leerdoel is belangrijk voor mijn professionele ontwikkeling en zal mij helpen om mijn werk op een ethisch verantwoorde manier uit te voeren.
+Voor eind mei 2024 identificeer ik minstens twee ontbrekende technische vaardigheden die nodig zijn voor mijn huidige softwareproject, en stel ik een actieplan op om deze vaardigheden te ontwikkelen.
 
-**Realistisch**: Ik kan deze doelstelling bereiken door regelmatig tijd te besteden aan het bekijken van educatieve video's en online bronnen te raadplegen.
+## Persoonlijk leiderschap
 
-**Tijdgebonden:** Ik wil deze doelstelling binnen de komende zes weken bereiken.
+Binnen de komende vijf weken zal ik regelmatig reflecteren op mijn eigen handelen en beslissingen, waarbij ik mijn sterke punten en valkuilen identificeer. Dit zal mij helpen om mijn persoonlijke ontwikkeling te bevorderen en mijn studie- en loopbaankeuzes effectiever te onderbouwen.
 
-## Transparantie en openheid
-**Specifiek:** Ik wil transparante communicatie integreren in mijn werk om gebruikers duidelijk te informeren over het gebruik van hun gegevens.
 
-**Meetbaar:** Ik zal ten minste drie online bronnen raadplegen en twee educatieve video's bekijken over het opstellen van een privacyverklaring en het bevorderen van transparantie.
+## Doelgericht interacteren
 
-**Acceptabel:** Het bevorderen van transparantie en openheid is van essentieel belang voor het opbouwen van vertrouwen bij gebruikers en het naleven van ethische normen.
-
-**Realistisch:** Ik kan deze doelstelling bereiken door tijd vrij te maken om online bronnen te bestuderen en educatieve video's te bekijken.
-
-**Tijdgebonden:** Ik wil deze doelstelling binnen de komende zes weken bereiken.
-
-## Verbeteren van gegevensbeschermingspraktijken
-**Specifiek:** Ik wil mijn vaardigheden verbeteren in het implementeren van effectieve gegevensbeschermingspraktijken om de privacy van gebruikers te waarborgen.
-
-**Meetbaar:** Ik zal ten minste drie educatieve video's bekijken over gegevensbescherming en online onderzoek doen naar best practices voor gegevensbescherming in mijn vakgebied.
-
-**Acceptabel:** Het verbeteren van mijn gegevensbeschermingspraktijken zal bijdragen aan het opbouwen van vertrouwen bij gebruikers en het beschermen van hun gegevens, wat van vitaal belang is voor het succes van mijn projecten.
-
-**Realistisch:** Ik kan deze doelstelling bereiken door regelmatig tijd te besteden aan het bekijken van educatieve video's en online bronnen te raadplegen, en door de geleerde praktijken toe te passen in mijn projecten.
-
-**Tijdgebonden:** Ik wil deze doelstelling binnen de komende zes weken bereiken.
+Binnen de komende zes weken zal ik mijn samenwerkingsvaardigheden verbeteren door actief verantwoordelijkheid te nemen voor mijn rol binnen de groep en constructief samen te werken met mijn groepsleden, waarbij ik zowel mondelinge als schriftelijke communicatie effectief inzet.
