@@ -11,6 +11,7 @@ enum RouterPage {
     Home = "orderItems",
     Login = "login",
     Register = "register",
+    products = "product",
 }
 
 /**
@@ -79,6 +80,8 @@ export class Root extends LitElement {
     private _email: string = "";
     private _password: string = "";
     private _name: string = "";
+    private _firstname: string = "";
+    private _lastname: string = "";
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -142,6 +145,7 @@ export class Root extends LitElement {
 
         const result: boolean = await this._userService.register({
             email: this._email,
+            firstname: this._firstname,
             password: this._password,
             name: this._name,
         });
@@ -228,7 +232,7 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderLogoutInNav()}
+                    ${this.renderProductInNav()} ${this.renderLogoutInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -247,7 +251,7 @@ export class Root extends LitElement {
         }
 
         return html`
-            <h1>Welkom op de Luca Stars webshop!</h1>
+            <h1>Welkom op de webshop</h1>
 
             ${this._isLoggedIn
                 ? nothing
@@ -267,6 +271,7 @@ export class Root extends LitElement {
             <div class="order-item">
                 <h2>${orderItem.name}</h2>
                 <p>${orderItem.description}</p>
+                <p>€${orderItem.price}</p>
                 ${this._isLoggedIn
                     ? html`<button @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}>
                           Toevoegen aan winkelmandje
@@ -310,8 +315,12 @@ export class Root extends LitElement {
         return html`
             <div class="form">
                 <div>
-                    <label for="username">Naam</label>
+                    <label for="username">Gebruikersnaam</label>
                     <input type="text" id="name" value=${this._name} @change=${this.onChangeName} />
+                    <label for="voornaam">Voornaam</label>
+                    <input type="text" id="firstname" value=${this._firstname} @change=${this.onChangeFirstName} />
+                    <label for="achternaam">Achternaam</label>
+                    <input type="text" id="lastname" value=${this._lastname} @change=${this.onChangeLastName} />
                 </div>
 
                 ${this.renderEmail()} ${this.renderPassword()}
@@ -350,6 +359,19 @@ export class Root extends LitElement {
         >
             <button>Inloggen</button>
         </div>`;
+    }
+
+    /**
+     * Renders the product button in the navigation
+     */
+    private renderProductInNav(): TemplateResult {
+        return html`
+            <div>
+                <a href="../product-page.html">
+                    <button>Products</button>
+                </a>
+            </div>
+        `;
     }
 
     /**
@@ -442,5 +464,11 @@ export class Root extends LitElement {
      */
     private onChangeName(event: InputEvent): void {
         this._name = (event.target as HTMLInputElement).value;
+    }
+    private onChangeFirstName(event: InputEvent): void {
+        this._firstname = (event.target as HTMLInputElement).value;
+    }
+    private onChangeLastName(event: InputEvent): void {
+        this._lastname = (event.target as HTMLInputElement).value;
     }
 }
