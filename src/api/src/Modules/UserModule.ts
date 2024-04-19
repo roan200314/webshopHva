@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { User } from "../Models/Entities/User";
 import { AuthGuard } from "../Auth/auth.guard";
 import { APP_GUARD } from "@nestjs/core";
 import { UserService } from "../Services/UserService";
 import { UserController } from "../Controllers/UserController";
 import { CartItemModule } from "./CartItemModule";
-import { UserData } from "../Models/Entities/UserData";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([UserData]), CartItemModule],
+    imports: [TypeOrmModule.forFeature([User]), CartItemModule],
     providers: [
         UserService,
         {

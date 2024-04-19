@@ -1,24 +1,23 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Category } from "./Category";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Order } from "./Order";
 
-@Entity()
+@Entity("OrderItem")
 export class OrderItem {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column()
+    @Column({ type: "varchar", length: 255, nullable: false })
     public name: string;
 
-    @Column()
-    public description: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    public description?: string;
 
-    @Column("decimal")
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: false })
     public price: number;
 
-    @Column("simple-array")
-    public imageURLs: string[];
+    @Column({ type: "json", nullable: true })
+    public imageURLs?: string[];
 
-    @ManyToOne(() => Category)
-    @JoinColumn()
-    public category: Category;
+    @ManyToOne(() => Order, order => order.products)
+    public order: Order;
 }

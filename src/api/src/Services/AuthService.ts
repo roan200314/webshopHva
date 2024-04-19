@@ -3,9 +3,9 @@ import { UserService } from "./UserService";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
+import { User } from "../Models/Entities/User";
 import { UserDto } from "../Models/Dto/User/UserDto";
 import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
-import { UserData } from "../Models/Entities/UserData";
 
 /**
  * A service provides functionality for user authentication including registration and login.
@@ -37,7 +37,7 @@ export class AuthService {
      * @returns {Promise<{access_token: string, token_type: string}>} - A Promise that resolves to an object consisting of a bearer token and its type.
      */
     public async signIn(loginUserDto: LoginUserDto): Promise<{ access_token: string; token_type: string }> {
-        const loginResult: UserData = await this.usersService.loginUser(loginUserDto);
+        const loginResult: User = await this.usersService.loginUser(loginUserDto);
 
         if (loginResult) {
             const payload: { id: number; email: string; name: string; authorizationLevel: AuthorizationLevel } = {

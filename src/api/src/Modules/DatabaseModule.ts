@@ -1,15 +1,11 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { UserData } from "../Models/Entities/UserData";
+import { User } from "../Models/Entities/User";
 import { Address } from "../Models/Entities/Address";
-import { Category } from "../Models/Entities/Category";
+import { CartItem } from "../Models/Entities/CartItem";
 import { Order } from "../Models/Entities/Order";
 import { OrderItem } from "../Models/Entities/OrderItem";
-import { Product } from "../Models/Entities/Product";
-import { Service } from "../Models/Entities/Service";
-import { ShoppingCart } from "../Models/Entities/ShoppingCart";
-import { ShoppingCartItem } from "../Models/Entities/ShoppingCartItem";
 
 @Module({
     imports: [
@@ -23,7 +19,7 @@ import { ShoppingCartItem } from "../Models/Entities/ShoppingCartItem";
                 username: process.env.DATABASE_USER,
                 password: process.env.DATABASE_PASSWORD,
                 database: process.env.DATABASE_NAME,
-                entities: [UserData, Address, Category, Order, OrderItem, Product, Service, ShoppingCart, ShoppingCartItem],
+                entities: [User, Address, CartItem, Order, OrderItem],
                 synchronize: false,
                 autoLoadEntities: false,
                 logging: false,
