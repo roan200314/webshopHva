@@ -37,6 +37,7 @@ export class UserService {
         const user: User = new User();
         user.email = createUserDto.email;
         user.name = createUserDto.name;
+        user.firstName = createUserDto.firstname;
         user.password = createUserDto.password;
 
         // Generate a hash of the password
