@@ -4,7 +4,7 @@ Binnen de komende vijf weken zal ik mijn begrip van privacykwesties vergroten en
 
 ## Onderzoekend probleemoplossen
 
-Voor eind mei 2024 identificeer ik minstens twee ontbrekende technische vaardigheden die nodig zijn voor mijn huidige softwareproject, en stel ik een actieplan op om deze vaardigheden te ontwikkelen.
+Voor het einde van dit project identificeer ik minstens twee ontbrekende technische vaardigheden die nodig zijn voor mijn huidige softwareproject, en stel ik een actieplan op om deze vaardigheden te ontwikkelen.
 
 ## Persoonlijk leiderschap
 
