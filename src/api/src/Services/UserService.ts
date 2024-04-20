@@ -37,6 +37,8 @@ export class UserService {
         const user: User = new User();
         user.email = createUserDto.email;
         user.name = createUserDto.name;
+        user.firstName = createUserDto.firstname;
+        user.lastName = createUserDto.lastname;
         user.password = createUserDto.password;
 
         // Generate a hash of the password
@@ -56,7 +58,7 @@ export class UserService {
         const { email, password } = loginUserDto;
         // Find the user with the provided username
         const user: User = await this.usersRepository.findOne({
-            where: { email },
+            where: { email: email },
         });
 
         // If no such user exists, return null
