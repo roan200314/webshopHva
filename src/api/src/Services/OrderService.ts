@@ -21,4 +21,8 @@ export class OrderService {
     public async getAllOrderItems(): Promise<OrderItem[]> {
         return await this.orderItemRepository.find();
     }
+
+    public async createOrderItem(orderItem: OrderItem): Promise<OrderItem> {
+        return await this.orderItemRepository.save(orderItem);
+    }
 }

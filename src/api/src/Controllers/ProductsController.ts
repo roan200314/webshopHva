@@ -1,4 +1,11 @@
-import { Controller } from "@nestjs/common";
+// import { Controller, Get } from "@nestjs/common";
 
-@Controller("products")
-export class ProductsController {}
+// @Controller("products")
+// export class ProductsController {
+//   @Get()
+//     public getProducts(): Promise<Products[]> {
+//         return "All products";
+//     }
+
+
+// }
