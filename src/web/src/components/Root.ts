@@ -368,21 +368,14 @@ export class Root extends LitElement {
 
 
     private handleClick(): void {
-        const result: any = 
-           `${this._email}`;
+        const result: any = {
+            name: this._email,
+        };
 
         console.log(result);
     }
 
     private renderAdmin(): TemplateResult {
-        // const result: UserData | undefined = {
-        //     email: this._email,
-        //     name: this._name,
-        //     password: this._password,
-        //     id: this._id,
-        // };
-        
-
         return html` 
         <button @click=${this.handleClick}>Click me</button>
         <div>Admin page van ${this._email}</div> `;
@@ -411,7 +404,7 @@ export class Root extends LitElement {
     private renderProductInNav(): TemplateResult {
         return html`
             <div>
-                <a href="/products">
+                <a href="/product-page.html">
                     <button>Products</button>
                 </a>
             </div>
@@ -423,13 +416,15 @@ export class Root extends LitElement {
      */
 
     private renderAdminInNav(): TemplateResult {
-        return html` <div
-            @click=${(): void => {
-                this._currentPage = RouterPage.Admin;
-            }}
-        >
-            <button>Admin</button>
-        </div>`;
+        if (this._isLoggedIn === true){
+            return html`
+                <div>
+                    <a href="/admin-page.html" target="">
+                        <button>Admin</button>
+                    </a>
+                </div>`;
+        }
+        return html ``;
     }
 
     /**
