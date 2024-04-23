@@ -179,7 +179,7 @@ export class Root extends LitElement {
         this._cartItemsCount = result.cartItems?.length || 0;
 
         alert(
-            `Hallo ${result.email}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
+            `Hallo ${result.name}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
                 result.cartItems?.join("\r\n- ") || "Geen"
             }`
         );

@@ -17,6 +17,7 @@ export class UserController {
         return {
             email: req.user.email,
             cartItems: await this.cartItemService.getCartItemNames(req.user.id),
+            name: req.user.name,
         };
     }
 
