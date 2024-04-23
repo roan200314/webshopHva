@@ -5,6 +5,7 @@ import { OrderItem } from "@shared/types/OrderItem";
 import { TokenService } from "../services/TokenService";
 import { OrderItemService } from "../services/OrderItemService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { CartItem } from "@shared/types";
 
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
@@ -12,6 +13,7 @@ enum RouterPage {
     Login = "login",
     Register = "register",
     products = "product",
+    ShoppingCart = "shoppingCart",
 }
 
 /**
@@ -59,6 +61,28 @@ export class Root extends LitElement {
             display: block;
             margin-bottom: 5px;
         }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        
+        table {
+            border-spacing: 30px;
+            width: 50%;
+            margin: auto;
+            justify-content: center;
+        }
+
+        th {
+            font-size: 1.2em;
+            font-weight: bolder;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+        }
     `;
 
     @state()
@@ -72,6 +96,9 @@ export class Root extends LitElement {
 
     @state()
     public _cartItemsCount: number = 0;
+
+    @state()
+    public _cartItems: CartItem[] = [];
 
     private _userService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
@@ -99,6 +126,7 @@ export class Root extends LitElement {
         if (result) {
             this._isLoggedIn = true;
             this._cartItemsCount = result.cartItems?.length || 0;
+            this._cartItems = result.cartItems || [];
         }
     }
 
@@ -171,12 +199,7 @@ export class Root extends LitElement {
         }
 
         this._cartItemsCount = result.cartItems?.length || 0;
-
-        alert(
-            `Hallo ${result.email}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
-                result.cartItems?.join("\r\n- ") || "Geen"
-            }`
-        );
+        this._currentPage = RouterPage.ShoppingCart;
     }
 
     /**
@@ -194,13 +217,14 @@ export class Root extends LitElement {
      * @param orderItem Order item to add to the cart
      */
     private async addItemToCart(orderItem: OrderItem): Promise<void> {
-        const result: number | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+        const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
 
         if (!result) {
             return;
         }
 
-        this._cartItemsCount = result;
+        this._cartItems = result;
+        this._cartItemsCount = result?.length || 0;
     }
 
     /**
@@ -215,6 +239,9 @@ export class Root extends LitElement {
                 break;
             case RouterPage.Register:
                 contentTemplate = this.renderRegister();
+                break;
+            case RouterPage.ShoppingCart:
+                contentTemplate =  this.renderShoppingCart();
                 break;
             default:
                 contentTemplate = this.renderHome();
@@ -342,6 +369,32 @@ export class Root extends LitElement {
                     door hier te klikken.
                 </div>
             </div>
+        `;
+    }
+
+    private renderShoppingCart(): TemplateResult{
+        console.log(this._cartItems);
+
+        return html`
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+                ${this._cartItems.map((cartItem) => {
+                   return html`
+                    <tr>
+                        <td>${cartItem.item.name}</td>
+                        <td>${cartItem.amount}</td>
+                        <td>${cartItem.item.price}</td>
+                        <td><b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b></td>
+                    </tr>
+                    `;
+                }
+                )}
+            </table>
         `;
     }
 

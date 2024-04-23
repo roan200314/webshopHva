@@ -1,4 +1,6 @@
+import { CartItem } from "@shared/types";
+
 export type UserHelloResponse = {
     email: string;
-    cartItems: string[] | undefined;
+    cartItems: CartItem[] | undefined;
 };

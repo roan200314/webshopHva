@@ -2,6 +2,7 @@ import { Controller, Get, Param, Post, Request } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { CartItemService } from "../Services/CartItemService";
+import { CartItem } from "@shared/types";
 
 @ApiTags("Users")
 @Controller("users")
@@ -16,7 +17,7 @@ export class UserController {
     public async getWelcome(@Request() req): Promise<UserHelloResponse> {
         return {
             email: req.user.email,
-            cartItems: await this.cartItemService.getCartItemNames(req.user.id),
+            cartItems: await this.cartItemService.getCartItems(req.user.id),
         };
     }
 
@@ -28,7 +29,7 @@ export class UserController {
     public async addOrderItemToCart(
         @Request() req,
         @Param("id") id: number
-    ): Promise<number> {
+    ): Promise<CartItem[]> {
         return await this.cartItemService.addOrderItemToCart(req.user.id, id);
     }
 }
