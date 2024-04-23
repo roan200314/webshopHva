@@ -12,6 +12,7 @@ enum RouterPage {
     Login = "login",
     Register = "register",
     products = "product",
+    Admin = "admin",
 }
 
 /**
@@ -52,7 +53,7 @@ export class Root extends LitElement {
         .order-item {
             box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2);
             width: 350px;
-            text-align: center
+            text-align: center;
         }
 
         .form {
@@ -181,7 +182,7 @@ export class Root extends LitElement {
         alert(
             `Hallo ${result.name}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
                 result.cartItems?.join("\r\n- ") || "Geen"
-            }`
+            }`,
         );
     }
 
@@ -221,6 +222,9 @@ export class Root extends LitElement {
                 break;
             case RouterPage.Register:
                 contentTemplate = this.renderRegister();
+                break;
+            case RouterPage.Admin:
+                contentTemplate = this.renderAdmin();
                 break;
             default:
                 contentTemplate = this.renderHome();
@@ -325,9 +329,19 @@ export class Root extends LitElement {
                     <label for="username">Gebruikersnaam</label>
                     <input type="text" id="name" value=${this._name} @change=${this.onChangeName} />
                     <label for="voornaam">Voornaam</label>
-                    <input type="text" id="firstname" value=${this._firstname} @change=${this.onChangeFirstName} />
+                    <input
+                        type="text"
+                        id="firstname"
+                        value=${this._firstname}
+                        @change=${this.onChangeFirstName}
+                    />
                     <label for="achternaam">Achternaam</label>
-                    <input type="text" id="lastname" value=${this._lastname} @change=${this.onChangeLastName} />
+                    <input
+                        type="text"
+                        id="lastname"
+                        value=${this._lastname}
+                        @change=${this.onChangeLastName}
+                    />
                 </div>
 
                 ${this.renderEmail()} ${this.renderPassword()}
@@ -349,6 +363,29 @@ export class Root extends LitElement {
                 </div>
             </div>
         `;
+    }
+
+
+
+    private handleClick(): void {
+        const result: any = 
+           `${this._email}`;
+
+        console.log(result);
+    }
+
+    private renderAdmin(): TemplateResult {
+        // const result: UserData | undefined = {
+        //     email: this._email,
+        //     name: this._name,
+        //     password: this._password,
+        //     id: this._id,
+        // };
+        
+
+        return html` 
+        <button @click=${this.handleClick}>Click me</button>
+        <div>Admin page van ${this._email}</div> `;
     }
 
     /**
@@ -374,26 +411,26 @@ export class Root extends LitElement {
     private renderProductInNav(): TemplateResult {
         return html`
             <div>
-                <a href="../product-page.html">
+                <a href="/products">
                     <button>Products</button>
                 </a>
             </div>
         `;
     }
 
-        /**
+    /**
      * Renders the product button in the navigation
      */
-    
-        private renderAdminInNav(): TemplateResult {
-            return html`
-                <div>
-                    <a href="../product-page.html">
-                        <button>Admin</button>
-                    </a>
-                </div>
-            `;
-        }
+
+    private renderAdminInNav(): TemplateResult {
+        return html` <div
+            @click=${(): void => {
+                this._currentPage = RouterPage.Admin;
+            }}
+        >
+            <button>Admin</button>
+        </div>`;
+    }
 
     /**
      * Renders the register button in the navigation
