@@ -2,6 +2,7 @@ import { UserLoginFormModel } from "@shared/formModels/UserLoginFormModel";
 import { UserRegisterFormModel } from "@shared/formModels/UserRegisterFormModel";
 import { TokenService } from "./TokenService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { CartItem } from "@shared/types";
 
 const headers: { "Content-Type": string } = {
     "Content-Type": "application/json",
@@ -98,7 +99,7 @@ export class UserService {
      *
      * @returns Current number of order items in the cart when successful, otherwise `false`.
      */
-    public async addOrderItemToCart(id: number): Promise<number | undefined> {
+    public async addOrderItemToCart(id: number): Promise<CartItem[] | undefined> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (!token) {
@@ -111,11 +112,11 @@ export class UserService {
         });
 
         if (!response.ok) {
-            console.error(response);
+            console.error(response.body);
 
             return undefined;
         }
 
-        return (await response.json()) as number;
+        return (await response.json()) as CartItem[];
     }
 }
