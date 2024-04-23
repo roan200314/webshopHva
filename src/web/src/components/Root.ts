@@ -239,7 +239,7 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderLogoutInNav()}
+                    ${this.renderProductInNav()} ${this.renderLogoutInNav()} ${this.renderAdminInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -380,6 +380,20 @@ export class Root extends LitElement {
             </div>
         `;
     }
+
+        /**
+     * Renders the product button in the navigation
+     */
+    
+        private renderAdminInNav(): TemplateResult {
+            return html`
+                <div>
+                    <a href="../product-page.html">
+                        <button>Admin</button>
+                    </a>
+                </div>
+            `;
+        }
 
     /**
      * Renders the register button in the navigation
