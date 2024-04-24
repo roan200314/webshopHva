@@ -7,9 +7,10 @@ import { AppService } from "../Services/AppService";
 import { DatabaseModule } from "./DatabaseModule";
 import { CartItemModule } from "./CartItemModule";
 import { OrderModule } from "./OrderModule";
+import { AddressModule } from "./AddressModule";
 
 @Module({
-    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule],
+    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule, AddressModule],
     controllers: [AppController],
     providers: [AppService],
 })
