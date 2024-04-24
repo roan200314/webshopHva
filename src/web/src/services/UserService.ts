@@ -98,8 +98,10 @@ export class UserService {
     }
 
     public async getUsers(): Promise<UserData[] | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
         const responses: Response = await fetch(`${viteConfiguration.API_URL}auth/getUsers`, {
             method: "get",
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!responses.ok) {
