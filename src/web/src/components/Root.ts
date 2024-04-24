@@ -5,7 +5,8 @@ import { OrderItem } from "@shared/types/OrderItem";
 import { TokenService } from "../services/TokenService";
 import { OrderItemService } from "../services/OrderItemService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { CartItem } from "@shared/types";
+import { Address, CartItem, UserData } from "@shared/types";
+import { AddressService } from "../services/AddressService";
 
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
@@ -130,6 +131,24 @@ export class Root extends LitElement {
             padding: 10px; 
             border: none;
         }
+
+        .adressInfo{
+            border: 3px solid #373E98; 
+            width: 50%;
+            margin: auto;
+            text-align: right;
+            font-weight: bolder;
+        }
+
+        .adressInfo input {
+            margin: 10px;
+            margin-right: 35%;
+        }
+
+        #userInfo{
+            text-align:center;
+        }
+     
     `;
 
     @state()
@@ -150,6 +169,23 @@ export class Root extends LitElement {
     private _userService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
     private _tokenService: TokenService = new TokenService();
+    private _addressService: AddressService = new AddressService();
+
+    private _user: UserData = {
+        email: "",
+        password: "",
+        name: "",
+        id: 0
+    };
+
+    private _adressData: Address = {
+        id: 0,
+        street: "",
+        city:"" , 
+        zip: "",
+        country: "",
+        user: this._user
+    };
 
     private _email: string = "";
     private _password: string = "";
@@ -162,6 +198,7 @@ export class Root extends LitElement {
 
         await this.getWelcome();
         await this.getOrderItems();
+        await this.getAddress();
     }
 
     /**
@@ -171,10 +208,27 @@ export class Root extends LitElement {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
 
         if (result) {
+            this._user = result.user;
+            this._email = result.user.email;
+            this._name = result.user.name;
+            this._firstname = result.user.firstName || "";
+            this._lastname = result.user.lastName || "";
             this._isLoggedIn = true;
             this._cartItemsCount = result.cartItems?.length || 0;
             this._cartItems = result.cartItems || [];
+
         }
+    }
+
+    private async getAddress(): Promise<void> {
+        const result: Address | undefined = await this._addressService.getAddressForUser();
+
+        if (!result) {
+            return;
+        }
+
+        console.log(result);
+        this._adressData = result;
     }
 
     /**
@@ -481,41 +535,36 @@ export class Root extends LitElement {
                         <div class="stepnmbr" id="currentstep">Step 2</div>
                         <div class="stepnmbr">Step 3</div> 
                 </div>
-                        <table>
-                            <tr>
-                                <th>First name</th>
-                                <td>Your name</td>
-                            </tr>
-                            <tr>
-                                <th>Last name</th>
-                                <td>Your name</td>
-                            <tr>
-                                <th>Email</th>
-                                <td>Your email</td>
-                            </tr>
-                            <tr>
-                                <th>Street</th>
-                                <td>Your street</td>
-                            </tr>
-                            <tr>
-                                <th>City</th>
-                                <td>Your City</td>
-                            </tr>
-                            <tr>
-                                <th>Zip</th>
-                                <td>Your Zip</td>
-                            </tr>
-                            <tr>
-                                <th>Country</th>
-                                <td>Your country</td>
-                            </tr>
-                    </table>
-
+                <div class="adressInfo">
+                    <label>Username</label><input type="text" disabled value="${this._name}"><br>
+                    <label>Email</label><input type="text" disabled value="${this._email}"><br>
+                    <label>Street</label> <input type="text" @change="${this._onChangeStreet}" value="${this._adressData.street}"><br>
+                    <label>City</label>   <input type="text" @change="${this._onChangeCity}" value="${this._adressData.city}"><br>
+                    <label>Zip</label>    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}"><br>
+                    <label>Country</label><input type="text" @change="${this._onChangeCountry}" value="${this._adressData.country}"><br>
+                </div>
                 <div class="nxtstep">
-                 <button class="button" type="submit" @click="${this._renderOrderConfirmation}">Next Step</button>
+                 <button class="button" type="submit">Next Step</button>
                 </div>
         `;
     }
+
+    /**
+     * Handles changes to the adress input field
+     */
+    private _onChangeStreet(e: Event): any {
+        this._adressData.street = (e.target as HTMLInputElement).value;
+    }
+    private _onChangeCity(e: Event): any {
+        this._adressData.city = (e.target as HTMLInputElement).value;
+    }
+    private _onChangeZip(e: Event): any {
+        this._adressData.zip = (e.target as HTMLInputElement).value;
+    }
+    private _onChangeCountry(e: Event): any {
+        this._adressData.country = (e.target as HTMLInputElement).value;
+    }
+
 
     private _renderOrderConfirmation(): HTMLTemplateResult{
         this._currentPage = RouterPage.OrderConfirmation;
@@ -653,4 +702,6 @@ export class Root extends LitElement {
     private onChangeLastName(event: InputEvent): void {
         this._lastname = (event.target as HTMLInputElement).value;
     }
+
+
 }
