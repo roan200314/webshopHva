@@ -2,6 +2,8 @@ import { UserLoginFormModel } from "@shared/formModels/UserLoginFormModel";
 import { UserRegisterFormModel } from "@shared/formModels/UserRegisterFormModel";
 import { TokenService } from "./TokenService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { UserData } from "@shared/types";
+
 
 const headers: { "Content-Type": string } = {
     "Content-Type": "application/json",
@@ -43,6 +45,8 @@ export class UserService {
 
         return false;
     }
+
+    
 
     /**
      * Handles user registration
@@ -92,6 +96,21 @@ export class UserService {
 
         return (await response.json()) as UserHelloResponse;
     }
+
+    public async getUsers(): Promise<UserData[] | undefined> {
+        const responses: Response = await fetch(`${viteConfiguration.API_URL}auth/getUsers`, {
+            method: "get",
+        });
+
+        if (!responses.ok) {
+            console.error(responses);
+
+            return undefined;
+        }
+
+        return (await responses.json()) as UserData[];
+    }
+    
 
     /**
      * Handles adding an order item to the cart of the current user. Requires a valid token.

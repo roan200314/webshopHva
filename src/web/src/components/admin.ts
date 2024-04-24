@@ -4,7 +4,7 @@ import { OrderItemService } from "../services/OrderItemService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { OrderItem } from "@shared/types";
+import { OrderItem, UserData } from "@shared/types";
 
 
 /** Enumeration to keep track of all the different pages */
@@ -83,7 +83,7 @@ private _currentPage: RouterPage = RouterPage.Home;
 
     private _userService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
-
+    private _getUsersService: UserService = new UserService();
     private _tokenService: TokenService = new TokenService();
     private _email: string = "";
     private _password: string = "";
@@ -97,7 +97,7 @@ private _currentPage: RouterPage = RouterPage.Home;
         await this.getWelcome();
         await this.getOrderItems();
         await this.getAdmin();
-        await this.retrieveAllUserData();
+        await this.showAllUsers();
 
     }
 
@@ -135,25 +135,28 @@ private _currentPage: RouterPage = RouterPage.Home;
             }
         }
     }
-// Assuming you have imported and instantiated the GetUserService class
 
-    	private async  retrieveAllUserData(): Promise<void> {
-    try {
-        // Instantiate the GetUserService class
-        const getUserService: any = new GetUserService();
 
-        // Call the getAllUsers method to fetch all users
-        const allUsers: UserDto[] = await getUserService.getAllUsers();
-
-        // Log or process the fetched user data
-        console.log("All users:", allUsers);
-        // Or you can return the users if needed
-        // return allUsers;
-    } catch (error) {
-        // Handle any errors that might occur during fetching
-        console.error("Error retrieving all users:", error);
+    private async showAllUsers(): Promise<void> {
+        const result: UserData[] | undefined = await this._getUsersService.getUsers();
+        if (result) {
+            const allUsersDiv: HTMLElement | null = document.getElementById("allUsers");
+            if (allUsersDiv) {
+                // Clear the existing content of the div
+                allUsersDiv.innerHTML = "";
+    
+                // Iterate over each user and create a string representation
+                result.forEach(user => {
+                    const userElement: any = document.createElement("div");
+                    userElement.innerText = `User ID: ${user.id}, Name: ${user.name}, Email: ${user.email}`;
+                    allUsersDiv.appendChild(userElement);
+                });
+            }
+        }
     }
-}
+    
+
+
 
 
         /**
