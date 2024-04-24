@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, css, html, nothing } from "lit";
+import { HTMLTemplateResult, LitElement, TemplateResult, css, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { OrderItem } from "@shared/types/OrderItem";
@@ -14,6 +14,8 @@ enum RouterPage {
     Register = "register",
     products = "product",
     ShoppingCart = "shoppingCart",
+    OrderConfirmation = "orderConfirmation",
+    InfoConfirmation = "infoConfirmation"
 }
 
 /**
@@ -67,7 +69,7 @@ export class Root extends LitElement {
             margin-bottom: 5px;
         }
 
-        table, th, td {
+        table ,th, td {
             border: 3px solid #373E98;
             border-collapse: collapse;
         }
@@ -83,20 +85,50 @@ export class Root extends LitElement {
             font-size: 1.2em;
             font-weight: bolder;
             padding: 10px;
+
         }
 
         td {
             padding: 10px;
+
         }
 
         .title {
             color: #ecae20; 
             text-align: center; 
+            margin: 3%;
         }
 
-        #nxtstep {
+        #steps{
+            text-align: right;
+            margin-right: 25%;
+            padding: 10px;
+        }
+
+        .stepnmbr{
+            border: 3px solid #373E98; 
+            display: inline;
+            padding: 10px;
+            
+        }
+
+        #currentstep{
+            background-color:#373E98;
+            color: white;
+        }
+
+        .nxtstep {
             text-align: right;
             margin-right: 400px;
+            margin-top: 25px;
+        }
+
+        .button{
+            background-color: #373E98; 
+            color: white;
+            border-radius: 10px;
+            padding: 10px; 
+            border: none;
         }
     `;
 
@@ -258,6 +290,12 @@ export class Root extends LitElement {
             case RouterPage.ShoppingCart:
                 contentTemplate =  this.renderShoppingCart();
                 break;
+            case RouterPage.OrderConfirmation:
+                contentTemplate = this._renderOrderConfirmation();
+                break;
+            case RouterPage.InfoConfirmation:
+                contentTemplate = this._renderInfoConfirmation();
+                break;
             default:
                 contentTemplate = this.renderHome();
         }
@@ -388,33 +426,37 @@ export class Root extends LitElement {
     }
 
     private renderShoppingCart(): TemplateResult{
-        console.log(this._cartItems);
         const totalAmount: number = this.calculateTotalPrice();
 
         return html`
             <h1 class="title">Just a few steps left to go!</h1>
-            <table>
-                <tr>
-                    <th>Item</th>
-                    <th>Amount</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-                ${this._cartItems.map((cartItem) => {
-                   return html`
+                <div id="steps">
+                        <div class="stepnmbr" id="currentstep">Step 1</div>
+                        <div class="stepnmbr">Step 2</div>
+                        <div class="stepnmbr">Step 3</div> 
+                </div>
+                <table>
                     <tr>
-                        <td>${cartItem.item.name}</td>
-                        <td>${cartItem.amount}</td>
-                        <td>${cartItem.item.price}</td>
-                        <td><b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b></td>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Price</th>
+                        <th>Total</th>
                     </tr>
-                    `;
-                }
-                )}
-            </table>
-            <div id="nxtstep">            
+                    ${this._cartItems.map((cartItem) => {
+                    return html`
+                        <tr>
+                            <td>${cartItem.item.name}</td>
+                            <td>${cartItem.amount}</td>
+                            <td>${cartItem.item.price}</td>
+                            <td><b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b></td>
+                        </tr>
+                        `;
+                    }
+                    )}
+                </table>
+            <div class="nxtstep">            
                 <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
-                <button>Next Step</button>
+                <button class="button" type="submit" @click="${this._renderInfoConfirmation}">Next Step</button>
             </div>
         `;
     }
@@ -427,6 +469,61 @@ export class Root extends LitElement {
         }
     
         return totalPrice;
+    }
+
+    private _renderInfoConfirmation(): HTMLTemplateResult{
+        this._currentPage = RouterPage.InfoConfirmation;
+
+        return html`
+             <h1 class="title">Confirm your information</h1>
+                <div id="steps">
+                        <div class="stepnmbr">Step 1</div>
+                        <div class="stepnmbr" id="currentstep">Step 2</div>
+                        <div class="stepnmbr">Step 3</div> 
+                </div>
+                        <table>
+                            <tr>
+                                <th>First name</th>
+                                <td>Your name</td>
+                            </tr>
+                            <tr>
+                                <th>Last name</th>
+                                <td>Your name</td>
+                            <tr>
+                                <th>Email</th>
+                                <td>Your email</td>
+                            </tr>
+                            <tr>
+                                <th>Street</th>
+                                <td>Your street</td>
+                            </tr>
+                            <tr>
+                                <th>City</th>
+                                <td>Your City</td>
+                            </tr>
+                            <tr>
+                                <th>Zip</th>
+                                <td>Your Zip</td>
+                            </tr>
+                            <tr>
+                                <th>Country</th>
+                                <td>Your country</td>
+                            </tr>
+                    </table>
+
+                <div class="nxtstep">
+                 <button class="button" type="submit" @click="${this._renderOrderConfirmation}">Next Step</button>
+                </div>
+        `;
+    }
+
+    private _renderOrderConfirmation(): HTMLTemplateResult{
+        this._currentPage = RouterPage.OrderConfirmation;
+
+        return html`
+        <h1 class="title">Thank you for ordering!</h1>
+
+        `;
     }
 
     /**
