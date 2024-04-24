@@ -6,6 +6,7 @@ import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { User } from "../Models/Entities/User";
 import { UserDto } from "../Models/Dto/User/UserDto";
 import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
+import { DeleteUserDto } from "src/Models/Dto/User/DeleteUserDto";
 
 /**
  * A service provides functionality for user authentication including registration and login.
@@ -88,5 +89,9 @@ export class AuthService {
      */
     public async getAll(): Promise<UserDto[]> {
         return await this.usersService.getAllUsers();
+    }
+
+    public async delete(id: number): Promise<DeleteUserDto> {
+        return await this.usersService.findOneById(id)
     }
 }

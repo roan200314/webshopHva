@@ -112,7 +112,21 @@ export class UserService {
 
         return (await responses.json()) as UserData[];
     }
+
+        public async deleteFun(): Promise<UserData> {
+            const token: string | undefined = this._tokenService.getToken();
+            const response: Response = await fetch(`${viteConfiguration.API_URL}auth/delete`, {
+                method: "post",
+                headers: { ...headers, authorization: `Bearer ${token}` },
+            });
     
+            if (!response.ok) {
+                console.error(response);
+    
+            }
+    
+            return (await response.json()) as UserData;
+        }
 
     /**
      * Handles adding an order item to the cart of the current user. Requires a valid token.

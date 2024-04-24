@@ -85,6 +85,20 @@ export class UserService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
+        /**
+     * Finds a user using their id.
+     *
+     * @param {string} id - The id of the user to find.
+     * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
+     */
+        public async findOneById(id: number): Promise<User | undefined> {
+            const user: User = await this.usersRepository.findOne({
+                where: { id },
+            });
+            return user;
+        }
+        
+
     /**
      * Retrieves all users from the database.
      *
