@@ -10,7 +10,7 @@
 
 **meetbaar**
 
--   Ik zal in de komende PO gesprekken het gesprek te gaan leiden.
+-   Ik zal in dit blok minimaal 1 keer het gesprek leiden
 
 **acceptabel**
 
@@ -34,7 +34,7 @@
 
 **meetbaar**
 
--   Ik zal kijken welke informatie ik mis en dat dan Z.S.M oppakken.
+-   aan het einde van dit blok wil ik alle code begrijpen en goed kunnen uitleggen
 
 **acceptabel**
 
@@ -58,7 +58,7 @@
 
     **meetbaar**
 
--   Ik zal in de loop der tijd meer gaan luisteren naar feedback en kijken wat ik anders zal gaan doen in vergelijking tot vroeger.
+-   Ik zal voortaan luisteren naar feedback en dit bekijken hoe het mijn dagelijkse leven zal helpen.
 
 **acceptabel**
 
@@ -82,7 +82,7 @@
 
     **meetbaar**
 
--   Ik zal in de loop der tijd veel meer in detail gaan met de PO over details
+-   Ik wil in dit blok meerdere gesprekken met de PO aan willen gaan om alles te weten over de verwachtingen.
 
 **acceptabel**
 
