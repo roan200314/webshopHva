@@ -141,14 +141,11 @@ private _currentPage: RouterPage = RouterPage.Home;
         if (result) {
             const allUsersTable: HTMLTableSectionElement | null = document.getElementById("allUsersTable") as HTMLTableSectionElement;
             if (allUsersTable) {
-                // Clear the existing content of the table body
                 allUsersTable.innerHTML = "";
-    
-                // Iterate over each user and create a table row with delete button for each user
+
                 result.forEach(user => {
                     const row: any = document.createElement("tr");
     
-                    // Add user data to table cells
                     row.innerHTML = `
                         <td>${user.id}</td>
                         <td>${user.name}</td>
