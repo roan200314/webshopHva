@@ -136,25 +136,40 @@ private _currentPage: RouterPage = RouterPage.Home;
         }
     }
 
-
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
         if (result) {
-            const allUsersDiv: HTMLElement | null = document.getElementById("allUsers");
-            if (allUsersDiv) {
-                // Clear the existing content of the div
-                allUsersDiv.innerHTML = "";
+            const allUsersTable: HTMLTableSectionElement | null = document.getElementById("allUsersTable") as HTMLTableSectionElement;
+            if (allUsersTable) {
+                // Clear the existing content of the table body
+                allUsersTable.innerHTML = "";
     
-                // Iterate over each user and create a string representation
+                // Iterate over each user and create a table row with delete button for each user
                 result.forEach(user => {
-                    const userElement: any = document.createElement("div");
-                    userElement.innerText = `User ID: ${user.id}, Name: ${user.name}, Email: ${user.email}`;
-                    allUsersDiv.appendChild(userElement);
+                    const row: any = document.createElement("tr");
+    
+                    // Add user data to table cells
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.authorizationLevel}</td>
+                        <td>
+                            <button class="btn btn-danger delete-btn" data-user-id="${user.id}">Delete</button>
+                        </td>
+                    `;
+    
+                    // Append row to table body
+                    allUsersTable.appendChild(row);
+    
                 });
             }
         }
     }
     
+    // private async deleteUser(userId: number): Promise<void> {
+
+    // }
 
 
 
