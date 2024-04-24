@@ -16,7 +16,7 @@ export class UserController {
     @Get("hello")
     public async getWelcome(@Request() req): Promise<UserHelloResponse> {
         return {
-            email: req.user.email,
+            user: req.user,
             cartItems: await this.cartItemService.getCartItems(req.user.id),
         };
     }
