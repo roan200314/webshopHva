@@ -37,6 +37,11 @@ export class Root extends LitElement {
             background-color: #ecae20;
             padding: 10px;
             text-align: center;
+            position: fixed;
+            z-index: 100; 
+            bottom: 0; 
+            left: 0;
+            width: 100%;
         }
 
         nav {
@@ -63,7 +68,7 @@ export class Root extends LitElement {
         }
 
         table, th, td {
-            border: 1px solid black;
+            border: 3px solid #373E98;
             border-collapse: collapse;
         }
         
@@ -82,6 +87,16 @@ export class Root extends LitElement {
 
         td {
             padding: 10px;
+        }
+
+        .title {
+            color: #ecae20; 
+            text-align: center; 
+        }
+
+        #nxtstep {
+            text-align: right;
+            margin-right: 400px;
         }
     `;
 
@@ -374,8 +389,10 @@ export class Root extends LitElement {
 
     private renderShoppingCart(): TemplateResult{
         console.log(this._cartItems);
+        const totalAmount: number = this.calculateTotalPrice();
 
         return html`
+            <h1 class="title">Just a few steps left to go!</h1>
             <table>
                 <tr>
                     <th>Item</th>
@@ -395,7 +412,21 @@ export class Root extends LitElement {
                 }
                 )}
             </table>
+            <div id="nxtstep">            
+                <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
+                <button>Next Step</button>
+            </div>
         `;
+    }
+
+    private calculateTotalPrice(): number {
+        let totalPrice: number = 0;
+    
+        for (const cartItem of this._cartItems) {
+            totalPrice += cartItem.item.price * cartItem.amount;
+        }
+    
+        return totalPrice;
     }
 
     /**
