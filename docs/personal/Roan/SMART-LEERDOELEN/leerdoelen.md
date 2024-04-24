@@ -10,7 +10,7 @@
 
 **meetbaar**
 
--   Ik zal in dit blok minimaal 1 keer het gesprek leiden
+-   Ik zal in dit blok minimaal 1 keer het gesprek leiden bij de PO en minimaal 3 keer ongevraagd in actie komen.
 
 **acceptabel**
 
