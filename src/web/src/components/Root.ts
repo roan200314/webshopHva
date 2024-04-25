@@ -16,7 +16,7 @@ enum RouterPage {
     products = "product",
     ShoppingCart = "shoppingCart",
     OrderConfirmation = "orderConfirmation",
-    InfoConfirmation = "infoConfirmation"
+    InfoConfirmation = "infoConfirmation",
 }
 
 /**
@@ -41,8 +41,8 @@ export class Root extends LitElement {
             padding: 10px;
             text-align: center;
             position: fixed;
-            z-index: 100; 
-            bottom: 0; 
+            z-index: 100;
+            bottom: 0;
             left: 0;
             width: 100%;
         }
@@ -70,11 +70,13 @@ export class Root extends LitElement {
             margin-bottom: 5px;
         }
 
-        table ,th, td {
-            border: 3px solid #373E98;
+        table,
+        th,
+        td {
+            border: 3px solid #373e98;
             border-collapse: collapse;
         }
-        
+
         table {
             border-spacing: 30px;
             width: 50%;
@@ -86,35 +88,32 @@ export class Root extends LitElement {
             font-size: 1.2em;
             font-weight: bolder;
             padding: 10px;
-
         }
 
         td {
             padding: 10px;
-
         }
 
         .title {
-            color: #ecae20; 
-            text-align: center; 
+            color: #ecae20;
+            text-align: center;
             margin: 3%;
         }
 
-        #steps{
+        #steps {
             text-align: right;
             margin-right: 25%;
             padding: 10px;
         }
 
-        .stepnmbr{
-            border: 3px solid #373E98; 
+        .stepnmbr {
+            border: 3px solid #373e98;
             display: inline;
             padding: 10px;
-            
         }
 
-        #currentstep{
-            background-color:#373E98;
+        #currentstep {
+            background-color: #373e98;
             color: white;
         }
 
@@ -124,16 +123,16 @@ export class Root extends LitElement {
             margin-top: 25px;
         }
 
-        .button{
-            background-color: #373E98; 
+        .button {
+            background-color: #373e98;
             color: white;
             border-radius: 10px;
-            padding: 10px; 
+            padding: 10px;
             border: none;
         }
 
-        .adressInfo{
-            border: 3px solid #373E98; 
+        .adressInfo {
+            border: 3px solid #373e98;
             width: 50%;
             margin: auto;
             text-align: right;
@@ -145,10 +144,9 @@ export class Root extends LitElement {
             margin-right: 35%;
         }
 
-        #userInfo{
-            text-align:center;
+        #userInfo {
+            text-align: center;
         }
-     
     `;
 
     @state()
@@ -175,16 +173,16 @@ export class Root extends LitElement {
         email: "",
         password: "",
         name: "",
-        id: 0
+        id: 0,
     };
 
     private _adressData: Address = {
         id: 0,
         street: "",
-        city:"" , 
+        city: "",
         zip: "",
         country: "",
-        user: this._user
+        user: this._user,
     };
 
     private _email: string = "";
@@ -216,7 +214,6 @@ export class Root extends LitElement {
             this._isLoggedIn = true;
             this._cartItemsCount = result.cartItems?.length || 0;
             this._cartItems = result.cartItems || [];
-
         }
     }
 
@@ -342,7 +339,7 @@ export class Root extends LitElement {
                 contentTemplate = this.renderRegister();
                 break;
             case RouterPage.ShoppingCart:
-                contentTemplate =  this.renderShoppingCart();
+                contentTemplate = this.renderShoppingCart();
                 break;
             case RouterPage.OrderConfirmation:
                 contentTemplate = this._renderOrderConfirmation();
@@ -453,9 +450,19 @@ export class Root extends LitElement {
                     <label for="username">Gebruikersnaam</label>
                     <input type="text" id="name" value=${this._name} @change=${this.onChangeName} />
                     <label for="voornaam">Voornaam</label>
-                    <input type="text" id="firstname" value=${this._firstname} @change=${this.onChangeFirstName} />
+                    <input
+                        type="text"
+                        id="firstname"
+                        value=${this._firstname}
+                        @change=${this.onChangeFirstName}
+                    />
                     <label for="achternaam">Achternaam</label>
-                    <input type="text" id="lastname" value=${this._lastname} @change=${this.onChangeLastName} />
+                    <input
+                        type="text"
+                        id="lastname"
+                        value=${this._lastname}
+                        @change=${this.onChangeLastName}
+                    />
                 </div>
 
                 ${this.renderEmail()} ${this.renderPassword()}
@@ -479,53 +486,61 @@ export class Root extends LitElement {
         `;
     }
 
-    private renderShoppingCart(): TemplateResult{
+    private renderShoppingCart(): TemplateResult {
         const totalAmount: number = this.calculateTotalPrice();
 
         return html`
             <h1 class="title">Just a few steps left to go!</h1>
-                <div id="steps">
-                        <div class="stepnmbr" id="currentstep">Step 1</div>
-                        <div class="stepnmbr">Step 2</div>
-                        <div class="stepnmbr">Step 3</div> 
-                </div>
-                <table>
-                    <tr>
-                        <th>Item</th>
-                        <th>Amount</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                    ${this._cartItems.map((cartItem) => {
+            <div id="steps">
+                <div class="stepnmbr" id="currentstep">Step 1</div>
+                <div class="stepnmbr">Step 2</div>
+                <div class="stepnmbr">Step 3</div>
+            </div>
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+                ${this._cartItems.map((cartItem) => {
                     return html`
                         <tr>
                             <td>${cartItem.item.name}</td>
                             <td>${cartItem.amount}</td>
                             <td>${cartItem.item.price}</td>
-                            <td><b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b></td>
+                            <td>
+                                <b
+                                    >&euro;
+                                    ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
+                                        2,
+                                    )}</b
+                                >
+                            </td>
                         </tr>
-                        `;
-                    }
-                    )}
-                </table>
-            <div class="nxtstep">            
+                    `;
+                })}
+            </table>
+            <div class="nxtstep">
                 <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
-                <button class="button" type="submit" @click="${this._renderInfoConfirmation}">Next Step</button>
+                <button class="button" type="submit" @click="${this._renderInfoConfirmation}">
+                    Next Step
+                </button>
             </div>
         `;
     }
 
     private calculateTotalPrice(): number {
         let totalPrice: number = 0;
-    
+
         for (const cartItem of this._cartItems) {
             totalPrice += cartItem.item.price * cartItem.amount;
         }
-    
+
         return totalPrice;
     }
 
-    private _renderInfoConfirmation(): HTMLTemplateResult{
+    private _renderInfoConfirmation(): HTMLTemplateResult {
         this._currentPage = RouterPage.InfoConfirmation;
 
         return html`
@@ -536,12 +551,14 @@ export class Root extends LitElement {
                         <div class="stepnmbr">Step 3</div> 
                 </div>
                 <div class="adressInfo">
-                    <label>Username</label><input type="text" disabled value="${this._name}"><br>
-                    <label>Email</label><input type="text" disabled value="${this._email}"><br>
-                    <label>Street</label> <input type="text" @change="${this._onChangeStreet}" value="${this._adressData.street}"><br>
-                    <label>City</label>   <input type="text" @change="${this._onChangeCity}" value="${this._adressData.city}"><br>
-                    <label>Zip</label>    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}"><br>
-                    <label>Country</label><input type="text" @change="${this._onChangeCountry}" value="${this._adressData.country}"><br>
+                    <form>
+                        <label>Username</label><input type="text" disabled value="${this._name}"><br>
+                        <label>Email</label><input type="text" disabled value="${this._email}"><br>
+                        <label>Street</label> <input type="text" @change="${this._onChangeStreet}" value="${this._adressData.street}"><br>
+                        <label>City</label>   <input type="text" @change="${this._onChangeCity}" value="${this._adressData.city}"><br>
+                        <label>Zip</label>    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}"><br>
+                        <label>Country</label><input type="text" @change="${this._onChangeCountry}" value="${this._adressData.country}"><br>
+                    </form>
                 </div>
                 <div class="nxtstep">
                  <button class="button" type="submit">Next Step</button>
@@ -552,27 +569,27 @@ export class Root extends LitElement {
     /**
      * Handles changes to the adress input field
      */
-    private _onChangeStreet(e: Event): any {
+    private async _onChangeStreet(e: Event): Promise<void> {
         this._adressData.street = (e.target as HTMLInputElement).value;
+        await this.changeAddress();
     }
-    private _onChangeCity(e: Event): any {
+    private async _onChangeCity(e: Event): Promise<void> {
         this._adressData.city = (e.target as HTMLInputElement).value;
+        await this.changeAddress();
     }
-    private _onChangeZip(e: Event): any {
+    private async _onChangeZip(e: Event): Promise<void> {
         this._adressData.zip = (e.target as HTMLInputElement).value;
+        await this.changeAddress();
     }
-    private _onChangeCountry(e: Event): any {
+    private async _onChangeCountry(e: Event): Promise<void> {
         this._adressData.country = (e.target as HTMLInputElement).value;
+        await this.changeAddress();
     }
 
-
-    private _renderOrderConfirmation(): HTMLTemplateResult{
+    private _renderOrderConfirmation(): HTMLTemplateResult {
         this._currentPage = RouterPage.OrderConfirmation;
 
-        return html`
-        <h1 class="title">Thank you for ordering!</h1>
-
-        `;
+        return html` <h1 class="title">Thank you for ordering!</h1> `;
     }
 
     /**
@@ -703,5 +720,15 @@ export class Root extends LitElement {
         this._lastname = (event.target as HTMLInputElement).value;
     }
 
+    private async changeAddress(): Promise<void> {
+        const address: Address | undefined = await this._addressService.setAddressForUser({
+            id: this._adressData.id,
+            street: this._adressData.street || "",
+            city: this._adressData.city || "",
+            zip: this._adressData.zip || "",
+            country: this._adressData.country || "",
+        });
 
+        this._adressData = address || this._adressData;
+    }
 }
