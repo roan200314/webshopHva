@@ -6,10 +6,10 @@
 - Tijdgebonden
 
 ### De proffesional skills:
-G1: Je blijft leren en bent doelgericht, persoonlijk leiderschap
-G2: Doelgericht interacteren, constructief samenwerken, goede mondelinge en schriftelijke communicatie af op het doel. 
-G3: Toekomst organiseren, je herkent ethnische aspecten en de maatschappelijke gevolgen ervan en maakt bewuste keuzes.
-G4: Onderzoekend probleem oplossen, methodisch onderzoek doen en analyseer de uitkomsten, vanuit hier concludeer de beste oplossing voor het probleem. 
+- G1: Je blijft leren en bent doelgericht, persoonlijk leiderschap
+- G2: Doelgericht interacteren, constructief samenwerken, goede mondelinge en schriftelijke communicatie af op het doel. 
+- G3: Toekomst organiseren, je herkent ethnische aspecten en de maatschappelijke gevolgen ervan en maakt bewuste keuzes.
+- G4: Onderzoekend probleem oplossen, methodisch onderzoek doen en analyseer de uitkomsten, vanuit hier concludeer de beste oplossing voor het probleem. 
 
 
 
