@@ -55,10 +55,10 @@ export class UserService {
      * @return {Promise<User>} - Returns user representation if login is successful, null otherwise.
      */
     public async loginUser(loginUserDto: LoginUserDto): Promise<User> {
-        const { email, password } = loginUserDto;
+        const {email, password} = loginUserDto;
         // Find the user with the provided username
         const user: User = await this.usersRepository.findOne({
-            where: { email: email },
+            where: {email: email},
         });
 
         // If no such user exists, return null
@@ -82,20 +82,20 @@ export class UserService {
      * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
      */
     public async findOne(email: string): Promise<User | undefined> {
-        return this.usersRepository.findOne({ where: { email } });
+        return this.usersRepository.findOne({where: {email}});
     }
 
-/**
- * Deletes a user by their ID.
- *
- * @param {number} id - The ID of the user to delete.
- * @return {Promise<void>} - Returns a promise that resolves once the user is deleted.
- */
-public async deleteUserById(id: number): Promise<void> {
-    // Delete the user by ID
-    await this.usersRepository.delete(id);
-}
-        
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param {number} id - The ID of the user to delete.
+     * @return {Promise<void>} - Returns a promise that resolves once the user is deleted.
+     */
+    public async deleteUserById(id: number): Promise<{ message: string }> {
+        await this.usersRepository.delete(id);
+        return { message: "User removed successfully" };
+    }
+
 
     /**
      * Retrieves all users from the database.
@@ -104,8 +104,7 @@ public async deleteUserById(id: number): Promise<void> {
      */
     public async getAllUsers(): Promise<UserDto[]> {
         const users: User[] = await this.usersRepository.find();
-        console.log(users);
-        return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
+        return users.map((user: User) => plainToClass(UserDto, user, {excludeExtraneousValues: true}));
     }
 
     /**
@@ -116,7 +115,7 @@ public async deleteUserById(id: number): Promise<void> {
      */
     public async checkIfUserExists(email: string): Promise<boolean> {
         const user: User = await this.usersRepository.findOne({
-            where: { email },
+            where: {email},
         });
         return !!user;
     }
@@ -148,6 +147,4 @@ public async deleteUserById(id: number): Promise<void> {
     private async comparePassword(password: string, hash: string): Promise<boolean> {
         return await bcrypt.compare(password, hash);
     }
-
-    
 }

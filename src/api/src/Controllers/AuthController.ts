@@ -54,14 +54,4 @@ export class AuthController {
     public getProfile(@Request() req): string {
         return req.user;
     }
-
-    
-    @HttpCode(HttpStatus.OK)
-    @Post("delete")
-    @ApiBearerAuth()
-    @ApiOperation({ summary: "Deletes the user based on id" })
-    @ApiResponse({ status: 200, description: "User deleted" })
-    public async deleteUser(@Body() deleteUserDto: UserDto): Promise<UserDto> {
-        return await this.authService.delete(deleteUserDto);
-    }
 }

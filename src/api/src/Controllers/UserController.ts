@@ -1,12 +1,24 @@
-import { Controller, Get, Param, Post, Request } from "@nestjs/common";
+import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Request } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { CartItemService } from "../Services/CartItemService";
+import { UserService } from "../Services/UserService";
 
 @ApiTags("Users")
 @Controller("users")
 export class UserController {
-    public constructor(private cartItemService: CartItemService) {
+    public constructor(
+        private cartItemService: CartItemService,
+        private userService: UserService,
+    ) {}
+
+    @HttpCode(HttpStatus.OK)
+    @Delete("/:id")
+    @ApiBearerAuth()
+    @ApiOperation({ summary: "Deletes the user based on id" })
+    @ApiResponse({ status: 200, description: "User deleted" })
+    public async deleteUser(@Param("id") id: number): Promise<{ message: string }> {
+         return await this.userService.deleteUserById(id);
     }
 
     @ApiOperation({summary: "Get a welcome message for the user"})
