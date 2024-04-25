@@ -53,7 +53,7 @@ export class CreateOrderItem extends LitElement {
      * Creates an order item.
      * @param event 
      */
-    private async createOrderItem(event: Event): Promise<boolean> {
+    private async createOrderItem(event: Event): Promise<void> {
         event.preventDefault();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/create`, {
             method: "POST",
@@ -64,8 +64,7 @@ export class CreateOrderItem extends LitElement {
         });
         if (!response.ok) {
             console.error(response);
-            return false;
         }
-        return true;
+        alert("Order item created successfully");
     }
 }

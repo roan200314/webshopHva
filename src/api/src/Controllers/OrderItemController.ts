@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { OrderService } from "../Services/OrderService";
 import { Public } from "../Auth/Decorators/public.decorator";
@@ -32,5 +32,13 @@ export class OrderItemController {
     @ApiResponse({ status: 200, description: "Order Item" })
     public async getOrderItemById(@Param("id", ParseIntPipe) id: number): Promise<OrderItem> {
         return this.orderService.getOrderItemById(id);
+    }
+
+    @Public()
+    @Delete(":id")
+    @ApiOperation({ summary: "Deletes an order item by its ID" })
+    @ApiResponse({ status: 200, description: "Order Item deleted" })
+    public async deleteOrderItemById(@Param("id", ParseIntPipe) id: number): Promise<void> {
+        return await this.orderService.deleteOrderItemById(id);
     }
 }

@@ -175,7 +175,7 @@ export class Root extends LitElement {
         alert(
             `Hallo ${result.email}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
                 result.cartItems?.join("\r\n- ") || "Geen"
-            }`
+            }`,
         );
     }
 
@@ -273,11 +273,24 @@ export class Root extends LitElement {
                 <h2 @click=${(): Promise<OrderItem> => this.getSingleOrder(orderItem)}>${orderItem.name}</h2>
                 <p>${orderItem.description}</p>
                 <p>€${orderItem.price}</p>
-                ${this._isLoggedIn
-                    ? html`<button @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}>
-                          Toevoegen aan winkelmandje
-                      </button>`
-                    : nothing}
+                ${
+                    this._isLoggedIn
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}
+                          >
+                              Toevoegen aan winkelmandje
+                          </button>`
+                        : nothing
+                }
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}
+                          >
+                              Verwijderen
+                          </button>`
+                        : nothing
+                }
             </div>
         `;
     }
@@ -289,12 +302,12 @@ export class Root extends LitElement {
                 "Content-Type": "application/json",
             },
         });
-        
+
         if (!response.ok) {
             console.error(response);
             throw new Error("Failed to fetch order item");
         }
-    
+
         try {
             const orderItemData: OrderItem = await response.json();
             console.log(orderItemData);
@@ -303,6 +316,22 @@ export class Root extends LitElement {
             console.error("Error parsing JSON:", error);
             throw new Error("Failed to parse order item data");
         }
+    }
+
+    private async deleteOrderItem(orderItem: OrderItem): Promise<void> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            console.error(response);
+            throw new Error("Failed to delete order item");
+        }
+
+        alert("Order item deleted successfully");
     }
 
     /**
@@ -342,9 +371,19 @@ export class Root extends LitElement {
                     <label for="username">Gebruikersnaam</label>
                     <input type="text" id="name" value=${this._name} @change=${this.onChangeName} />
                     <label for="voornaam">Voornaam</label>
-                    <input type="text" id="firstname" value=${this._firstname} @change=${this.onChangeFirstName} />
+                    <input
+                        type="text"
+                        id="firstname"
+                        value=${this._firstname}
+                        @change=${this.onChangeFirstName}
+                    />
                     <label for="achternaam">Achternaam</label>
-                    <input type="text" id="lastname" value=${this._lastname} @change=${this.onChangeLastName} />
+                    <input
+                        type="text"
+                        id="lastname"
+                        value=${this._lastname}
+                        @change=${this.onChangeLastName}
+                    />
                 </div>
 
                 ${this.renderEmail()} ${this.renderPassword()}
