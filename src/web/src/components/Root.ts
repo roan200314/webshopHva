@@ -561,7 +561,7 @@ export class Root extends LitElement {
                     </form>
                 </div>
                 <div class="nxtstep">
-                 <button class="button" type="submit">Next Step</button>
+                 <button class="button" type="submit" @click="${this._renderOrderConfirmation}">Next Step</button>
                 </div>
         `;
     }
