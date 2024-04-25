@@ -41,4 +41,13 @@ export class OrderService {
     public async createOrderItem(orderItem: OrderItem): Promise<OrderItem> {
         return await this.orderItemRepository.save(orderItem);
     }
+
+    /**
+     * Retrieves an order item by its ID.
+     * @param id - The ID of the order item to retrieve.
+     * @returns {Promise<OrderItem>}
+     */
+    public async getOrderItemById(id: number): Promise<OrderItem> {
+        return await this.orderItemRepository.findOne({ where: { id } });
+    }
 }
