@@ -1,9 +1,4 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./User";
 import { OrderItem } from "./OrderItem";
 
@@ -18,6 +13,6 @@ export class CartItem {
     @ManyToOne(() => OrderItem)
     public item: OrderItem;
 
-    @ManyToOne(() => User, user => user.cart)
+    @ManyToOne(() => User, (user) => user.cart)
     public user: User;
 }

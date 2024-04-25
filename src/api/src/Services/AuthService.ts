@@ -40,7 +40,12 @@ export class AuthService {
         const loginResult: User = await this.usersService.loginUser(loginUserDto);
 
         if (loginResult) {
-            const payload: { id: number; email: string; name: string; authorizationLevel: AuthorizationLevel } = {
+            const payload: {
+                id: number;
+                email: string;
+                name: string;
+                authorizationLevel: AuthorizationLevel;
+            } = {
                 id: loginResult.id,
                 email: loginResult.email,
                 name: loginResult.name,
@@ -89,14 +94,14 @@ export class AuthService {
     public async getAll(): Promise<UserDto[]> {
         return await this.usersService.getAllUsers();
     }
-/**
- * Deletes a user by their ID.
- *
- * @param {UserDto} id 
- * @return {Promise<UserDto>} 
- */
-public async delete(id: UserDto): Promise<UserDto> {
-    await this.usersService.deleteUserById(id.id);
-    return id;
-}
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param {UserDto} id
+     * @return {Promise<UserDto>}
+     */
+    public async delete(id: UserDto): Promise<UserDto> {
+        await this.usersService.deleteUserById(id.id);
+        return id;
+    }
 }

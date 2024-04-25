@@ -365,8 +365,6 @@ export class Root extends LitElement {
         `;
     }
 
-
-
     private handleClick(): void {
         const result: any = {
             name: this._email,
@@ -376,9 +374,10 @@ export class Root extends LitElement {
     }
 
     private renderAdmin(): TemplateResult {
-        return html` 
-        <button @click=${this.handleClick}>Click me</button>
-        <div>Admin page van ${this._email}</div> `;
+        return html`
+            <button @click=${this.handleClick}>Click me</button>
+            <div>Admin page van ${this._email}</div>
+        `;
     }
 
     /**
@@ -416,15 +415,14 @@ export class Root extends LitElement {
      */
 
     private renderAdminInNav(): TemplateResult {
-        if (this._isLoggedIn === true){
-            return html`
-                <div>
-                    <a href="/admin-page.html" target="">
-                        <button>Admin</button>
-                    </a>
-                </div>`;
+        if (this._isLoggedIn === true) {
+            return html` <div>
+                <a href="/admin-page.html" target="">
+                    <button>Admin</button>
+                </a>
+            </div>`;
         }
-        return html ``;
+        return html``;
     }
 
     /**

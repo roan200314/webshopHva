@@ -24,8 +24,7 @@ export class UserService {
     public constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
-    ) {
-    }
+    ) {}
 
     /**
      * Registers a new user in the database.
@@ -55,10 +54,10 @@ export class UserService {
      * @return {Promise<User>} - Returns user representation if login is successful, null otherwise.
      */
     public async loginUser(loginUserDto: LoginUserDto): Promise<User> {
-        const {email, password} = loginUserDto;
+        const { email, password } = loginUserDto;
         // Find the user with the provided username
         const user: User = await this.usersRepository.findOne({
-            where: {email: email},
+            where: { email: email },
         });
 
         // If no such user exists, return null
@@ -82,7 +81,7 @@ export class UserService {
      * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
      */
     public async findOne(email: string): Promise<User | undefined> {
-        return this.usersRepository.findOne({where: {email}});
+        return this.usersRepository.findOne({ where: { email } });
     }
 
     /**
@@ -96,7 +95,6 @@ export class UserService {
         return { message: "User removed successfully" };
     }
 
-
     /**
      * Retrieves all users from the database.
      *
@@ -104,7 +102,7 @@ export class UserService {
      */
     public async getAllUsers(): Promise<UserDto[]> {
         const users: User[] = await this.usersRepository.find();
-        return users.map((user: User) => plainToClass(UserDto, user, {excludeExtraneousValues: true}));
+        return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
 
     /**
@@ -115,7 +113,7 @@ export class UserService {
      */
     public async checkIfUserExists(email: string): Promise<boolean> {
         const user: User = await this.usersRepository.findOne({
-            where: {email},
+            where: { email },
         });
         return !!user;
     }

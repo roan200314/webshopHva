@@ -1,11 +1,10 @@
-import { LitElement, TemplateResult, css, html} from "lit";
-import { customElement, state} from "lit/decorators.js";
+import { LitElement, TemplateResult, css, html } from "lit";
+import { customElement, state } from "lit/decorators.js";
 import { OrderItemService } from "../services/OrderItemService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
-
 
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
@@ -16,7 +15,7 @@ enum RouterPage {
     Admin = "admin",
 }
 
-  /**
+/**
  * Custom element based on Lit for the header of the webshop.
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
@@ -69,8 +68,8 @@ export class Root extends LitElement {
         }
     `;
 
-@state()
-private _currentPage: RouterPage = RouterPage.Home;
+    @state()
+    private _currentPage: RouterPage = RouterPage.Home;
 
     @state()
     private _isLoggedIn: boolean = false;
@@ -99,7 +98,6 @@ private _currentPage: RouterPage = RouterPage.Home;
         await this.getOrderItems();
         await this.getAdmin();
         await this.showAllUsers();
-
     }
 
     /**
@@ -140,13 +138,15 @@ private _currentPage: RouterPage = RouterPage.Home;
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
         if (result) {
-            const allUsersTable: HTMLTableSectionElement | null = document.getElementById("allUsersTable") as HTMLTableSectionElement;
+            const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
+                "allUsersTable",
+            ) as HTMLTableSectionElement;
             if (allUsersTable) {
                 allUsersTable.innerHTML = "";
 
-                result.forEach(user => {
+                result.forEach((user) => {
                     const row: any = document.createElement("tr");
-    
+
                     row.innerHTML = `
                         <td>${user.id}</td>
                         <td>${user.name}</td>
@@ -157,40 +157,31 @@ private _currentPage: RouterPage = RouterPage.Home;
                         </td>
                     `;
                     allUsersTable.appendChild(row);
-    
                 });
             }
         }
     }
-    
-    private async deleteUser(): Promise<void> {
-        
-    }
 
+    private async deleteUser(): Promise<void> {}
 
-
-
-        /**
+    /**
      * Renders the components
      */
-        protected render(): TemplateResult {
-    
-    
-            return html`
-                <header>
-                    <nav>
-                        <div
-                            class="logo"
-                            @click=${(): void => {
-                                this._currentPage = RouterPage.Home;
-                            }}
-                        >
-                            <img src="/assets/img/logo.png" alt="Logo" />
-                        </div>
-    
-                    </nav>
-                </header>
-                <footer>Copyright &copy; Luca Stars 2024</footer>
-            `;
-        }
+    protected render(): TemplateResult {
+        return html`
+            <header>
+                <nav>
+                    <div
+                        class="logo"
+                        @click=${(): void => {
+                            this._currentPage = RouterPage.Home;
+                        }}
+                    >
+                        <img src="/assets/img/logo.png" alt="Logo" />
+                    </div>
+                </nav>
+            </header>
+            <footer>Copyright &copy; Luca Stars 2024</footer>
+        `;
+    }
 }

@@ -9,12 +9,11 @@ import { CartItemModule } from "./CartItemModule";
 import { OrderModule } from "./OrderModule";
 
 @Module({
-    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule, ],
+    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule],
     controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {
     // @ts-expect-error Unused variables
-    public constructor(private _dataSource: DataSource) {
-    }
+    public constructor(private _dataSource: DataSource) {}
 }

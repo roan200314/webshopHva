@@ -1,9 +1,4 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./User";
 
 @Entity("Address")
@@ -23,6 +18,6 @@ export class Address {
     @Column({ type: "varchar", length: 255, nullable: false })
     public country: string;
 
-    @ManyToOne(() => User, user => user.addresses)
+    @ManyToOne(() => User, (user) => user.addresses)
     public user: User;
 }

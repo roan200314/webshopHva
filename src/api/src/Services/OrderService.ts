@@ -11,8 +11,7 @@ export class OrderService {
         private orderRepository: Repository<Order>,
         @InjectRepository(OrderItem)
         private orderItemRepository: Repository<OrderItem>,
-    ) {
-    }
+    ) {}
 
     public async createOrder(order: Order): Promise<Order> {
         return await this.orderRepository.save(order);
