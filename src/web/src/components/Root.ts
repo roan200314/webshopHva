@@ -269,8 +269,8 @@ export class Root extends LitElement {
      */
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         return html`
-            <div class="order-item">
-                <h2>${orderItem.name}</h2>
+            <div class="order-item"></div>
+                <h2 @click=${(): Promise<OrderItem> => this.getSingleOrder(orderItem)}>${orderItem.name}</h2>
                 <p>${orderItem.description}</p>
                 <p>€${orderItem.price}</p>
                 ${this._isLoggedIn
@@ -280,6 +280,29 @@ export class Root extends LitElement {
                     : nothing}
             </div>
         `;
+    }
+
+    private async getSingleOrder(orderItem: OrderItem): Promise<OrderItem> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        
+        if (!response.ok) {
+            console.error(response);
+            throw new Error("Failed to fetch order item");
+        }
+    
+        try {
+            const orderItemData: OrderItem = await response.json();
+            console.log(orderItemData);
+            return orderItemData;
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+            throw new Error("Failed to parse order item data");
+        }
     }
 
     /**
