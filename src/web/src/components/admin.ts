@@ -84,6 +84,7 @@ private _currentPage: RouterPage = RouterPage.Home;
     private _userService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
+    private _deleteUserService: UserService = new UserService();
     private _tokenService: TokenService = new TokenService();
     private _email: string = "";
     private _password: string = "";
@@ -155,8 +156,6 @@ private _currentPage: RouterPage = RouterPage.Home;
                             <button class="btn btn-danger delete-btn" data-user-id="${user.id}">Delete</button>
                         </td>
                     `;
-    
-                    // Append row to table body
                     allUsersTable.appendChild(row);
     
                 });
@@ -164,9 +163,9 @@ private _currentPage: RouterPage = RouterPage.Home;
         }
     }
     
-    // private async deleteUser(): Promise<void> {
+    private async deleteUser(): Promise<void> {
         
-    // }
+    }
 
 
 

@@ -85,18 +85,16 @@ export class UserService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
-        /**
-     * Finds a user using their id.
-     *
-     * @param {string} id - The id of the user to find.
-     * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
-     */
-        public async findOneById(id: number): Promise<User | undefined> {
-            const user: User = await this.usersRepository.findOne({
-                where: { id },
-            });
-            return user;
-        }
+/**
+ * Deletes a user by their ID.
+ *
+ * @param {number} id - The ID of the user to delete.
+ * @return {Promise<void>} - Returns a promise that resolves once the user is deleted.
+ */
+public async deleteUserById(id: number): Promise<void> {
+    // Delete the user by ID
+    await this.usersRepository.delete(id);
+}
         
 
     /**

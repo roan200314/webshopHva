@@ -5,7 +5,6 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags
 import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { UserDto } from "../Models/Dto/User/UserDto";
-import { DeleteUserDto } from "src/Models/Dto/User/DeleteUserDto";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -58,11 +57,11 @@ export class AuthController {
 
     
     @HttpCode(HttpStatus.OK)
-    @Get("delete")
+    @Post("delete")
     @ApiBearerAuth()
     @ApiOperation({ summary: "Deletes the user based on id" })
-    @ApiResponse({ status: 200, description: "User delete" })
-    public async deleteUser(userId: number): Promise<DeleteUserDto> {
-        return await this.authService.delete(userId);
+    @ApiResponse({ status: 200, description: "User deleted" })
+    public async deleteUser(@Body() deleteUserDto: UserDto): Promise<UserDto> {
+        return await this.authService.delete(deleteUserDto);
     }
 }
