@@ -162,10 +162,6 @@ private _currentPage: RouterPage = RouterPage.Home;
             }
         }
     }
-    
-    private async deleteUser(): Promise<void> {
-        
-    }
 
 
 

@@ -235,7 +235,7 @@ export class Root extends LitElement {
                 <nav>
                     <div
                         class="logo"
-                        @click=${(): void => {
+                        cli@ck=${(): void => {
                             this._currentPage = RouterPage.Home;
                         }}
                     >
