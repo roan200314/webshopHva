@@ -7,8 +7,7 @@ import { OrderItem } from "../Models/Entities/OrderItem";
 @ApiTags("OrderItems")
 @Controller("orderItems")
 export class OrderItemController {
-    public constructor(private orderService: OrderService) {
-    }
+    public constructor(private orderService: OrderService) {}
 
     @Public()
     @Get("all")

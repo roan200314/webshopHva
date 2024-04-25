@@ -4,7 +4,7 @@
 export class TokenService {
     /**
      * Store the current JWT token in local storage
-     * 
+     *
      * @param token The current JWT token
      */
     public setToken(token: string): void {
@@ -13,7 +13,7 @@ export class TokenService {
 
     /**
      * Retrieve the stored JWT token from local storage
-     * 
+     *
      * @returns JWT token when successful, otherwise `undefined`.
      */
     public getToken(): string | undefined {

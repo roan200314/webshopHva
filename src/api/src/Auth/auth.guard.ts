@@ -22,8 +22,10 @@ export class AuthGuard implements CanActivate {
      * @param {JwtService} jwtService
      * @param {Reflector} reflector - An instance of the NestJS Reflector utility.
      */
-    public constructor(private jwtService: JwtService, private reflector: Reflector) {
-    }
+    public constructor(
+        private jwtService: JwtService,
+        private reflector: Reflector,
+    ) {}
 
     /**
      * Determines if user can access certain routes based on the token.
@@ -55,7 +57,6 @@ export class AuthGuard implements CanActivate {
             request["user"] = await this.jwtService.verifyAsync(token, {
                 secret: process.env.JWT_SECRET_KEY,
             });
-
         } catch {
             throw new UnauthorizedException();
         }

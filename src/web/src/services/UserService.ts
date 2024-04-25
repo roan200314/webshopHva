@@ -4,7 +4,6 @@ import { TokenService } from "./TokenService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { UserData } from "@shared/types";
 
-
 const headers: { "Content-Type": string } = {
     "Content-Type": "application/json",
 };
@@ -45,8 +44,6 @@ export class UserService {
 
         return false;
     }
-
-    
 
     /**
      * Handles user registration
@@ -113,20 +110,19 @@ export class UserService {
         return (await responses.json()) as UserData[];
     }
 
-        public async deleteFun(): Promise<UserData> {
-            const token: string | undefined = this._tokenService.getToken();
-            const response: Response = await fetch(`${viteConfiguration.API_URL}auth/delete`, {
-                method: "post",
-                headers: { ...headers, authorization: `Bearer ${token}` },
-            });
-    
-            if (!response.ok) {
-                console.error(response);
-    
-            }
-    
-            return (await response.json()) as UserData;
+    public async deleteFun(): Promise<UserData> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/delete`, {
+            method: "post",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            console.error(response);
         }
+
+        return (await response.json()) as UserData;
+    }
 
     /**
      * Handles adding an order item to the cart of the current user. Requires a valid token.

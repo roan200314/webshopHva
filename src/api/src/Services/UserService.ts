@@ -24,8 +24,7 @@ export class UserService {
     public constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
-    ) {
-    }
+    ) {}
 
     /**
      * Registers a new user in the database.
@@ -85,17 +84,16 @@ export class UserService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
-/**
- * Deletes a user by their ID.
- *
- * @param {number} id - The ID of the user to delete.
- * @return {Promise<void>} - Returns a promise that resolves once the user is deleted.
- */
-public async deleteUserById(id: number): Promise<void> {
-    // Delete the user by ID
-    await this.usersRepository.delete(id);
-}
-        
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param {number} id - The ID of the user to delete.
+     * @return {Promise<void>} - Returns a promise that resolves once the user is deleted.
+     */
+    public async deleteUserById(id: number): Promise<{ message: string }> {
+        await this.usersRepository.delete(id);
+        return { message: "User removed successfully" };
+    }
 
     /**
      * Retrieves all users from the database.
@@ -104,7 +102,6 @@ public async deleteUserById(id: number): Promise<void> {
      */
     public async getAllUsers(): Promise<UserDto[]> {
         const users: User[] = await this.usersRepository.find();
-        console.log(users);
         return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
 
@@ -148,6 +145,4 @@ public async deleteUserById(id: number): Promise<void> {
     private async comparePassword(password: string, hash: string): Promise<boolean> {
         return await bcrypt.compare(password, hash);
     }
-
-    
 }

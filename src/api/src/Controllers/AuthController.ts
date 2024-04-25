@@ -9,8 +9,7 @@ import { UserDto } from "../Models/Dto/User/UserDto";
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-    public constructor(private authService: AuthService) {
-    }
+    public constructor(private authService: AuthService) {}
 
     @Public()
     @HttpCode(HttpStatus.OK)
@@ -53,15 +52,5 @@ export class AuthController {
     @ApiResponse({ status: 200, description: "User profile" })
     public getProfile(@Request() req): string {
         return req.user;
-    }
-
-    
-    @HttpCode(HttpStatus.OK)
-    @Post("delete")
-    @ApiBearerAuth()
-    @ApiOperation({ summary: "Deletes the user based on id" })
-    @ApiResponse({ status: 200, description: "User deleted" })
-    public async deleteUser(@Body() deleteUserDto: UserDto): Promise<UserDto> {
-        return await this.authService.delete(deleteUserDto);
     }
 }
