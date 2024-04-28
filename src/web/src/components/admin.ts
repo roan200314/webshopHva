@@ -92,6 +92,7 @@ export class Root extends LitElement {
     private _lastname: string = "";
 
     public async connectedCallback(): Promise<void> {
+
         super.connectedCallback();
 
         await this.getWelcome();
@@ -135,38 +136,39 @@ export class Root extends LitElement {
         }
     }
 
-    private async showAllUsers(userdata: UserData): Promise<void> {
+    private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
-        if (result) {
+           
+        if (result && result.length > 0) {
             const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
                 "allUsersTable",
             ) as HTMLTableSectionElement;
             if (allUsersTable) {
                 allUsersTable.innerHTML = "";
-
+    
                 result.forEach((user) => {
+                    console.log("User:", user);
+    
                     const row: any = document.createElement("tr");
-
-                    row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.authorizationLevel}</td>
-                    <td>
-                    <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(userdata)}>Delete</button>
-
-
-
-
-                    </td>
-                `;
-                
+    
+                    row.innerHTML =  html `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.authorizationLevel}</td>
+                        <td>
+                            <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(user.id)}>Delete</button>
+                        </td>
+                    `;
+                    
                     allUsersTable.appendChild(row);
-                }
-            );
+                });
             }
+        } else {
+            console.log("No users found.");
         }
     }
+    
     // private async deleteUser(userId: number): Promise<void> {
     //     try {
     //         const result: any = await this._userService.deleteFun(userId);
