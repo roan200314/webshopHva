@@ -135,7 +135,7 @@ export class Root extends LitElement {
         }
     }
 
-    private async showAllUsers(): Promise<void> {
+    private async showAllUsers(userdata: UserData): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
         if (result) {
             const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
@@ -153,7 +153,8 @@ export class Root extends LitElement {
                     <td>${user.email}</td>
                     <td>${user.authorizationLevel}</td>
                     <td>
-                    <button class="btn btn-danger delete-btn" data-user-id="${user.id}" @click=${async (): Promise<void> => await this.deleteUser(user.id)}>Delete</button>
+                    <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(userdata)}>Delete</button>
+
 
 
 
@@ -161,23 +162,20 @@ export class Root extends LitElement {
                 `;
                 
                     allUsersTable.appendChild(row);
-                });
+                }
+            );
             }
         }
     }
-    private async deleteUser(userId: number): Promise<void> {
-        try {
-            const result: any = await this._userService.deleteFun(userId);
-            // Optionally, you can handle the result here if needed
-            console.log(result);
-        } catch (error) {
-            // Handle any errors that occur during the deletion process
-            console.error("Error deleting user:", error);
-        }
-    
-
-             
-    }
+    // private async deleteUser(userId: number): Promise<void> {
+    //     try {
+    //         const result: any = await this._userService.deleteFun(userId);
+    //         console.log(result);
+    //     } catch (error) {
+    //         // Handle any errors that occur during the deletion process
+    //         console.error("Error deleting user:", error);
+    //     }      
+    // }
 
 
 
