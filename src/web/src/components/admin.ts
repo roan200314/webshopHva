@@ -148,21 +148,40 @@ export class Root extends LitElement {
                     const row: any = document.createElement("tr");
 
                     row.innerHTML = `
-                        <td>${user.id}</td>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${user.authorizationLevel}</td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" data-user-id="${user.id}">Delete</button>
-                        </td>
-                    `;
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.authorizationLevel}</td>
+                    <td>
+                    <button class="btn btn-danger delete-btn" data-user-id="${user.id}" @click=${async (): Promise<void> => await this.deleteUser(user.id)}>Delete</button>
+
+
+
+                    </td>
+                `;
+                
                     allUsersTable.appendChild(row);
                 });
             }
         }
     }
+    private async deleteUser(userId: number): Promise<void> {
+        try {
+            const result: any = await this._userService.deleteFun(userId);
+            // Optionally, you can handle the result here if needed
+            console.log(result);
+        } catch (error) {
+            // Handle any errors that occur during the deletion process
+            console.error("Error deleting user:", error);
+        }
+    
 
-    private async deleteUser(): Promise<void> {}
+             
+    }
+
+
+
+    
 
     /**
      * Renders the components

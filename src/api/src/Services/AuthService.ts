@@ -94,14 +94,5 @@ export class AuthService {
     public async getAll(): Promise<UserDto[]> {
         return await this.usersService.getAllUsers();
     }
-    /**
-     * Deletes a user by their ID.
-     *
-     * @param {UserDto} id
-     * @return {Promise<UserDto>}
-     */
-    public async delete(id: UserDto): Promise<UserDto> {
-        await this.usersService.deleteUserById(id.id);
-        return id;
-    }
+
 }

@@ -110,18 +110,17 @@ export class UserService {
         return (await responses.json()) as UserData[];
     }
 
-    public async deleteFun(): Promise<UserData> {
+    public async deleteFun(userId: number): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
-        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/delete`, {
-            method: "post",
+        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/delete/${userId}`, {
+            method: "delete",
             headers: { ...headers, authorization: `Bearer ${token}` },
         });
-
+    
         if (!response.ok) {
             console.error(response);
         }
-
-        return (await response.json()) as UserData;
+    
     }
 
     /**
