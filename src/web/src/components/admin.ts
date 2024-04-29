@@ -4,7 +4,7 @@ import { OrderItemService } from "../services/OrderItemService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { OrderItem, UserData } from "@shared/types";
+import { OrderItem, UserData} from "@shared/types";
 
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
@@ -146,20 +146,20 @@ export class Root extends LitElement {
             if (allUsersTable) {
                 allUsersTable.innerHTML = "";
     
-                result.forEach((user) => {
-                    console.log("User:", user);
+                result.forEach((userdata) => {
+                    console.log("User:", userdata);
     
                     const row: any = document.createElement("tr");
     
-                    row.innerHTML =  html `
-                        <td>${user.id}</td>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${user.authorizationLevel}</td>
+                    row.innerHTML = html `
+                        <td>${userdata.id}</td>
+                        <td>${userdata.name}</td>
+                        <td>${userdata.email}</td>
+                        <td>${userdata.authorizationLevel}</td>
                         <td>
-                            <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(user.id)}>Delete</button>
-                        </td>
-                    `;
+                            //eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                            <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(userdata.id)}>Delete</button>
+                        </td>`;
                     
                     allUsersTable.appendChild(row);
                 });
@@ -168,6 +168,9 @@ export class Root extends LitElement {
             console.log("No users found.");
         }
     }
+    
+    
+    
     
     // private async deleteUser(userId: number): Promise<void> {
     //     try {
