@@ -113,17 +113,37 @@ export class Root extends LitElement {
         }
     }
 
-    /**
-     * Get all available order items
-     */
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
-
-        if (!result) {
-            return;
+    
+        if (result && result.length > 0) {
+            const allordersTable: HTMLTableSectionElement | null = document.getElementById(
+                "allOrdersTable",
+            ) as HTMLTableSectionElement;
+            if (allordersTable) {
+                allordersTable.innerHTML = "";
+                
+                result.forEach((orderdata) => {
+                    console.log("orders:", orderdata);
+                    
+                    const row: any = document.createElement("tr");
+                    
+                    if (this._isLoggedIn) {
+                        render(html`
+                            <td>${orderdata.id}</td>
+                            <td>${orderdata.description}</td>
+                            <td>${orderdata.name}</td>
+                            <td>${orderdata.price}</td>                         
+                            `, row);
+                    }
+                    
+                    allordersTable.appendChild(row);
+                    console.log("data found");
+                });
+            }
+        } else {
+            console.log("No orders found.");
         }
-
-        this._orderItems = result;
     }
 
     private async getAdmin(): Promise<void> {
@@ -158,7 +178,7 @@ export class Root extends LitElement {
                             <td>${userdata.email}</td>
                             <td>${userdata.authorizationLevel}</td>
                             <td>
-                                <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(userdata.id)}>Delete</button>
+                                <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._getUsersService.updateFun(userdata.id)}>Delete</button>
                             </td>
                         `, row);
                     }
@@ -170,25 +190,7 @@ export class Root extends LitElement {
             console.log("No users found.");
         }
     }
-    
-    
-    
-    
-    
-    
-    // private async deleteUser(userId: number): Promise<void> {
-    //     try {
-    //         const result: any = await this._userService.deleteFun(userId);
-    //         console.log(result);
-    //     } catch (error) {
-    //         // Handle any errors that occur during the deletion process
-    //         console.error("Error deleting user:", error);
-    //     }      
-    // }
-
-
-
-    
+      
 
     /**
      * Renders the components

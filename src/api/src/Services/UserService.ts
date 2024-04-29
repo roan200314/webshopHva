@@ -7,6 +7,7 @@ import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { plainToClass } from "class-transformer";
 import { UserDto } from "../Models/Dto/User/UserDto";
+import { AuthorizationLevel } from "../Enumerations/AuthorizationLevel";
 
 /**
  * A service handles user related operations including registration and login.
@@ -94,6 +95,32 @@ export class UserService {
         await this.usersRepository.delete(id);
         return { message: "User removed successfully" };
     }
+/**
+ * Updates a user by their ID.
+ *
+ * @param {number} id - The ID of the user to update.
+ * @param {AuthorizationLevel} newAuthenticationLevel - The new authentication level for the user.
+ * @return {Promise<{ message: string }>} - Returns a promise that resolves once the user's authentication level is updated.
+ * 
+ */
+
+public async updateAuthenticationLevelById(id: number, newAuthenticationLevel: AuthorizationLevel): Promise<{ message: string }> {
+    const user = await this.usersRepository.findOne({where: {id}});
+
+    // Check if the user exists
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    // Update the authentication level
+    user.authorizationLevel = newAuthenticationLevel;
+
+    // Save the changes
+    await this.usersRepository.save(user);
+
+    return { message: "User's authentication level updated successfully" };
+}
+
 
     /**
      * Retrieves all users from the database.
