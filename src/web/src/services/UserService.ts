@@ -112,7 +112,7 @@ export class UserService {
 
     public async deleteFun(id: number): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
-        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/delete/${id}`, {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}users/${id}`, {
             method: "DELETE",
             headers: { ...headers, authorization: `Bearer ${token}` },
         });
