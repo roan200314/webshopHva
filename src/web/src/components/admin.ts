@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, css, html } from "lit";
+import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { OrderItemService } from "../services/OrderItemService";
 import { TokenService } from "../services/TokenService";
@@ -151,15 +151,17 @@ export class Root extends LitElement {
     
                     const row: any = document.createElement("tr");
     
-                    row.innerHTML = html `
-                        <td>${userdata.id}</td>
-                        <td>${userdata.name}</td>
-                        <td>${userdata.email}</td>
-                        <td>${userdata.authorizationLevel}</td>
-                        <td>
-                            //eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                            <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(userdata.id)}>Delete</button>
-                        </td>`;
+                    if (this._isLoggedIn) {
+                        render(html`
+                            <td>${userdata.id}</td>
+                            <td>${userdata.name}</td>
+                            <td>${userdata.email}</td>
+                            <td>${userdata.authorizationLevel}</td>
+                            <td>
+                                <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._deleteUserService.deleteFun(userdata.id)}>Delete</button>
+                            </td>
+                        `, row);
+                    }
                     
                     allUsersTable.appendChild(row);
                 });
@@ -168,6 +170,8 @@ export class Root extends LitElement {
             console.log("No users found.");
         }
     }
+    
+    
     
     
     
