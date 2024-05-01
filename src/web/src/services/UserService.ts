@@ -124,19 +124,20 @@ export class UserService {
     
     }
 
-    public async updateFun(id: number): Promise<void> {
+    public async updateFun(userId: number, newAuthorizationLevel: string): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
-        const response: Response = await fetch(`${viteConfiguration.API_URL}users/${id}`, {
-            method: "UPDATE",
-            headers: { ...headers, authorization: `Bearer ${token}` },
+        const response: Response = await fetch(`${viteConfiguration.API_URL}update/${userId}`, {
+            method: "POST",
+            headers: { ...headers, authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ authorizationLevel: newAuthorizationLevel }),
         });
     
         if (!response.ok) {
             console.error(response);
         }
-        alert("User deleted succesfully");
-    
+        alert("User " + userId + " authorization level updated successfully");
     }
+    
 
     /**
      * Handles adding an order item to the cart of the current user. Requires a valid token.

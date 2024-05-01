@@ -4,7 +4,7 @@ import { OrderItemService } from "../services/OrderItemService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { OrderItem, UserData} from "@shared/types";
+import { AuthorizationLevel, OrderItem, UserData } from "@shared/types";
 
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
@@ -92,7 +92,6 @@ export class Root extends LitElement {
     private _lastname: string = "";
 
     public async connectedCallback(): Promise<void> {
-
         super.connectedCallback();
 
         await this.getWelcome();
@@ -115,28 +114,31 @@ export class Root extends LitElement {
 
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
-    
+
         if (result && result.length > 0) {
             const allordersTable: HTMLTableSectionElement | null = document.getElementById(
                 "allOrdersTable",
             ) as HTMLTableSectionElement;
             if (allordersTable) {
                 allordersTable.innerHTML = "";
-                
+
                 result.forEach((orderdata) => {
                     console.log("orders:", orderdata);
-                    
+
                     const row: any = document.createElement("tr");
-                    
+
                     if (this._isLoggedIn) {
-                        render(html`
-                            <td>${orderdata.id}</td>
-                            <td>${orderdata.description}</td>
-                            <td>${orderdata.name}</td>
-                            <td>${orderdata.price}</td>                         
-                            `, row);
+                        render(
+                            html`
+                                <td>${orderdata.id}</td>
+                                <td>${orderdata.description}</td>
+                                <td>${orderdata.name}</td>
+                                <td>${orderdata.price}</td>
+                            `,
+                            row,
+                        );
                     }
-                    
+
                     allordersTable.appendChild(row);
                     console.log("data found");
                 });
@@ -158,31 +160,84 @@ export class Root extends LitElement {
 
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
-           
+
         if (result && result.length > 0) {
             const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
                 "allUsersTable",
             ) as HTMLTableSectionElement;
             if (allUsersTable) {
                 allUsersTable.innerHTML = "";
-    
+
                 result.forEach((userdata) => {
                     console.log("User:", userdata);
-    
+
                     const row: any = document.createElement("tr");
-    
+
                     if (this._isLoggedIn) {
-                        render(html`
-                            <td>${userdata.id}</td>
-                            <td>${userdata.name}</td>
-                            <td>${userdata.email}</td>
-                            <td>${userdata.authorizationLevel}</td>
-                            <td>
-                                <button class="btn btn-danger delete-btn" @click=${async (): Promise<void> => await this._getUsersService.updateFun(userdata.id)}>Delete</button>
-                            </td>
-                        `, row);
+                        render(
+                            html`
+                                <td>${userdata.id}</td>
+                                <td>${userdata.name}</td>
+                                <td>${userdata.email}</td>
+                                <td>
+                                    <select
+                                         @change=${(e: Event): Promise<void> =>
+                                            this.handleAuthorizationLevelChange(e, userdata.id)}
+                                    >
+                                        <option
+                                            value="${AuthorizationLevel.EMPLOYEE}"
+                                            ?selected=${userdata.authorizationLevel ===
+                                            AuthorizationLevel.EMPLOYEE}
+                                        >
+                                            Employee
+                                        </option>
+                                        <option
+                                            value="${AuthorizationLevel.USER}"
+                                            ?selected=${userdata.authorizationLevel ===
+                                            AuthorizationLevel.USER}
+                                        >
+                                            User
+                                        </option>
+                                        <option
+                                            value="${AuthorizationLevel.ADMIN}"
+                                            ?selected=${userdata.authorizationLevel ===
+                                            AuthorizationLevel.ADMIN}
+                                        >
+                                            Admin
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button
+                                        class="btn btn-danger delete-btn"
+                                        @click=${async (): Promise<void> =>
+                                            await this._getUsersService.deleteFun(userdata.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                    <button
+                                        class="btn btn-blue update-btn"
+                                        @click=${async (): Promise<void> => {
+                                            const authorizationLevelString: any =
+                                                userdata.authorizationLevel?.toString();
+                                            if (authorizationLevelString) {
+                                                await this._getUsersService.updateFun(
+                                                    userdata.id,
+                                                    authorizationLevelString,
+                                                );
+                                            } else {
+                                                console.error("Authorization level is undefined");
+                                            }
+                                        }}
+                                    >
+                                        update
+                                    </button>
+                                </td>
+                            `,
+                            row,
+                        );
                     }
-                    
+
                     allUsersTable.appendChild(row);
                 });
             }
@@ -190,7 +245,18 @@ export class Root extends LitElement {
             console.log("No users found.");
         }
     }
-      
+
+    public async handleAuthorizationLevelChange(e: Event, userId: number): Promise<void> {
+        const selectElement: any = e.target as HTMLSelectElement;
+        const newAuthorizationLevel: any = selectElement.value as AuthorizationLevel;
+
+        try {
+            await this._getUsersService.updateFun(userId, newAuthorizationLevel);
+            console.log("Authorization level updated successfully");
+        } catch (error) {
+            console.error("Failed to update authorization level:", error);
+        }
+    }
 
     /**
      * Renders the components

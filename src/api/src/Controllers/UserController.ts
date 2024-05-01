@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@ne
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { CartItemService } from "../Services/CartItemService";
 import { UserService } from "../Services/UserService";
-import { UserDto } from "src/Models/Dto/User/UserDto";
+import { AuthorizationLevel } from "@shared/types/UserData";
 
 @ApiTags("Users")
 @Controller("users")
@@ -22,15 +22,18 @@ export class UserController {
         return await this.userService.deleteUserById(id);
     }
 
-    @HttpCode(HttpStatus.OK)
-    @Post("update/:id")
-    @ApiBearerAuth()
-    @ApiOperation({ summary: "Updates the user based on id" })
-    @ApiResponse({ status: 200, description: "User updated" })
-    public async updateUser(@Param("id") id: number, @Body() updateUserDto: UserDto): Promise<{ message: string }> {
-        await this.userService.updateAuthenticationLevelById(id, updateUserDto);
-        return { message: "User updated successfully" };
-    }
+// Update the updateUser method in your controller to accept the new authorization level
+@HttpCode(HttpStatus.OK)
+@Post("update/:id")
+@ApiBearerAuth()
+@ApiOperation({ summary: "Updates the user's authorization level based on ID" })
+@ApiResponse({ status: 200, description: "User's authorization level updated" })
+public async updateUser(@Param("id") id: number, @Body() updateData: { authorizationLevel: AuthorizationLevel }): Promise<{ message: string }> {
+    await this.userService.updateAuthenticationLevelById(id, updateData.authorizationLevel);
+    return { message: "User's authorization level updated successfully" };
+}
+
+    
 
     @ApiOperation({ summary: "Get a welcome message for the user" })
     @ApiResponse({ status: 200, description: "Successful retrieval of welcome message" })
