@@ -85,6 +85,8 @@ export class UserService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
+
+
     /**
      * Deletes a user by their ID.
      *
@@ -98,7 +100,7 @@ export class UserService {
 
 
     public async updateAuthenticationLevelById(id: number, newAuthenticationLevel: AuthorizationLevel): Promise<{ message: string }> {
-        const user = await this.usersRepository.findOne({ where: { id } });
+        const user: any = await this.usersRepository.findOne({ where: { id } });
     
         // Check if the user exists
         if (!user) {

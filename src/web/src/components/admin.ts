@@ -4,7 +4,7 @@ import { OrderItemService } from "../services/OrderItemService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { AuthorizationLevel, OrderItem, UserData } from "@shared/types";
+import { OrderItem, UserData } from "@shared/types";
 
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
@@ -181,27 +181,22 @@ export class Root extends LitElement {
                                 <td>${userdata.email}</td>
                                 <td>
                                     <select
-                                         @change=${(e: Event): Promise<void> =>
+                                        @change=${(e: Event): Promise<void> =>
                                             this.handleAuthorizationLevelChange(e, userdata.id)}
                                     >
                                         <option
                                             value="${AuthorizationLevel.EMPLOYEE}"
-                                            ?selected=${userdata.authorizationLevel ===
-                                            AuthorizationLevel.EMPLOYEE}
                                         >
                                             Employee
                                         </option>
+
                                         <option
                                             value="${AuthorizationLevel.USER}"
-                                            ?selected=${userdata.authorizationLevel ===
-                                            AuthorizationLevel.USER}
                                         >
                                             User
                                         </option>
                                         <option
                                             value="${AuthorizationLevel.ADMIN}"
-                                            ?selected=${userdata.authorizationLevel ===
-                                            AuthorizationLevel.ADMIN}
                                         >
                                             Admin
                                         </option>
