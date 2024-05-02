@@ -20,8 +20,8 @@ enum RouterPage {
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
  */
-@customElement("webshop-root")
-export class Root extends LitElement {
+@customElement("admin")
+export class Admin extends LitElement {
     public static styles = css`
         header {
             background-color: #fbfbfa;

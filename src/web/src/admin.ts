@@ -1,1 +1,1 @@
-export * from "./components/admin";
+export * from "./components/Admin";
