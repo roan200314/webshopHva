@@ -160,18 +160,17 @@ export class Root extends LitElement {
     }
 
     private async getAdmin(): Promise<void> {
-        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
+        const result: UserData | undefined = await this._userService.getUserData();
         if (result) {
             const adminNameDiv: HTMLElement | null = document.getElementById("adminName");
             if (adminNameDiv) {
-                adminNameDiv.innerText = "Hi admin " + `${result.name}`;
+                adminNameDiv.innerText = "Hi " + result.authorizationLevel + ` ${result.name}`;
             }
         }
     }
 
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
-
         if (result && result.length > 0) {
             const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
                 "allUsersTable",
@@ -190,6 +189,7 @@ export class Root extends LitElement {
                                 <td>${userdata.id}</td>
                                 <td>${userdata.name}</td>
                                 <td>${userdata.email}</td>
+                                <td>${userdata.authorizationLevel}</td>
                                 <td>
                                     <select
                                         @change=${(e: Event): void => {
@@ -200,10 +200,9 @@ export class Root extends LitElement {
                                                 selectElement.value as AuthorizationLevel;
                                         }}
                                     >
-                                        <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
-
-                                        <option value="${AuthorizationLevel.USER}">User</option>
                                         <option value="${AuthorizationLevel.ADMIN}">Admin</option>
+                                        <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
+                                        <option value="${AuthorizationLevel.USER}">User</option>
                                     </select>
                                 </td>
                                 <td>
@@ -215,9 +214,8 @@ export class Root extends LitElement {
                                         Delete
                                     </button>
                                     <button
-                                        class="btn btn-blue update-btn"
+                                        class="btn btn-success update-btn"
                                         @click=${async (): Promise<void> => {
-                                            // Update the user using the selected value when the button is pressed
                                             if (this.selectedAuthorizationLevel) {
                                                 await this._getUsersService.updateFun(
                                                     userdata.id,

@@ -20,6 +20,8 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Authorization</th>
+                    <th>Change Authorization to:</th>
+
                 </tr>
             </thead>
             <tbody id="allUsersTable">
@@ -29,9 +31,18 @@
     </div>
     <div class="orders">
         <p id="titelOrder">All Orders</p>
-        <tbody id="allOrdersTable">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Game ID</th>
+                    <th>Game Name</th>
+                    <th>Game price</th>
+                </tr>
+            </thead>
+            <tbody id="allOrdersTable">
             <!-- order data komt hier -->
-        </tbody>
+            </tbody>
+        </table>
     </div>
     <script src="/src/Admin.ts" type="module"></script>
 </body>

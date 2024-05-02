@@ -129,6 +129,18 @@ export class UserService {
         return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
 
+        /**
+     *
+     * @return {Promise<boolean>} - Returns true if user exists, false otherwise.
+     */
+        public async get1User(id: number): Promise<boolean> {
+            const user: User = await this.usersRepository.findOne({
+                where: { id },
+            });
+            return !!user;
+        }
+
+
     /**
      * Checks whether a user with a certain email exists.
      *
@@ -141,6 +153,8 @@ export class UserService {
         });
         return !!user;
     }
+
+
 
     /**
      * Generates a hash for a password.

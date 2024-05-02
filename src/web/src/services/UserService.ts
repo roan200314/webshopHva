@@ -110,6 +110,22 @@ export class UserService {
         return (await responses.json()) as UserData[];
     }
 
+    public async getUserData(): Promise<UserData | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
+        const responses: Response = await fetch(`${viteConfiguration.API_URL}users/user`, {
+            method: "get",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+
+        if (!responses.ok) {
+            console.error(responses);
+
+            return undefined;
+        }
+
+        return (await responses.json()) as UserData;
+    }
+
     public async deleteFun(id: number): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/${id}`, {
