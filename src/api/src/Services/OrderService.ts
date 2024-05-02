@@ -56,7 +56,31 @@ export class OrderService {
      * @param id - The ID of the order item to delete.
      * @returns {Promise<void>}
      */
-    public async deleteOrderItemById(id: number): Promise<void> {
+    public async deleteOrderItemById(id: number): Promise<{ message: string }> {
+        const orderItem: any = await this.orderItemRepository.findOne({ where: { id } });
+        if (!orderItem) {
+            return { message: "Order item not found" };
+        }
         await this.orderItemRepository.delete(id);
+        return { message: "User removed successfully" };
+    }
+
+    /**
+     * Updates an order item.
+     * @param id - The ID of the order item to update.
+     * @param orderItem - The updated order item.
+     * @returns {Promise<OrderItem>}
+     */
+    public async updateOrderItem(id: number, orderItem: OrderItem): Promise<OrderItem> {
+        // Retrieve the order item by its ID
+        const osda: any = await this.orderItemRepository.findOne({ where: { id } });
+
+        // Check if the order item exists
+        if (!osda) {
+            throw new Error("Order item not found");
+        }
+        // Update the order item
+        await this.orderItemRepository.update(id, orderItem);
+        return await this.orderItemRepository.findOne({ where: { id } });
     }
 }

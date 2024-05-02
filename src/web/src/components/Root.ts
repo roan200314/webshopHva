@@ -291,6 +291,16 @@ export class Root extends LitElement {
                           </button>`
                         : nothing
                 }
+
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.updateOrderItem(orderItem)}
+                          >
+                              Update
+                          </button>`
+                        : nothing
+                }
             </div>
         `;
     }
@@ -332,6 +342,23 @@ export class Root extends LitElement {
         }
 
         alert("Order item deleted successfully");
+    }
+
+    private async updateOrderItem(orderItem: OrderItem): Promise<void> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/update/${orderItem.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderItem),
+        });
+
+        if (!response.ok) {
+            console.error(response);
+            throw new Error("Failed to update order item");
+        }
+
+        alert("Order item updated successfully");
     }
 
     /**

@@ -38,7 +38,16 @@ export class OrderItemController {
     @Delete(":id")
     @ApiOperation({ summary: "Deletes an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item deleted" })
-    public async deleteOrderItemById(@Param("id", ParseIntPipe) id: number): Promise<void> {
+    public async deleteOrderItemById(@Param("id", ParseIntPipe) id: number): Promise<{ message: string }> {
         return await this.orderService.deleteOrderItemById(id);
     }
+
+    @Public()
+    @Post("update/:id")
+    @ApiOperation({ summary: "Updates an order item by its ID" })
+    @ApiResponse({ status: 200, description: "Order Item updated" })
+    public async updateOrderItemById(@Param("id", ParseIntPipe) id: number, @Body() orderItem: OrderItem): Promise<OrderItem> {
+        return this.orderService.updateOrderItem(id, orderItem);
+    }
+
 }
