@@ -112,8 +112,9 @@ export class UserService {
     
         // Save the changes
         await this.usersRepository.save(user);
+        console.log(user.authorizationLevel);
     
-        return { message: "User's authorization level updated successfully" };
+        return { message: "User " + user.id + " authorization level updated successfully" };
     }
     
 

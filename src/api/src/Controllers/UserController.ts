@@ -22,7 +22,6 @@ export class UserController {
         return await this.userService.deleteUserById(id);
     }
 
-    // Update the updateUser method in your controller to accept the new authorization level
     @HttpCode(HttpStatus.OK)
     @Post("update/:id")
     @ApiBearerAuth()
@@ -30,11 +29,13 @@ export class UserController {
     @ApiResponse({ status: 200, description: "User's authorization level updated" })
     public async updateUser(
         @Param("id") id: number,
-        @Body() updateData: { authorizationLevel: AuthorizationLevel },
+        @Body() updateData: { authorizationLevel: string }, 
     ): Promise<{ message: string }> {
-        await this.userService.updateAuthenticationLevelById(id, updateData.authorizationLevel);
-        return { message: "User's authorization level updated successfully" };
+        const authorizationLevel: AuthorizationLevel = updateData.authorizationLevel as AuthorizationLevel;
+        await this.userService.updateAuthenticationLevelById(id, authorizationLevel);
+        return { message: "User " + id +" authorization level updated successfully" };
     }
+    
 
     @ApiOperation({ summary: "Get a welcome message for the user" })
     @ApiResponse({ status: 200, description: "Successful retrieval of welcome message" })

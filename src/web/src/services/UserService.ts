@@ -126,7 +126,7 @@ export class UserService {
 
     public async updateFun(userId: number, newAuthorizationLevel: string): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
-        const response: Response = await fetch(`${viteConfiguration.API_URL}update/${userId}`, {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}users/update/${userId}`, {
             method: "POST",
             headers: { ...headers, authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify({ authorizationLevel: newAuthorizationLevel }),
@@ -135,7 +135,7 @@ export class UserService {
         if (!response.ok) {
             console.error(response);
         }
-        alert("User " + userId + " authorization level updated successfully");
+        alert("User " + userId + " authorization level updated successfully to " + newAuthorizationLevel +"");
     }
     
 

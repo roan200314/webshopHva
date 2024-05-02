@@ -16,12 +16,23 @@ enum RouterPage {
 }
 
 /**
+ * @enum AuthorizationLevel
+ * @description An enumeration of authorization levels.
+ */
+export enum AuthorizationLevel {
+    USER = "user",
+    EMPLOYEE = "employee",
+    ADMIN = "admin",
+}
+
+
+/**
  * Custom element based on Lit for the header of the webshop.
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
  */
-@customElement("admin")
-export class Admin extends LitElement {
+@customElement("admin-root")
+export class Root extends LitElement {
     public static styles = css`
         header {
             background-color: #fbfbfa;
