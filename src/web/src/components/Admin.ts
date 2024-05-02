@@ -25,7 +25,6 @@ export enum AuthorizationLevel {
     ADMIN = "admin",
 }
 
-
 /**
  * Custom element based on Lit for the header of the webshop.
  *
@@ -101,6 +100,7 @@ export class Root extends LitElement {
     private _name: string = "";
     private _firstname: string = "";
     private _lastname: string = "";
+    private selectedAuthorizationLevel: string = "";
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -192,25 +192,18 @@ export class Root extends LitElement {
                                 <td>${userdata.email}</td>
                                 <td>
                                     <select
-                                        @change=${(e: Event): Promise<void> =>
-                                            this.handleAuthorizationLevelChange(e, userdata.id)}
+                                        @change=${(e: Event): void => {
+                                            // Store the selected value when the option is changed
+                                            const selectElement: HTMLSelectElement =
+                                                e.target as HTMLSelectElement;
+                                            this.selectedAuthorizationLevel =
+                                                selectElement.value as AuthorizationLevel;
+                                        }}
                                     >
-                                        <option
-                                            value="${AuthorizationLevel.EMPLOYEE}"
-                                        >
-                                            Employee
-                                        </option>
+                                        <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
 
-                                        <option
-                                            value="${AuthorizationLevel.USER}"
-                                        >
-                                            User
-                                        </option>
-                                        <option
-                                            value="${AuthorizationLevel.ADMIN}"
-                                        >
-                                            Admin
-                                        </option>
+                                        <option value="${AuthorizationLevel.USER}">User</option>
+                                        <option value="${AuthorizationLevel.ADMIN}">Admin</option>
                                     </select>
                                 </td>
                                 <td>
@@ -224,12 +217,11 @@ export class Root extends LitElement {
                                     <button
                                         class="btn btn-blue update-btn"
                                         @click=${async (): Promise<void> => {
-                                            const authorizationLevelString: any =
-                                                userdata.authorizationLevel?.toString();
-                                            if (authorizationLevelString) {
+                                            // Update the user using the selected value when the button is pressed
+                                            if (this.selectedAuthorizationLevel) {
                                                 await this._getUsersService.updateFun(
                                                     userdata.id,
-                                                    authorizationLevelString,
+                                                    this.selectedAuthorizationLevel,
                                                 );
                                             } else {
                                                 console.error("Authorization level is undefined");
