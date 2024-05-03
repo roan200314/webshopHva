@@ -6,6 +6,8 @@ import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
 
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyb2FuX2FsaGVsbHlAaG90bWFpbC5jb20iLCJuYW1lIjoicm9hbiIsImF1dGhvcml6YXRpb25MZXZlbCI6ImFkbWluIiwiaWF0IjoxNzE0NjY4MTUzLCJleHAiOjE3MTUyNzI5NTN9.ii3my56qs3VpqQdpTLSpgDxmUul1VoQqS2a7q7bq1WA
+
 /** Enumeration to keep track of all the different pages */
 enum RouterPage {
     Home = "orderItems",
@@ -102,6 +104,7 @@ export class Root extends LitElement {
     private _lastname: string = "";
     private selectedAuthorizationLevel: string = "";
 
+
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
@@ -145,6 +148,13 @@ export class Root extends LitElement {
                                 <td>${orderdata.description}</td>
                                 <td>${orderdata.name}</td>
                                 <td>${orderdata.price}</td>
+                                <button
+                                        class="btn btn-danger delete-btn"
+                                        @click=${async (): Promise<void> =>
+                                            await this._orderItemService.deleteOrderFunction(orderdata.id)}
+                                    >
+                                        Delete
+                                    </button>
                             `,
                             row,
                         );
@@ -261,17 +271,17 @@ export class Root extends LitElement {
         return html`
             <header>
                 <nav>
-                    <div
-                        class="logo"
-                        @click=${(): void => {
-                            this._currentPage = RouterPage.Home;
-                        }}
-                    >
-                        <img src="/assets/img/logo.png" alt="Logo" />
+                    <div class="logo">
+                        <a href="/index.html">
+                            <img src="/assets/img/logo.png" alt="Logo" />
+                        </a>
                     </div>
                 </nav>
             </header>
-            <footer>Copyright &copy; Luca Stars 2024</footer>
+            <footer>
+                Copyright &copy; Luca Stars 2024
+            </footer>
         `;
     }
+    
 }

@@ -132,12 +132,11 @@ export class UserService {
             method: "DELETE",
             headers: { ...headers, authorization: `Bearer ${token}` },
         });
-    
+        
         if (!response.ok) {
             console.error(response);
         }
-        alert("User deleted succesfully");
-    
+        confirm("Are you sure you wanna delete user " + id + "?");
     }
 
     public async updateFun(userId: number, newAuthorizationLevel: string): Promise<void> {

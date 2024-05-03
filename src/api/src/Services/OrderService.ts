@@ -20,4 +20,15 @@ export class OrderService {
     public async getAllOrderItems(): Promise<OrderItem[]> {
         return await this.orderItemRepository.find();
     }
+
+        /**
+     * Deletes a order by their ID.
+     *
+     * @param {number} id - The ID of the order to delete.
+     * @return {Promise<void>} - Returns a promise that resolves once the oreder is deleted.
+     */
+        public async deleteOrderById(id: number): Promise<{ message: string }> {
+            await this.orderItemRepository.delete(id);
+            return { message: "order removed successfully" };
+        }
 }
