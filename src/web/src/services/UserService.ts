@@ -127,16 +127,18 @@ export class UserService {
     }
 
     public async deleteFun(id: number): Promise<void> {
-        const token: string | undefined = this._tokenService.getToken();
-        const response: Response = await fetch(`${viteConfiguration.API_URL}users/${id}`, {
-            method: "DELETE",
-            headers: { ...headers, authorization: `Bearer ${token}` },
-        });
-        
-        if (!response.ok) {
-            console.error(response);
+        const confirmed: any = confirm("Are you sure you want to delete user " + id + "?");
+        if (confirmed) {
+            const token: string | undefined = this._tokenService.getToken();
+            const response: Response = await fetch(`${viteConfiguration.API_URL}users/${id}`, {
+                method: "DELETE",
+                headers: { ...headers, authorization: `Bearer ${token}` },
+            });
+    
+            if (!response.ok) {
+                console.error(response);
+            }
         }
-        confirm("Are you sure you wanna delete user " + id + "?");
     }
 
     public async updateFun(userId: number, newAuthorizationLevel: string): Promise<void> {
@@ -150,7 +152,7 @@ export class UserService {
         if (!response.ok) {
             console.error(response);
         }
-        alert("User " + userId + " authorization level updated successfully to " + newAuthorizationLevel +"");
+        alert("User " + userId + " authorization level updated successfully to " + newAuthorizationLevel +".");
     }
     
 

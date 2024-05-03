@@ -8,15 +8,6 @@ import { OrderItem, UserData } from "@shared/types";
 
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyb2FuX2FsaGVsbHlAaG90bWFpbC5jb20iLCJuYW1lIjoicm9hbiIsImF1dGhvcml6YXRpb25MZXZlbCI6ImFkbWluIiwiaWF0IjoxNzE0NjY4MTUzLCJleHAiOjE3MTUyNzI5NTN9.ii3my56qs3VpqQdpTLSpgDxmUul1VoQqS2a7q7bq1WA
 
-/** Enumeration to keep track of all the different pages */
-enum RouterPage {
-    Home = "orderItems",
-    Login = "login",
-    Register = "register",
-    products = "product",
-    Admin = "admin",
-}
-
 /**
  * @enum AuthorizationLevel
  * @description An enumeration of authorization levels.
@@ -80,8 +71,6 @@ export class Root extends LitElement {
         }
     `;
 
-    @state()
-    private _currentPage: RouterPage = RouterPage.Home;
 
     @state()
     private _isLoggedIn: boolean = false;
@@ -137,7 +126,6 @@ export class Root extends LitElement {
                 allordersTable.innerHTML = "";
 
                 result.forEach((orderdata) => {
-                    console.log("orders:", orderdata);
 
                     const row: any = document.createElement("tr");
 
@@ -189,7 +177,6 @@ export class Root extends LitElement {
                 allUsersTable.innerHTML = "";
 
                 result.forEach((userdata) => {
-                    console.log("User:", userdata);
 
                     const row: any = document.createElement("tr");
 
@@ -231,6 +218,7 @@ export class Root extends LitElement {
                                                     userdata.id,
                                                     this.selectedAuthorizationLevel,
                                                 );
+                                                window.location.reload();
                                             } else {
                                                 console.error("Authorization level is undefined");
                                             }
