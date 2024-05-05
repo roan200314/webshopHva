@@ -1,5 +1,6 @@
 import { LitElement, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { TokenService } from "../services/TokenService";
 
 @customElement("create-order-item")
 export class CreateOrderItem extends LitElement {
@@ -9,6 +10,9 @@ export class CreateOrderItem extends LitElement {
         price: 0,
         description: "",
     };
+
+    private _tokenService: TokenService = new TokenService();
+
     public render(): TemplateResult {
         return html`
             <form @submit=${this.createOrderItem}>
@@ -55,15 +59,17 @@ export class CreateOrderItem extends LitElement {
      */
     private async createOrderItem(event: Event): Promise<void> {
         event.preventDefault();
+        const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(this.orderItem),
         });
         if (!response.ok) {
-            console.error(response);
+            alert("Could not create order item");
         }
         alert("Order item created successfully");
     }

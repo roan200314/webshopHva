@@ -350,10 +350,12 @@ export class Root extends LitElement {
     }
 
     private async getSingleOrder(orderItem: OrderItem): Promise<OrderItem> {
+        const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
             },
         });
 
@@ -371,10 +373,12 @@ export class Root extends LitElement {
     }
 
     private async deleteOrderItem(orderItem: OrderItem): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
             },
         });
 
@@ -386,10 +390,12 @@ export class Root extends LitElement {
     }
 
     private async updateOrderItem(orderItem: OrderItem): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/update/${orderItem.id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
             },
             body: JSON.stringify(orderItem),
         });
