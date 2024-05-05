@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { OrderService } from "../Services/OrderService";
 import { Public } from "../Auth/Decorators/public.decorator";
 import { OrderItem } from "../Models/Entities/OrderItem";
@@ -18,7 +18,7 @@ export class OrderItemController {
         return this.orderService.getAllOrderItems();
     }
 
-    @Public()
+    @ApiBearerAuth()
     @Post("create")
     @ApiOperation({ summary: "Creates a new order item" })
     @ApiResponse({ status: 201, description: "Order Item created" })
@@ -26,7 +26,7 @@ export class OrderItemController {
         return this.orderService.createOrderItem(orderItem);
     }
 
-    @Public()
+    @ApiBearerAuth()
     @Get(":id")
     @ApiOperation({ summary: "Retrieves an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item" })
@@ -34,7 +34,7 @@ export class OrderItemController {
         return this.orderService.getOrderItemById(id);
     }
 
-    @Public()
+    @ApiBearerAuth()
     @Delete(":id")
     @ApiOperation({ summary: "Deletes an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item deleted" })
@@ -42,7 +42,7 @@ export class OrderItemController {
         return await this.orderService.deleteOrderItemById(id);
     }
 
-    @Public()
+    @ApiBearerAuth()
     @Post("update/:id")
     @ApiOperation({ summary: "Updates an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item updated" })

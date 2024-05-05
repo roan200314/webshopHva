@@ -346,7 +346,6 @@ export class Root extends LitElement {
         orderItem.name = nameElement.value;
         orderItem.description = descriptionElement.value;
         orderItem.price = parseFloat(priceElement.value);
-        console.log(orderItem);
         await this.updateOrderItem(orderItem);
     }
 
@@ -359,13 +358,11 @@ export class Root extends LitElement {
         });
 
         if (!response.ok) {
-            console.error(response);
             throw new Error("Failed to fetch order item");
         }
 
         try {
             const orderItemData: OrderItem = await response.json();
-            console.log(orderItemData);
             return orderItemData;
         } catch (error) {
             console.error("Error parsing JSON:", error);
@@ -382,7 +379,6 @@ export class Root extends LitElement {
         });
 
         if (!response.ok) {
-            console.error(response);
             throw new Error("Failed to delete order item");
         }
 
@@ -399,7 +395,6 @@ export class Root extends LitElement {
         });
 
         if (!response.ok) {
-            console.error(response);
             throw new Error("Failed to update order item");
         }
 

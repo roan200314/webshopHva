@@ -62,7 +62,7 @@ export class OrderService {
             return { message: "Order item not found" };
         }
         await this.orderItemRepository.delete(id);
-        return { message: "User removed successfully" };
+        return { message: "Order removed successfully" };
     }
 
     /**
@@ -73,10 +73,10 @@ export class OrderService {
      */
     public async updateOrderItem(id: number, orderItem: OrderItem): Promise<OrderItem> {
         // Retrieve the order item by its ID
-        const osda: any = await this.orderItemRepository.findOne({ where: { id } });
+        const orderToUpdate: any = await this.orderItemRepository.findOne({ where: { id } });
 
         // Check if the order item exists
-        if (!osda) {
+        if (!orderToUpdate) {
             throw new Error("Order item not found");
         }
         // Update the order item
