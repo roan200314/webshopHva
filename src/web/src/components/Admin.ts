@@ -1,12 +1,10 @@
 import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { OrderItemService } from "../services/OrderItemService";
-import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyb2FuX2FsaGVsbHlAaG90bWFpbC5jb20iLCJuYW1lIjoicm9hbiIsImF1dGhvcml6YXRpb25MZXZlbCI6ImFkbWluIiwiaWF0IjoxNzE0NjY4MTUzLCJleHAiOjE3MTUyNzI5NTN9.ii3my56qs3VpqQdpTLSpgDxmUul1VoQqS2a7q7bq1WA
 
 /**
  * @enum AuthorizationLevel
@@ -71,13 +69,8 @@ export class Root extends LitElement {
         }
     `;
 
-
     @state()
     private _isLoggedIn: boolean = false;
-
-    @state()
-    private _orderItems: OrderItem[] = [];
-
     @state()
     public _cartItemsCount: number = 0;
 
@@ -85,14 +78,7 @@ export class Root extends LitElement {
     private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
     private _deleteUserService: UserService = new UserService();
-    private _tokenService: TokenService = new TokenService();
-    private _email: string = "";
-    private _password: string = "";
-    private _name: string = "";
-    private _firstname: string = "";
-    private _lastname: string = "";
     private selectedAuthorizationLevel: string = "";
-
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -118,43 +104,42 @@ export class Root extends LitElement {
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
 
-        if (result && result.length > 0) {
-            const allordersTable: HTMLTableSectionElement | null = document.getElementById(
-                "allOrdersTable",
-            ) as HTMLTableSectionElement;
-            if (allordersTable) {
-                allordersTable.innerHTML = "";
-
-                result.forEach((orderdata) => {
-
-                    const row: any = document.createElement("tr");
-
-                    if (this._isLoggedIn) {
-                        render(
-                            html`
-                                <td>${orderdata.id}</td>
-                                <td>${orderdata.description}</td>
-                                <td>${orderdata.name}</td>
-                                <td>${orderdata.price}</td>
-                                <button
-                                        class="btn btn-danger delete-btn"
-                                        @click=${async (): Promise<void> =>
-                                            await this._orderItemService.deleteOrderFunction(orderdata.id)}
-                                    >
-                                        Delete
-                                    </button>
-                            `,
-                            row,
-                        );
-                    }
-
-                    allordersTable.appendChild(row);
-                    console.log("data found");
-                });
-            }
-        } else {
+        if (!result || result.length === 0) {
             console.log("No orders found.");
+            return;
         }
+
+        const allOrdersTable: HTMLTableSectionElement | null = document.getElementById(
+            "allOrdersTable",
+        ) as HTMLTableSectionElement;
+        if (!allOrdersTable) return;
+
+        allOrdersTable.innerHTML = "";
+
+        result.forEach((orderdata) => {
+            const row: any = document.createElement("tr");
+            if (!this._isLoggedIn) return;
+
+            render(
+                html`
+                    <td>${orderdata.id}</td>
+                    <td>${orderdata.description}</td>
+                    <td>${orderdata.name}</td>
+                    <td>${orderdata.price}</td>
+                    <button
+                        class="btn btn-danger delete-btn"
+                        @click=${async (): Promise<void> =>
+                            await this._orderItemService.deleteOrderFunction(orderdata.id)}
+                    >
+                        Delete
+                    </button>
+                `,
+                row,
+            );
+
+            allOrdersTable.appendChild(row);
+            console.log("data found");
+        });
     }
 
     private async getAdmin(): Promise<void> {
@@ -169,75 +154,69 @@ export class Root extends LitElement {
 
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
-        if (result && result.length > 0) {
-            const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
-                "allUsersTable",
-            ) as HTMLTableSectionElement;
-            if (allUsersTable) {
-                allUsersTable.innerHTML = "";
-
-                result.forEach((userdata) => {
-
-                    const row: any = document.createElement("tr");
-
-                    if (this._isLoggedIn) {
-                        render(
-                            html`
-                                <td>${userdata.id}</td>
-                                <td>${userdata.name}</td>
-                                <td>${userdata.email}</td>
-                                <td>${userdata.authorizationLevel}</td>
-                                <td>
-                                    <select
-                                        @change=${(e: Event): void => {
-                                            // Store the selected value when the option is changed
-                                            const selectElement: HTMLSelectElement =
-                                                e.target as HTMLSelectElement;
-                                            this.selectedAuthorizationLevel =
-                                                selectElement.value as AuthorizationLevel;
-                                        }}
-                                    >
-                                        <option value="${AuthorizationLevel.ADMIN}">Admin</option>
-                                        <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
-                                        <option value="${AuthorizationLevel.USER}">User</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button
-                                        class="btn btn-danger delete-btn"
-                                        @click=${async (): Promise<void> =>
-                                            await this._getUsersService.deleteFun(userdata.id)}
-                                    >
-                                        Delete
-                                    </button>
-                                    <button
-                                        class="btn btn-success update-btn"
-                                        @click=${async (): Promise<void> => {
-                                            if (this.selectedAuthorizationLevel) {
-                                                await this._getUsersService.updateFun(
-                                                    userdata.id,
-                                                    this.selectedAuthorizationLevel,
-                                                );
-                                                window.location.reload();
-                                            } else {
-                                                console.error("Authorization level is undefined");
-                                            }
-                                        }}
-                                    >
-                                        update
-                                    </button>
-                                </td>
-                            `,
-                            row,
-                        );
-                    }
-
-                    allUsersTable.appendChild(row);
-                });
-            }
-        } else {
-            console.log("No users found.");
+        if (!result || result.length === 0) {
+            return;
         }
+
+        const allUsersTable: HTMLTableSectionElement | null = document.getElementById(
+            "allUsersTable",
+        ) as HTMLTableSectionElement;
+        if (!allUsersTable) return;
+        allUsersTable.innerHTML = "";
+        result.forEach((userdata) => {
+            const row: any = document.createElement("tr");
+
+            if (!this._isLoggedIn) return;
+
+            render(
+                html`
+                    <td>${userdata.id}</td>
+                    <td>${userdata.name}</td>
+                    <td>${userdata.email}</td>
+                    <td>${userdata.authorizationLevel}</td>
+                    <td>
+                        <select
+                            @change=${(e: Event): void => {
+                                const selectElement: HTMLSelectElement = e.target as HTMLSelectElement;
+                                this.selectedAuthorizationLevel = selectElement.value as AuthorizationLevel;
+                            }}
+                        >
+                            <option value="${AuthorizationLevel.ADMIN}">Admin</option>
+                            <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
+                            <option value="${AuthorizationLevel.USER}">User</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> =>
+                                await this._deleteUserService.deleteFun(userdata.id)}
+                        >
+                            Delete
+                        </button>
+                        <button
+                            class="btn btn-success update-btn"
+                            @click=${async (): Promise<void> => {
+                                if (this.selectedAuthorizationLevel) {
+                                    await this._getUsersService.updateFun(
+                                        userdata.id,
+                                        this.selectedAuthorizationLevel,
+                                    );
+                                    window.location.reload();
+                                } else {
+                                    console.error("Authorization level is undefined");
+                                }
+                            }}
+                        >
+                            update
+                        </button>
+                    </td>
+                `,
+                row,
+            );
+
+            allUsersTable.appendChild(row);
+        });
     }
 
     public async handleAuthorizationLevelChange(e: Event, userId: number): Promise<void> {
@@ -266,10 +245,7 @@ export class Root extends LitElement {
                     </div>
                 </nav>
             </header>
-            <footer>
-                Copyright &copy; Luca Stars 2024
-            </footer>
+            <footer>Copyright &copy; Luca Stars 2024</footer>
         `;
     }
-    
 }

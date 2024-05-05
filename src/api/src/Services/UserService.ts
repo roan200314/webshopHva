@@ -106,13 +106,11 @@ export class UserService {
         if (!user) {
             throw new Error("User not found");
         }
-    
         // Update the authorization level
         user.authorizationLevel = newAuthenticationLevel;
     
         // Save the changes
         await this.usersRepository.save(user);
-        console.log(user.authorizationLevel);
     
         return { message: "User " + user.id + " authorization level updated successfully" };
     }
@@ -133,7 +131,7 @@ export class UserService {
      *
      * @return {Promise<boolean>} - Returns true if user exists, false otherwise.
      */
-        public async get1User(id: number): Promise<boolean> {
+        public async getUser(id: number): Promise<boolean> {
             const user: User = await this.usersRepository.findOne({
                 where: { id },
             });
