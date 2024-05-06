@@ -5,7 +5,6 @@ import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
 
-
 /**
  * @enum AuthorizationLevel
  * @description An enumeration of authorization levels.

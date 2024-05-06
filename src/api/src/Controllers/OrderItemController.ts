@@ -7,8 +7,7 @@ import { OrderItem } from "../Models/Entities/OrderItem";
 @ApiTags("OrderItems")
 @Controller("orderItems")
 export class OrderItemController {
-    public constructor(private orderService: OrderService) {
-    }
+    public constructor(private orderService: OrderService) {}
 
     @Public()
     @Get("all")
@@ -46,8 +45,10 @@ export class OrderItemController {
     @Post("update/:id")
     @ApiOperation({ summary: "Updates an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item updated" })
-    public async updateOrderItemById(@Param("id", ParseIntPipe) id: number, @Body() orderItem: OrderItem): Promise<OrderItem> {
+    public async updateOrderItemById(
+        @Param("id", ParseIntPipe) id: number,
+        @Body() orderItem: OrderItem,
+    ): Promise<OrderItem> {
         return this.orderService.updateOrderItem(id, orderItem);
     }
-
 }

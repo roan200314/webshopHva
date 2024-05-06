@@ -85,8 +85,6 @@ export class UserService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
-
-
     /**
      * Deletes a user by their ID.
      *
@@ -98,24 +96,24 @@ export class UserService {
         return { message: "User removed successfully" };
     }
 
-
-    public async updateAuthenticationLevelById(id: number, newAuthenticationLevel: AuthorizationLevel): Promise<{ message: string }> {
+    public async updateAuthenticationLevelById(
+        id: number,
+        newAuthenticationLevel: AuthorizationLevel,
+    ): Promise<{ message: string }> {
         const user: any = await this.usersRepository.findOne({ where: { id } });
-    
+
         // Check if the user exists
         if (!user) {
             throw new Error("User not found");
         }
         // Update the authorization level
         user.authorizationLevel = newAuthenticationLevel;
-    
+
         // Save the changes
         await this.usersRepository.save(user);
-    
+
         return { message: "User " + user.id + " authorization level updated successfully" };
     }
-    
-
 
     /**
      * Retrieves all users from the database.
@@ -127,17 +125,16 @@ export class UserService {
         return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
 
-        /**
+    /**
      *
      * @return {Promise<boolean>} - Returns true if user exists, false otherwise.
      */
-        public async getUser(id: number): Promise<boolean> {
-            const user: User = await this.usersRepository.findOne({
-                where: { id },
-            });
-            return !!user;
-        }
-
+    public async getUser(id: number): Promise<boolean> {
+        const user: User = await this.usersRepository.findOne({
+            where: { id },
+        });
+        return !!user;
+    }
 
     /**
      * Checks whether a user with a certain email exists.
@@ -151,8 +148,6 @@ export class UserService {
         });
         return !!user;
     }
-
-
 
     /**
      * Generates a hash for a password.
