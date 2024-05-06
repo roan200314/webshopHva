@@ -1,8 +1,8 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Request } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Request } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { CartItemService } from "../Services/CartItemService";
-import { CartItem } from "@shared/types";
+import { AuthorizationLevel, CartItem } from "@shared/types";
 import { UserService } from "../Services/UserService";
 import { AdminOnly } from "../Auth/Decorators/admin.decorator";
 
@@ -24,6 +24,21 @@ export class UserController {
     public async deleteUser(@Param("id") id: number): Promise<{ message: string }> {
         return await this.userService.deleteUserById(id);
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Post("update/:id")
+    @ApiBearerAuth()
+    @AdminOnly()
+    @ApiOperation({ summary: "Updates the user's authorization level based on ID" })
+    @ApiResponse({ status: 200, description: "User's authorization level updated" })
+    public async updateUser(
+        @Param("id") id: number,
+        @Body() updateData: { authorizationLevel: AuthorizationLevel },
+    ): Promise<{ message: string }> {
+        await this.userService.updateAuthenticationLevelById(id, updateData.authorizationLevel);
+        return { message: "User " + id +" authorization level updated successfully" };
+    }
+
 
     // gets name, cart items and email
     @ApiOperation({ summary: "Get a welcome message for the user" })
