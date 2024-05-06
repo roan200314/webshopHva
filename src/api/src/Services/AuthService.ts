@@ -94,5 +94,4 @@ export class AuthService {
     public async getAll(): Promise<UserDto[]> {
         return await this.usersService.getAllUsers();
     }
-
 }

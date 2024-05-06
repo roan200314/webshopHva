@@ -5,7 +5,6 @@ import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
 
-
 /**
  * @enum AuthorizationLevel
  * @description An enumeration of authorization levels.
@@ -22,7 +21,7 @@ export enum AuthorizationLevel {
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
  */
 @customElement("admin-root")
-export class Root extends LitElement {
+export class Admin extends LitElement {
     public static styles = css`
         header {
             background-color: #fbfbfa;

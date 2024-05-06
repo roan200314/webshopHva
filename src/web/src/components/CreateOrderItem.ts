@@ -17,18 +17,23 @@ export class CreateOrderItem extends LitElement {
         return html`
             <form @submit=${this.createOrderItem}>
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" @input=${this.updateName} required/>
+                <input type="text" id="name" name="name" @input=${this.updateName} required />
                 <label for="price">Price</label>
-                <input type="number" id="price" name="price" @input=${this.updatePrice} required>
+                <input type="number" id="price" name="price" @input=${this.updatePrice} required />
                 <label for="description">Description</label>
-                <textarea id="description" name="description" @input=${this.updateDescription} required></textarea>
+                <textarea
+                    id="description"
+                    name="description"
+                    @input=${this.updateDescription}
+                    required
+                ></textarea>
                 <button type="submit">Create</button>
             </form>
         `;
     }
     /**
      * Updates the name of the order item.
-     * @param event 
+     * @param event
      */
     private updateName(event: InputEvent): void {
         const input: HTMLInputElement = event.target as HTMLInputElement;
@@ -37,7 +42,7 @@ export class CreateOrderItem extends LitElement {
 
     /**
      * Updates the price of the order item.
-     * @param event 
+     * @param event
      */
     private updatePrice(event: InputEvent): void {
         const input: HTMLInputElement = event.target as HTMLInputElement;
@@ -46,7 +51,7 @@ export class CreateOrderItem extends LitElement {
 
     /**
      * Updates the description of the order item.
-     * @param event 
+     * @param event
      */
     private updateDescription(event: InputEvent): void {
         const input: HTMLInputElement = event.target as HTMLInputElement;
@@ -55,7 +60,7 @@ export class CreateOrderItem extends LitElement {
 
     /**
      * Creates an order item.
-     * @param event 
+     * @param event
      */
     private async createOrderItem(event: Event): Promise<void> {
         event.preventDefault();
@@ -71,6 +76,8 @@ export class CreateOrderItem extends LitElement {
         if (!response.ok) {
             alert("Could not create order item");
         }
-        alert("Order item created successfully");
+        else {
+            alert("Order item created successfully");
+        }
     }
 }

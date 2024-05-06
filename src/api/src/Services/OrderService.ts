@@ -12,8 +12,7 @@ export class OrderService {
         private orderRepository: Repository<Order>,
         @InjectRepository(OrderItem)
         private orderItemRepository: Repository<OrderItem>,
-    ) {
-    }
+    ) {}
     /**
      * Creates an order item.
      * @param createOrderItemDto - DTO containing the order item details.

@@ -3,12 +3,12 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagg
 import { OrderService } from "../Services/OrderService";
 import { Public } from "../Auth/Decorators/public.decorator";
 import { OrderItem } from "../Models/Entities/OrderItem";
+import { EmployeeOnly } from "../Auth/Decorators/employee.decorator";
 
 @ApiTags("OrderItems")
 @Controller("orderItems")
 export class OrderItemController {
-    public constructor(private orderService: OrderService) {
-    }
+    public constructor(private orderService: OrderService) {}
 
     @Public()
     @Get("all")
@@ -19,6 +19,7 @@ export class OrderItemController {
     }
 
     @ApiBearerAuth()
+    @EmployeeOnly()
     @Post("create")
     @ApiOperation({ summary: "Creates a new order item" })
     @ApiResponse({ status: 201, description: "Order Item created" })
@@ -26,7 +27,7 @@ export class OrderItemController {
         return this.orderService.createOrderItem(orderItem);
     }
 
-    @ApiBearerAuth()
+    @Public()
     @Get(":id")
     @ApiOperation({ summary: "Retrieves an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item" })
@@ -35,6 +36,7 @@ export class OrderItemController {
     }
 
     @ApiBearerAuth()
+    @EmployeeOnly()
     @Delete(":id")
     @ApiOperation({ summary: "Deletes an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item deleted" })
@@ -43,11 +45,14 @@ export class OrderItemController {
     }
 
     @ApiBearerAuth()
+    @EmployeeOnly()
     @Post("update/:id")
     @ApiOperation({ summary: "Updates an order item by its ID" })
     @ApiResponse({ status: 200, description: "Order Item updated" })
-    public async updateOrderItemById(@Param("id", ParseIntPipe) id: number, @Body() orderItem: OrderItem): Promise<OrderItem> {
+    public async updateOrderItemById(
+        @Param("id", ParseIntPipe) id: number,
+        @Body() orderItem: OrderItem,
+    ): Promise<OrderItem> {
         return this.orderService.updateOrderItem(id, orderItem);
     }
-
 }

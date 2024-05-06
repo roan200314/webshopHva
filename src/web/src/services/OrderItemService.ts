@@ -34,11 +34,12 @@ export class OrderItemService {
             method: "DELETE",
             headers: { ...headers, authorization: `Bearer ${token}` },
         });
-    
+
         if (!response.ok) {
             console.error(response);
         }
-        alert("item deleted succesfully");
-    
+        else {
+            alert("item deleted successfully");
+        }
     }
 }
