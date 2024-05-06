@@ -40,7 +40,12 @@ export class AuthService {
         const loginResult: User = await this.usersService.loginUser(loginUserDto);
 
         if (loginResult) {
-            const payload: { id: number; email: string; name: string; authorizationLevel: AuthorizationLevel } = {
+            const payload: {
+                id: number;
+                email: string;
+                name: string;
+                authorizationLevel: AuthorizationLevel;
+            } = {
                 id: loginResult.id,
                 email: loginResult.email,
                 name: loginResult.name,

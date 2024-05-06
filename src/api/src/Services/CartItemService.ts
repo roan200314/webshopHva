@@ -8,41 +8,38 @@ export class CartItemService {
     public constructor(
         @InjectRepository(CartItem)
         private cartItemRepository: Repository<CartItem>,
-    ) {
-    }
+    ) {}
 
-    public async getCartItemNames(userId: number): Promise<string[]> {
+    public async getCartItems(userId: number): Promise<CartItem[]> {
         const userCartItems: CartItem[] = await this.cartItemRepository.find({
             where: {
-                user: {id: userId}
+                user: { id: userId },
             },
-            relations: ["item"]
+            relations: ["item"],
         });
 
-        return userCartItems.map(cartItem => cartItem.item.name);
+        return userCartItems;
     }
 
-    public async addOrderItemToCart(userId: number, orderItemId: number): Promise<number> {
+    public async addOrderItemToCart(userId: number, orderItemId: number): Promise<CartItem[]> {
         const cartItem: CartItem | undefined = await this.cartItemRepository.findOne({
             where: {
-                user: {id: userId},
-                item: {id: orderItemId}
-            }
+                user: { id: userId },
+                item: { id: orderItemId },
+            },
         });
 
         if (cartItem) {
             cartItem.amount += 1;
             await this.cartItemRepository.save(cartItem);
-
-            return cartItem.amount;
         } else {
             await this.cartItemRepository.save({
-                user: {id: userId},
-                item: {id: orderItemId},
-                amount: 1
+                user: { id: userId },
+                item: { id: orderItemId },
+                amount: 1,
             });
-
-            return 1;
         }
+
+        return await this.getCartItems(userId);
     }
 }
