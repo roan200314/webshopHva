@@ -1,6 +1,10 @@
 import { LitElement, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { TokenService } from "../services/TokenService";
+import { UserService } from "../services/UserService";
+import { UserData } from "@shared/types";
+import { AuthorizationLevel } from "./Admin";
+
 
 @customElement("create-order-item")
 export class CreateOrderItem extends LitElement {
@@ -11,10 +15,16 @@ export class CreateOrderItem extends LitElement {
         description: "",
     };
 
-    private _tokenService: TokenService = new TokenService();
+    
 
-    public render(): TemplateResult {
-        return html`
+    private _tokenService: TokenService = new TokenService();
+    private _userService: UserService = new UserService();
+
+    public async render(): Promise<TemplateResult> {
+        const result: UserData | undefined = await this._userService.currentUser();
+        if (this._tokenService.getToken() && result && result?.authorizationLevel === AuthorizationLevel.ADMIN) {
+            console.log("result", result);
+            return html`
             <form @submit=${this.createOrderItem}>
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" @input=${this.updateName} required />
@@ -30,6 +40,9 @@ export class CreateOrderItem extends LitElement {
                 <button type="submit">Create</button>
             </form>
         `;
+        } else {
+            return html``;
+        }
     }
     /**
      * Updates the name of the order item.
