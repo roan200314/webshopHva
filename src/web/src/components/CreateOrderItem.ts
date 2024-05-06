@@ -8,6 +8,7 @@ import { AuthorizationLevel } from "./Admin";
 
 @customElement("create-order-item")
 export class CreateOrderItem extends LitElement {
+    
     @state()
     private orderItem: any = {
         name: "",
@@ -15,18 +16,37 @@ export class CreateOrderItem extends LitElement {
         description: "",
     };
 
+    @state()
+    private _isLoggedIn: boolean = false;
+
+    @state()
+    private _isEmployee: boolean = false;
+
+    public async connectedCallback(): Promise<void> {
+        super.connectedCallback();
+
+        await this.handleLogin();
+        this.render();
+    }
+
     private _tokenService: TokenService = new TokenService();
     private _userService: UserService = new UserService();
 
-    public async render(): Promise<TemplateResult> {
-        if (!this._tokenService.getToken()) return html``;
+    private async handleLogin(): Promise<void> {
+        if (this._tokenService.getToken()) {
+            this._isLoggedIn = true;
+        }
 
         const userData: UserData | undefined = await this._userService.getUserData();
-        if (!userData) return html``;
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        if (userData.authorizationLevel === AuthorizationLevel.ADMIN) {
-            return html`
+        this._isEmployee = !(!userData || userData.authorizationLevel !== AuthorizationLevel.ADMIN || userData.authorizationLevel !== AuthorizationLevel.ADMIN);
+    }
+
+    public render(): TemplateResult {
+        if (!this._isLoggedIn || !this._isEmployee) return html``;
+
+        return html`
             <form @submit=${this.createOrderItem}>
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" @input=${this.updateName} required />
@@ -42,10 +62,8 @@ export class CreateOrderItem extends LitElement {
                 <button type="submit">Create</button>
             </form>
         `;
-        } else {
-            return html``;
-        }
     }
+
     /**
      * Updates the name of the order item.
      * @param event
