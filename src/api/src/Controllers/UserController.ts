@@ -1,5 +1,5 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Request } from "@nestjs/common";
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Request } from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { CartItemService } from "../Services/CartItemService";
 import { CartItem } from "@shared/types";
@@ -35,7 +35,7 @@ export class UserController {
         return {
             user: req.user,
             cartItems: await this.cartItemService.getCartItems(req.user.id),
-            email: req.user.email,
+            email: req.user.email
         };
     }
 

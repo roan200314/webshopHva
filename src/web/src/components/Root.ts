@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, css, html, nothing } from "lit";
+import { css, html, HTMLTemplateResult, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { OrderItem } from "@shared/types/OrderItem";
@@ -455,6 +455,7 @@ export class Root extends LitElement {
             </div>
         `;
     }
+
     private changeToInputField(orderItem: OrderItem): void {
         if (!this.shadowRoot) {
             return;
@@ -506,8 +507,7 @@ export class Root extends LitElement {
         }
 
         try {
-            const orderItemData: OrderItem = await response.json();
-            return orderItemData;
+            return await response.json();
         } catch (error) {
             console.error("Error parsing JSON:", error);
             throw new Error("Failed to parse order item data");
