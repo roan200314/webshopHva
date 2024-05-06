@@ -19,6 +19,8 @@ export class CreateOrderItem extends LitElement {
     private _userService: UserService = new UserService();
 
     public async render(): Promise<TemplateResult> {
+        if (!this._tokenService.getToken()) return html``;
+
         const userData: UserData | undefined = await this._userService.getUserData();
         if (!userData) return html``;
 
