@@ -7,6 +7,7 @@ import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { plainToClass } from "class-transformer";
 import { UserDto } from "../Models/Dto/User/UserDto";
+import { AuthorizationLevel } from "@shared/types";
 
 /**
  * A service handles user related operations including registration and login.
@@ -24,8 +25,7 @@ export class UserService {
     public constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
-    ) {
-    }
+    ) {}
 
     /**
      * Registers a new user in the database.
@@ -85,6 +85,38 @@ export class UserService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
+
+
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param {number} id - The ID of the user to delete.
+     * @return {Promise<void>} - Returns a promise that resolves once the user is deleted.
+     */
+    public async deleteUserById(id: number): Promise<{ message: string }> {
+        await this.usersRepository.delete(id);
+        return { message: "User removed successfully" };
+    }
+
+
+    public async updateAuthenticationLevelById(id: number, newAuthenticationLevel: AuthorizationLevel): Promise<{ message: string }> {
+        const user: any = await this.usersRepository.findOne({ where: { id } });
+    
+        // Check if the user exists
+        if (!user) {
+            throw new Error("User not found");
+        }
+        // Update the authorization level
+        user.authorizationLevel = newAuthenticationLevel;
+    
+        // Save the changes
+        await this.usersRepository.save(user);
+    
+        return { message: "User " + user.id + " authorization level updated successfully" };
+    }
+    
+
+
     /**
      * Retrieves all users from the database.
      *
@@ -92,9 +124,20 @@ export class UserService {
      */
     public async getAllUsers(): Promise<UserDto[]> {
         const users: User[] = await this.usersRepository.find();
-        console.log(users);
         return users.map((user: User) => plainToClass(UserDto, user, { excludeExtraneousValues: true }));
     }
+
+        /**
+     *
+     * @return {Promise<boolean>} - Returns true if user exists, false otherwise.
+     */
+        public async getUser(id: number): Promise<boolean> {
+            const user: User = await this.usersRepository.findOne({
+                where: { id },
+            });
+            return !!user;
+        }
+
 
     /**
      * Checks whether a user with a certain email exists.
@@ -108,6 +151,8 @@ export class UserService {
         });
         return !!user;
     }
+
+
 
     /**
      * Generates a hash for a password.

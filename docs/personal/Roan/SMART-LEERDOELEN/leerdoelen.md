@@ -1,23 +1,97 @@
-## Toekomstgericht organiseren
+# SMART LEERDOELEN
 
-Binnen de komende vijf weken zal ik mijn begrip van privacykwesties vergroten en leren hoe ik gegevens op een ethisch verantwoorde manier kan beheren door het bekijken van ten minste vijf educatieve video's en het uitvoeren van online onderzoek naar ethische richtlijnen. Dit zal mijn professionele ontwikkeling bevorderen en mijn vermogen verbeteren om mijn werk op een ethisch verantwoorde manier uit te voeren.
+### Persoonlijk leiderschap
 
-Ik wil mijn begrip van privacykwesties vergroten en leren hoe ik gegevens op een ethisch verantwoorde manier kan beheren omdat ik geloof dat dit cruciaal is in mijn professionele groei. 
+## ondernemend zijn
 
-## Onderzoekend probleemoplossen
+**specifiek**
 
-Voor het einde van dit project identificeer ik minstens twee ontbrekende technische vaardigheden die nodig zijn voor mijn huidige softwareproject, en stel ik een actieplan op om deze vaardigheden te ontwikkelen.
+-Ik neem zelf graag het hef in handen, maar ik zou mijzelf hier nog graag willen verbeteren. Zo wil ik vaker ongevraagd zelf in actie schieten. Dit ga ik verbeteren door zelf direct stappen te nemen en niet te gaan afwachten.
 
-Door dit te doen, kan ik ervoor zorgen dat ik over de juiste vaardigheden beschik om de vereiste taken effectief uit te voeren en eventuele ontbrekende stukken in mijn kennis aan te pakken.
+**meetbaar**
 
-## Persoonlijk leiderschap
+-   Ik zal in dit blok minimaal 1 keer het gesprek leiden bij de PO en minimaal 3 keer ongevraagd in actie komen.
 
-Binnen de komende vijf weken zal ik regelmatig reflecteren op mijn eigen handelen en beslissingen, waarbij ik mijn sterke punten en valkuilen identificeer. Dit zal mij helpen om mijn persoonlijke ontwikkeling te bevorderen en mijn studie- en loopbaankeuzes effectiever te onderbouwen.
+**acceptabel**
 
-Het regelmatig reflecteren op mijn eigen handelen en beslissingen is cruciaal voor mijn persoonlijke ontwikkeling en groei. Door dit te doen, kan ik mijn sterke punten en valkuilen identificeren.
+-Dit leerdoel is cruciaal voor mijn professionele ontwikkeling dit komt omdat in het bedrijfsleven je ook soms een leidende rol moet gaan aannemen.
+
+**Realistisch**
+
+-   Ik kan deze doelstelling bereiken door vaker op plekken gesprekken, projecten te leiden zoals bijvoorbeeld op werk en school.
+
+**Tijdgebonden**
+
+-   Ik wil deze doelstelling dit blok behalen.
+
+### Onderzoekend probleemoplossen
+
+## Methodische probleemaanpak
+
+**specifiek**
+
+-   Aan het begin van het project zag ik dat ik kennis mis. Dit als in vergelijking met mijn teamgenoot: Bram. Die kennis wil ik zsm opdoen.
+
+**meetbaar**
+
+-   aan het einde van dit blok wil ik alle code begrijpen en goed kunnen uitleggen
+
+**acceptabel**
+
+-Het verbeteren van mijn technische vaardigheden is essentieel voor het succesvol afronden van mijn softwareproject.
+
+**Realistisch**
+
+-   Ik zal dit kunnen behalen door naar de code te bekijken en te achterhalen wat ik niet begrijp en daar meer informatie over te gaan zoeken.
+
+**Tijdgebonden**
+
+-   Ik wil deze doelstelling tot einde blok geven.
+
+## Persoonlijke ontwikkeling
+
+### Je past je gedrag aan op basis van feedback en inzichten
+
+**specifiek**
+
+-   Ik zou graag meer willen leren van feedback. Zo heb ik soms dat ik er niks mee doe, omdat ik denk dat ik wel beter weet.
+
+    **meetbaar**
+
+-   Ik zal voortaan luisteren naar feedback en dit bekijken hoe het mijn dagelijkse leven zal helpen.
+
+**acceptabel**
+
+-   Het verbeteren van mijn gedrag op feedback zal niet alleen mijn eigen productiviteit verhogen, maar ook de samenwerking en efficiëntie van het team bevorderen.
+
+**Realistisch**
+
+-   Ik kan dit doel bereiken door in te gaan leven op de feedback die ik krijg.
+
+**Tijdgebonden**
+
+-   Ik wil deze doelstelling binnen de komende 2 weken behalen
 
 ## Doelgericht interacteren
 
-Binnen de komende zes weken zal ik mijn samenwerkingsvaardigheden verbeteren door actief verantwoordelijkheid te nemen voor mijn rol binnen de groep en constructief samen te werken met mijn groepsleden, waarbij ik zowel mondelinge als schriftelijke communicatie effectief inzet.
+### Je checkt of aan de verwachtingen is voldaan
 
-Het verbeteren van mijn samenwerkingsvaardigheden is van cruciaal belang voor mijn professionele ontwikkeling en succes in teamomgevingen. Door actief verantwoordelijkheid te nemen voor mijn rol binnen de groep en constructief samen te werken met mijn groepsleden, kan ik effectiever bijdragen aan het bereiken van gemeenschappelijke doelen. 
+**specifiek**
+
+-   Ik zou graag meer aan verwachtingen willen voldoen. Dit komt omdat klanten heel precies hun details willen.
+
+    **meetbaar**
+
+-   Ik wil in dit blok meerdere gesprekken met de PO aan willen gaan om alles te weten over de verwachtingen.
+
+**acceptabel**
+
+-   Het voldoen aan de verwachtingen geeft je klant een veel beter gevoel dan als dat niet zo is
+
+**Realistisch**
+
+-   Ik kan dit doel bereiken door meer in detail te gaan met de PO.
+
+**Tijdgebonden**
+
+-   Ik wil deze doelstelling binnen de komende 6 weken behalen

@@ -12,6 +12,7 @@ enum RouterPage {
     Login = "login",
     Register = "register",
     products = "product",
+    Admin = "admin",
 }
 
 /**
@@ -47,6 +48,12 @@ export class Root extends LitElement {
             width: auto;
             height: 100px;
             cursor: pointer;
+        }
+
+        .order-item {
+            box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
         }
 
         .form {
@@ -173,7 +180,7 @@ export class Root extends LitElement {
         this._cartItemsCount = result.cartItems?.length || 0;
 
         alert(
-            `Hallo ${result.email}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
+            `Hallo ${result.name}!\r\n\r\nJe hebt de volgende producten in je winkelmandje:\r\n- ${
                 result.cartItems?.join("\r\n- ") || "Geen"
             }`,
         );
@@ -216,6 +223,9 @@ export class Root extends LitElement {
             case RouterPage.Register:
                 contentTemplate = this.renderRegister();
                 break;
+            case RouterPage.Admin:
+                contentTemplate = this.renderAdmin();
+                break;
             default:
                 contentTemplate = this.renderHome();
         }
@@ -233,7 +243,8 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderLogoutInNav()}
+                    ${this.renderProductInNav()} ${this.renderLogoutInNav()} 
+                    ${this.renderAdminInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -480,6 +491,21 @@ export class Root extends LitElement {
         `;
     }
 
+    private handleClick(): void {
+        const result: any = {
+            name: this._email,
+        };
+
+        console.log(result);
+    }
+
+    private renderAdmin(): TemplateResult {
+        return html`
+            <button @click=${this.handleClick}>Click me</button>
+            <div>Admin page van ${this._email}</div>
+        `;
+    }
+
     /**
      * Renders the login button in the navigation
      */
@@ -503,11 +529,26 @@ export class Root extends LitElement {
     private renderProductInNav(): TemplateResult {
         return html`
             <div>
-                <a href="../product-page.html">
+                <a href="/product-page.html">
                     <button>Products</button>
                 </a>
             </div>
         `;
+    }
+
+    /**
+     * Renders the product button in the navigation
+     */
+
+    private renderAdminInNav(): TemplateResult {
+        if (this._isLoggedIn === true) {
+            return html` <div>
+                <a href="/admin-page.html" target="">
+                    <button>Admin</button>
+                </a>
+            </div>`;
+        }
+        return html``;
     }
 
     /**

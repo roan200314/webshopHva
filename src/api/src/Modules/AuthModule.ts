@@ -30,5 +30,4 @@ config({ path: ".env.local", override: true });
     controllers: [AuthController],
     exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}

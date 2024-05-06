@@ -30,15 +30,15 @@ export class User {
     @Column({ type: "varchar", length: 255, nullable: true })
     public lastName?: string;
 
-    @OneToMany(_ => Address, address => address.user)
+    @OneToMany((_) => Address, (address) => address.user)
     public addresses: Address[];
 
-    @OneToMany(_ => Order, order => order.user)
+    @OneToMany((_) => Order, (order) => order.user)
     public orders: Order[];
 
     @Column({ type: "enum", enum: AuthorizationLevel, default: AuthorizationLevel.USER })
     public authorizationLevel: AuthorizationLevel;
 
-    @OneToMany(_ => CartItem, cartItem => cartItem.user)
+    @OneToMany((_) => CartItem, (cartItem) => cartItem.user)
     public cart: CartItem[];
 }

@@ -28,5 +28,4 @@ import { OrderItem } from "../Models/Entities/OrderItem";
     ],
     exports: [TypeOrmModule],
 })
-export class DatabaseModule {
-}
+export class DatabaseModule {}

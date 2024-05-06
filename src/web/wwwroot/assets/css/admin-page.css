@@ -1,0 +1,17 @@
+#adminName {
+    font-size: 25px;
+
+}
+
+#allUsersTitle {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+}
+
+#titelOrder {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+    font-size: 25px;
+}
