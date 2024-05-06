@@ -4,6 +4,7 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { CartItemService } from "../Services/CartItemService";
 import { CartItem } from "@shared/types";
 import { UserService } from "../Services/UserService";
+import { AdminOnly } from "../Auth/Decorators/admin.decorator";
 
 @ApiTags("Users")
 @Controller("users")
@@ -17,6 +18,7 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @Delete("/:id")
     @ApiBearerAuth()
+    @AdminOnly()
     @ApiOperation({ summary: "Deletes the user based on id" })
     @ApiResponse({ status: 200, description: "User deleted" })
     public async deleteUser(@Param("id") id: number): Promise<{ message: string }> {

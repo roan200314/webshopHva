@@ -8,6 +8,8 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "./Decorators/public.decorator";
+import { IS_ADMIN_KEY } from "./Decorators/admin.decorator";
+import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
 
 /**
  * AuthGuard class implements CanActivate interface to check if a route is
@@ -48,10 +50,11 @@ export class AuthGuard implements CanActivate {
 
         // Extracts token from the header of the request
         const token: string = this.extractTokenFromHeader(request);
+
         if (!token) {
-            // If no token is found, throws an unauthorized exception
             throw new UnauthorizedException();
         }
+
         try {
             // Verifies the token and assigns the payload to the request object.
             request["user"] = await this.jwtService.verifyAsync(token, {
@@ -60,6 +63,18 @@ export class AuthGuard implements CanActivate {
         } catch {
             throw new UnauthorizedException();
         }
+
+        const isAdminOnly: boolean = this.reflector.getAllAndOverride<boolean>(IS_ADMIN_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+
+        if (isAdminOnly) {
+            if (request.user.authorizationLevel !== AuthorizationLevel.ADMIN) {
+                throw new UnauthorizedException("Unauthorized access. Admin only.");
+            }
+        }
+
         return true;
     }
 
