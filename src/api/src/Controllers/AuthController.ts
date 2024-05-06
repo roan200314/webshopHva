@@ -9,8 +9,7 @@ import { UserDto } from "../Models/Dto/User/UserDto";
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-    public constructor(private authService: AuthService) {
-    }
+    public constructor(private authService: AuthService) {}
 
     @Public()
     @HttpCode(HttpStatus.OK)

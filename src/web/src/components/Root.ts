@@ -1,4 +1,4 @@
-import { HTMLTemplateResult, LitElement, TemplateResult, css, html, nothing } from "lit";
+import { LitElement, TemplateResult, css, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { OrderItem } from "@shared/types/OrderItem";
@@ -14,6 +14,7 @@ enum RouterPage {
     Login = "login",
     Register = "register",
     products = "product",
+    Admin = "admin",
     ShoppingCart = "shoppingCart",
     OrderConfirmation = "orderConfirmation",
     InfoConfirmation = "infoConfirmation",
@@ -57,6 +58,12 @@ export class Root extends LitElement {
             width: auto;
             height: 100px;
             cursor: pointer;
+        }
+
+        .order-item {
+            box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
         }
 
         .form {
@@ -347,6 +354,9 @@ export class Root extends LitElement {
             case RouterPage.InfoConfirmation:
                 contentTemplate = this._renderInfoConfirmation();
                 break;
+            case RouterPage.Admin:
+                contentTemplate = this.renderAdmin();
+                break;
             default:
                 contentTemplate = this.renderHome();
         }
@@ -364,7 +374,8 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderLogoutInNav()}
+                    ${this.renderProductInNav()} ${this.renderLogoutInNav()} 
+                    ${this.renderAdminInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -400,17 +411,142 @@ export class Root extends LitElement {
      */
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         return html`
-            <div class="order-item">
-                <h2>${orderItem.name}</h2>
-                <p>${orderItem.description}</p>
-                <p>€${orderItem.price}</p>
-                ${this._isLoggedIn
-                    ? html`<button @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}>
-                          Toevoegen aan winkelmandje
-                      </button>`
-                    : nothing}
+            <div class="order-item"></div>
+                <h2 id="name${orderItem.id}" @click=${(): Promise<OrderItem> => this.getSingleOrder(orderItem)}>${orderItem.name}</h2>
+                <p id="description${orderItem.id}">${orderItem.description}</p>
+                <p id="price${orderItem.id}">€${orderItem.price}</p>
+                ${
+                    this._isLoggedIn
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}
+                          >
+                              Toevoegen aan winkelmandje
+                          </button>`
+                        : nothing
+                }
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}
+                          >
+                              Verwijderen
+                          </button>`
+                        : nothing
+                }
+
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${ (): void =>  this.changeToInputField(orderItem)}
+                          >
+                              Edit
+                          </button>`
+                        : nothing
+                }
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.updateOrderItemLogic(orderItem)}
+                          >
+                              update
+                          </button>`
+                        : nothing
+                }
             </div>
         `;
+    }
+    private changeToInputField(orderItem: OrderItem): void {
+        if (!this.shadowRoot) {
+            return;
+        }
+        const nameElement: HTMLElement | null = this.shadowRoot?.getElementById(`name${orderItem.id}`);
+        const descriptionElement: HTMLElement | null = this.shadowRoot?.getElementById(`description${orderItem.id}`);
+        const priceElement: HTMLElement | null = this.shadowRoot?.getElementById(`price${orderItem.id}`);
+
+        if (!nameElement || !descriptionElement || !priceElement) {
+            return;
+        }
+
+        nameElement.innerHTML = `<input type="text" value="${orderItem.name}" id="names${orderItem.id}" />`;
+        descriptionElement.innerHTML = `<input type="text" value="${orderItem.description}" id="descriptions${orderItem.id}" />`;
+        priceElement.innerHTML = `<input type="number" value="${orderItem.price}" id="prices${orderItem.id}" />`;
+    }
+
+    private async updateOrderItemLogic(orderItem: OrderItem): Promise<void> {
+        if (!this.shadowRoot) {
+            return;
+        }
+
+        const nameElement: HTMLInputElement | null = this.shadowRoot?.getElementById(`names${orderItem.id}`) as HTMLInputElement;
+        const descriptionElement: HTMLInputElement | null = this.shadowRoot?.getElementById(`descriptions${orderItem.id}`) as HTMLInputElement;
+        const priceElement: HTMLInputElement | null = this.shadowRoot?.getElementById(`prices${orderItem.id}`) as HTMLInputElement;
+
+        if (!nameElement || !descriptionElement || !priceElement) {
+            return;
+        }
+
+        orderItem.name = nameElement.value;
+        orderItem.description = descriptionElement.value;
+        orderItem.price = parseFloat(priceElement.value);
+        await this.updateOrderItem(orderItem);
+    }
+
+    private async getSingleOrder(orderItem: OrderItem): Promise<OrderItem> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch order item");
+        }
+
+        try {
+            const orderItemData: OrderItem = await response.json();
+            return orderItemData;
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+            throw new Error("Failed to parse order item data");
+        }
+    }
+
+    private async deleteOrderItem(orderItem: OrderItem): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to delete order item");
+        }
+
+        alert("Order item deleted successfully");
+    }
+
+    private async updateOrderItem(orderItem: OrderItem): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/update/${orderItem.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(orderItem),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update order item");
+        }
+
+        alert("Order item updated successfully");
     }
 
     /**
@@ -483,6 +619,21 @@ export class Root extends LitElement {
                     door hier te klikken.
                 </div>
             </div>
+        `;
+    }
+
+    private handleClick(): void {
+        const result: any = {
+            name: this._email,
+        };
+
+        console.log(result);
+    }
+
+    private renderAdmin(): TemplateResult {
+        return html`
+            <button @click=${this.handleClick}>Click me</button>
+            <div>Admin page van ${this._email}</div>
         `;
     }
 
@@ -615,11 +766,26 @@ export class Root extends LitElement {
     private renderProductInNav(): TemplateResult {
         return html`
             <div>
-                <a href="../product-page.html">
+                <a href="/product-page.html">
                     <button>Products</button>
                 </a>
             </div>
         `;
+    }
+
+    /**
+     * Renders the product button in the navigation
+     */
+
+    private renderAdminInNav(): TemplateResult {
+        if (this._isLoggedIn === true) {
+            return html` <div>
+                <a href="/admin-page.html" target="">
+                    <button>Admin</button>
+                </a>
+            </div>`;
+        }
+        return html``;
     }
 
     /**

@@ -8,15 +8,14 @@ export class CartItemService {
     public constructor(
         @InjectRepository(CartItem)
         private cartItemRepository: Repository<CartItem>,
-    ) {
-    }
+    ) {}
 
     public async getCartItems(userId: number): Promise<CartItem[]> {
         const userCartItems: CartItem[] = await this.cartItemRepository.find({
             where: {
-                user: {id: userId}
+                user: { id: userId },
             },
-            relations: ["item"]
+            relations: ["item"],
         });
 
         return userCartItems;
@@ -25,9 +24,9 @@ export class CartItemService {
     public async addOrderItemToCart(userId: number, orderItemId: number): Promise<CartItem[]> {
         const cartItem: CartItem | undefined = await this.cartItemRepository.findOne({
             where: {
-                user: {id: userId},
-                item: {id: orderItemId}
-            }
+                user: { id: userId },
+                item: { id: orderItemId },
+            },
         });
 
         if (cartItem) {
@@ -35,9 +34,9 @@ export class CartItemService {
             await this.cartItemRepository.save(cartItem);
         } else {
             await this.cartItemRepository.save({
-                user: {id: userId},
-                item: {id: orderItemId},
-                amount: 1
+                user: { id: userId },
+                item: { id: orderItemId },
+                amount: 1,
             });
         }
 

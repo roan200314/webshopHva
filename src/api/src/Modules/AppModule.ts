@@ -16,6 +16,5 @@ import { AddressModule } from "./AddressModule";
 })
 export class AppModule {
     // @ts-expect-error Unused variables
-    public constructor(private _dataSource: DataSource) {
-    }
+    public constructor(private _dataSource: DataSource) {}
 }
