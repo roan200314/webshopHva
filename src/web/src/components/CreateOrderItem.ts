@@ -2,8 +2,8 @@ import { LitElement, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
-import { UserData } from "@shared/types";
 import { AuthorizationLevel } from "./Admin";
+import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
 
 @customElement("create-order-item")
@@ -36,11 +36,16 @@ export class CreateOrderItem extends LitElement {
         if (this._tokenService.getToken()) {
             this._isLoggedIn = true;
         }
+        else {
+            return;
+        }
 
-        const userData: UserData | undefined = await this._userService.getUserData();
+        const userData: UserHelloResponse | undefined = await this._userService.getWelcome();
+
+        if (!userData) return;
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        this._isEmployee = !(!userData || userData.authorizationLevel !== AuthorizationLevel.ADMIN || userData.authorizationLevel !== AuthorizationLevel.ADMIN);
+        this._isEmployee = !(!userData || (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE));
     }
 
     public render(): TemplateResult {
