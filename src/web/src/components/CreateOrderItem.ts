@@ -15,15 +15,15 @@ export class CreateOrderItem extends LitElement {
         description: "",
     };
 
-    
-
     private _tokenService: TokenService = new TokenService();
     private _userService: UserService = new UserService();
 
     public async render(): Promise<TemplateResult> {
-        const result: UserData | undefined = await this._userService.currentUser();
-        if (this._tokenService.getToken() && result && result?.authorizationLevel === AuthorizationLevel.ADMIN) {
-            console.log("result", result);
+        const userData: UserData | undefined = await this._userService.getUserData();
+        if (!userData) return html``;
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        if (userData.authorizationLevel === AuthorizationLevel.ADMIN) {
             return html`
             <form @submit=${this.createOrderItem}>
                 <label for="name">Name</label>
