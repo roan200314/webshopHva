@@ -280,17 +280,142 @@ export class Root extends LitElement {
      */
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         return html`
-            <div class="order-item">
-                <h2>${orderItem.name}</h2>
-                <p>${orderItem.description}</p>
-                <p>€${orderItem.price}</p>
-                ${this._isLoggedIn
-                    ? html`<button @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}>
-                          Toevoegen aan winkelmandje
-                      </button>`
-                    : nothing}
+            <div class="order-item"></div>
+                <h2 id="name${orderItem.id}" @click=${(): Promise<OrderItem> => this.getSingleOrder(orderItem)}>${orderItem.name}</h2>
+                <p id="description${orderItem.id}">${orderItem.description}</p>
+                <p id="price${orderItem.id}">€${orderItem.price}</p>
+                ${
+                    this._isLoggedIn
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}
+                          >
+                              Toevoegen aan winkelmandje
+                          </button>`
+                        : nothing
+                }
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}
+                          >
+                              Verwijderen
+                          </button>`
+                        : nothing
+                }
+
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${ (): void =>  this.changeToInputField(orderItem)}
+                          >
+                              Edit
+                          </button>`
+                        : nothing
+                }
+                ${
+                    this._isLoggedIn // should be admin
+                        ? html`<button
+                              @click=${async (): Promise<void> => await this.updateOrderItemLogic(orderItem)}
+                          >
+                              update
+                          </button>`
+                        : nothing
+                }
             </div>
         `;
+    }
+    private changeToInputField(orderItem: OrderItem): void {
+        if (!this.shadowRoot) {
+            return;
+        }
+        const nameElement: HTMLElement | null = this.shadowRoot?.getElementById(`name${orderItem.id}`);
+        const descriptionElement: HTMLElement | null = this.shadowRoot?.getElementById(`description${orderItem.id}`);
+        const priceElement: HTMLElement | null = this.shadowRoot?.getElementById(`price${orderItem.id}`);
+
+        if (!nameElement || !descriptionElement || !priceElement) {
+            return;
+        }
+
+        nameElement.innerHTML = `<input type="text" value="${orderItem.name}" id="names${orderItem.id}" />`;
+        descriptionElement.innerHTML = `<input type="text" value="${orderItem.description}" id="descriptions${orderItem.id}" />`;
+        priceElement.innerHTML = `<input type="number" value="${orderItem.price}" id="prices${orderItem.id}" />`;
+    }
+
+    private async updateOrderItemLogic(orderItem: OrderItem): Promise<void> {
+        if (!this.shadowRoot) {
+            return;
+        }
+    
+        const nameElement: HTMLInputElement | null = this.shadowRoot?.getElementById(`names${orderItem.id}`) as HTMLInputElement;
+        const descriptionElement: HTMLInputElement | null = this.shadowRoot?.getElementById(`descriptions${orderItem.id}`) as HTMLInputElement;
+        const priceElement: HTMLInputElement | null = this.shadowRoot?.getElementById(`prices${orderItem.id}`) as HTMLInputElement;
+    
+        if (!nameElement || !descriptionElement || !priceElement) {
+            return;
+        }
+    
+        orderItem.name = nameElement.value;
+        orderItem.description = descriptionElement.value;
+        orderItem.price = parseFloat(priceElement.value);
+        await this.updateOrderItem(orderItem);
+    }
+
+    private async getSingleOrder(orderItem: OrderItem): Promise<OrderItem> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch order item");
+        }
+
+        try {
+            const orderItemData: OrderItem = await response.json();
+            return orderItemData;
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+            throw new Error("Failed to parse order item data");
+        }
+    }
+
+    private async deleteOrderItem(orderItem: OrderItem): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${orderItem.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to delete order item");
+        }
+
+        alert("Order item deleted successfully");
+    }
+
+    private async updateOrderItem(orderItem: OrderItem): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/update/${orderItem.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(orderItem),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update order item");
+        }
+
+        alert("Order item updated successfully");
     }
 
     /**
