@@ -2,6 +2,7 @@ import { UserLoginFormModel } from "@shared/formModels/UserLoginFormModel";
 import { UserRegisterFormModel } from "@shared/formModels/UserRegisterFormModel";
 import { TokenService } from "./TokenService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { CartItem } from "@shared/types";
 import { UserData } from "@shared/types";
 
 const headers: { "Content-Type": string } = {
@@ -134,7 +135,7 @@ export class UserService {
                 method: "DELETE",
                 headers: { ...headers, authorization: `Bearer ${token}` },
             });
-    
+
             if (!response.ok) {
                 console.error(response);
             }
@@ -148,20 +149,20 @@ export class UserService {
             headers: { ...headers, authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify({ authorizationLevel: newAuthorizationLevel }),
         });
-    
+
         if (!response.ok) {
             console.error(response);
         }
         alert("User " + userId + " authorization level updated successfully to " + newAuthorizationLevel +".");
     }
-    
+
 
     /**
      * Handles adding an order item to the cart of the current user. Requires a valid token.
      *
      * @returns Current number of order items in the cart when successful, otherwise `false`.
      */
-    public async addOrderItemToCart(id: number): Promise<number | undefined> {
+    public async addOrderItemToCart(id: number): Promise<CartItem[] | undefined> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (!token) {
@@ -174,11 +175,11 @@ export class UserService {
         });
 
         if (!response.ok) {
-            console.error(response);
+            console.error(response.body);
 
             return undefined;
         }
 
-        return (await response.json()) as number;
+        return (await response.json()) as CartItem[];
     }
 }
