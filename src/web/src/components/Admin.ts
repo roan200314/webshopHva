@@ -244,7 +244,7 @@ export class Admin extends LitElement {
                     </div>
                 </nav>
             </header>
-            <footer>Copyright &copy; Luca Stars 2024</footer>
+
         `;
     }
 }
