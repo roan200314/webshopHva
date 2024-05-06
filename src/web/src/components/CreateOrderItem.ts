@@ -76,6 +76,8 @@ export class CreateOrderItem extends LitElement {
         if (!response.ok) {
             alert("Could not create order item");
         }
-        alert("Order item created successfully");
+        else {
+            alert("Order item created successfully");
+        }
     }
 }

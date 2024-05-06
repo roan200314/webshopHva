@@ -10,6 +10,7 @@ import { Request } from "express";
 import { IS_PUBLIC_KEY } from "./Decorators/public.decorator";
 import { IS_ADMIN_KEY } from "./Decorators/admin.decorator";
 import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
+import { IS_EMPLOYEE_KEY } from "./Decorators/employee.decorator";
 
 /**
  * AuthGuard class implements CanActivate interface to check if a route is
@@ -62,6 +63,17 @@ export class AuthGuard implements CanActivate {
             });
         } catch {
             throw new UnauthorizedException();
+        }
+
+        const isEmployeeOnly: boolean = this.reflector.getAllAndOverride<boolean>(IS_EMPLOYEE_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+
+        if (isEmployeeOnly) {
+            if (!(request.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || request.user.authorizationLevel === AuthorizationLevel.ADMIN)) {
+                throw new UnauthorizedException("Unauthorized access. Employee or higher only.");
+            }
         }
 
         const isAdminOnly: boolean = this.reflector.getAllAndOverride<boolean>(IS_ADMIN_KEY, [

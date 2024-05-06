@@ -38,6 +38,8 @@ export class OrderItemService {
         if (!response.ok) {
             console.error(response);
         }
-        alert("item deleted succesfully");
+        else {
+            alert("item deleted successfully");
+        }
     }
 }
