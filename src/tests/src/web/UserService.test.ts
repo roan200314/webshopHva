@@ -58,9 +58,9 @@ describe("User service", () => {
     it("login successful without valid token", async () => {
         // Arrange
         fetchMock.mockResponse(() => {
-            return { 
-                status: 200, 
-                body: JSON.stringify({}) 
+            return {
+                status: 200,
+                body: JSON.stringify({}),
             };
         });
 
@@ -77,11 +77,11 @@ describe("User service", () => {
     it("login successful with valid token", async () => {
         // Arrange
         fetchMock.mockResponse(() => {
-            return { 
-                status: 200, 
+            return {
+                status: 200,
                 body: JSON.stringify({
-                    token: "test-token"
-                }) 
+                    token: "test-token",
+                }),
             };
         });
 

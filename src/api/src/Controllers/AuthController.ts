@@ -5,12 +5,12 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags
 import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { UserDto } from "../Models/Dto/User/UserDto";
+import { AdminOnly } from "../Auth/Decorators/admin.decorator";
 
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-    public constructor(private authService: AuthService) {
-    }
+    public constructor(private authService: AuthService) {}
 
     @Public()
     @HttpCode(HttpStatus.OK)
@@ -38,6 +38,7 @@ export class AuthController {
 
     @HttpCode(HttpStatus.OK)
     @Get("getUsers")
+    @AdminOnly()
     @ApiBearerAuth()
     @ApiOperation({ summary: "Gets all users from the database" })
     @ApiConsumes("application/json")

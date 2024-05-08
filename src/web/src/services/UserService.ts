@@ -2,6 +2,8 @@ import { UserLoginFormModel } from "@shared/formModels/UserLoginFormModel";
 import { UserRegisterFormModel } from "@shared/formModels/UserRegisterFormModel";
 import { TokenService } from "./TokenService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { CartItem } from "@shared/types";
+import { UserData } from "@shared/types";
 
 const headers: { "Content-Type": string } = {
     "Content-Type": "application/json",
@@ -93,12 +95,59 @@ export class UserService {
         return (await response.json()) as UserHelloResponse;
     }
 
+    public async getUsers(): Promise<UserData[] | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
+        const responses: Response = await fetch(`${viteConfiguration.API_URL}auth/getUsers`, {
+            method: "get",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+
+        if (!responses.ok) {
+            console.error(responses);
+
+            return undefined;
+        }
+
+        return (await responses.json()) as UserData[];
+    }
+
+    public async deleteFun(id: number): Promise<void> {
+        const confirmed: any = confirm("Are you sure you want to delete user " + id + "?");
+        if (confirmed) {
+            const token: string | undefined = this._tokenService.getToken();
+            const response: Response = await fetch(`${viteConfiguration.API_URL}users/${id}`, {
+                method: "DELETE",
+                headers: { ...headers, authorization: `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                console.error(response);
+            }
+        }
+    }
+
+    public async updateFun(userId: number, newAuthorizationLevel: string): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}users/update/${userId}`, {
+            method: "POST",
+            headers: { ...headers, authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ authorizationLevel: newAuthorizationLevel }),
+        });
+
+        if (!response.ok) {
+            console.error(response);
+        }
+        alert(
+            "User " + userId + " authorization level updated successfully to " + newAuthorizationLevel + ".",
+        );
+    }
+
     /**
      * Handles adding an order item to the cart of the current user. Requires a valid token.
      *
      * @returns Current number of order items in the cart when successful, otherwise `false`.
      */
-    public async addOrderItemToCart(id: number): Promise<number | undefined> {
+    public async addOrderItemToCart(id: number): Promise<CartItem[] | undefined> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (!token) {
@@ -111,11 +160,11 @@ export class UserService {
         });
 
         if (!response.ok) {
-            console.error(response);
+            console.error(response.body);
 
             return undefined;
         }
 
-        return (await response.json()) as number;
+        return (await response.json()) as CartItem[];
     }
 }
