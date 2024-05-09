@@ -16,4 +16,7 @@ export class UserDto {
     @IsNotEmpty()
     @Expose()
     public name: string;
+
+    @Expose()
+    public authorizationLevel: string;
 }
