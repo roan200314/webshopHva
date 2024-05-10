@@ -13,8 +13,11 @@ en dat iedereen in het team op de hoogte is van de voortgang.
 minstens één sprint volgens de scrum methodiek vóór het einde van dit blok.
 
 **Reflectie:** Tijdens sprint 1 bleek dit doel lastig te behalen, aangezien het team nog op elkaar ingespeeld moest raken,
-en er bepaalde dingen niet helemaal duidelijk waren. Echter ben ik er vrij zeker van dat dit in aankomende sprints geen enkel probleem zal voren
-aangezien we nu weten wat er van ons verwacht wordt en hoe we dit moeten aanpakken. Daarnaast ging het sprint 1 qua procesmanagement al een stuk beter dan in voorgaande blokken.
+en er bepaalde zaken niet helemaal duidelijk waren.
+Echter ben ik er vrij zeker van dat dit in aankomende sprints geen enkel probleem zal vormen
+aangezien we nu weten wat er van ons verwacht wordt en hoe we dit moeten aanpakken.
+Daarnaast ging het sprint 1 qua procesmanagement al een stuk beter dan in voorgaande blokken. 
+Zaak is nu vooral om dit vast te houden en elkaar nog beter op de hoogte te houden van het werk dat gedaan moet worden.
 
 **Samenwerken:**
 
@@ -30,6 +33,8 @@ zelfs als ik denk dat ik het sneller kan doen.
 **Resultaat:** Het resultaat van deze acties zou moeten zijn dat ik werk uit handen geef, 
 wat anderen de kans geeft om te groeien en bij te dragen aan het succes van het team.
 
-**Reflectie:** Het was aanvankelijk moeilijk om taken uit handen te geven, 
-maar door bewust te delegeren heb ik gemerkt dat anderen kunnen groeien en bijdragen aan het succes van het team. 
-Dit heeft geleid tot een betere samenwerking en efficiënter projectmanagement.
+**Reflectie:** Alhoewel ik in het begin wat moeite had met het werk delegeren, zeker gezien het groepje in voorgaand blok,
+heb ik gemerkt dat dit tijdens sprint 1 prima ging.
+Iedereen had netjes zijn werk voor de deadline af, al was het werk niet altijd kwalitatief van hetzelfde niveau,
+was het qua quantity wel in orde.
+Ik ben ervan overtuigd dat dit in aankomende sprints alleen maar beter zal gaan, maar ik ben positief verrast door de resultaten van sprint 1.
