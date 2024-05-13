@@ -4,6 +4,7 @@ module nl.hva.webshopeditorapplication {
 
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 
     opens nl.hva.webshopeditorapplication to javafx.fxml;
     exports nl.hva.webshopeditorapplication;
