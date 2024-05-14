@@ -1,6 +1,7 @@
 package com.bramdekker.webshopeditor;
 
 import com.bramdekker.webshopeditor.services.DatabaseService;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -35,7 +36,8 @@ public class HelloController {
 
     private void updateWelcomeTextBasedOnConnectionValidity(Connection connection) {
         try {
-            welcomeText.setText(isConnectionValid(connection) ? "Database connection is working" : "Database connection is NOT working");
+            boolean connectionValid = isConnectionValid(connection);
+            Platform.runLater(() -> welcomeText.setText(connectionValid ? "Database connection is working" : "Database connection is NOT working"));
         } catch (SQLException ex) {
             showDatabaseConnectionFailedMessage();
             ex.printStackTrace();
