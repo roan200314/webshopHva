@@ -23,6 +23,7 @@ public class HelloController {
             .returnConnection()
             .thenApplyAsync(connection -> {
                 try {
+                    if (connection == null) return false;
                     return connection.isValid(2);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);

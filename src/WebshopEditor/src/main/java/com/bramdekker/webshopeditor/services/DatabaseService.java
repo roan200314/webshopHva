@@ -35,7 +35,8 @@ public class DatabaseService {
             try {
                 return DriverManager.getConnection(url, username, password);
             } catch (SQLException e) {
-                throw new RuntimeException("Error connecting to the database", e);
+                e.printStackTrace();
+                return null;
             }
         });
     }
