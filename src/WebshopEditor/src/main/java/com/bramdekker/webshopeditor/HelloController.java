@@ -24,7 +24,9 @@ public class HelloController {
             .thenApplyAsync(connection -> {
                 try {
                     if (connection == null) return false;
-                    return connection.isValid(2);
+                    boolean isValidConnection = connection.isValid(2);
+                    connection.close();
+                    return isValidConnection;
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
