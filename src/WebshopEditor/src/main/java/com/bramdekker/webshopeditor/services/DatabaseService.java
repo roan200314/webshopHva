@@ -16,7 +16,7 @@ public class DatabaseService {
     }
 
     public static DatabaseService getInstance() {
-        if(databaseService == null) {
+        if (databaseService == null) {
             databaseService = new DatabaseService();
         }
         return databaseService;

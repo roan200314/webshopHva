@@ -1,14 +1,11 @@
 package com.bramdekker.webshopeditor;
 
 import com.bramdekker.webshopeditor.services.DatabaseService;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
 
 public class HelloController {
     @FXML
