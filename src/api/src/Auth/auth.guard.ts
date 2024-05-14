@@ -8,6 +8,9 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "./Decorators/public.decorator";
+import { IS_ADMIN_KEY } from "./Decorators/admin.decorator";
+import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
+import { IS_EMPLOYEE_KEY } from "./Decorators/employee.decorator";
 
 /**
  * AuthGuard class implements CanActivate interface to check if a route is
@@ -22,8 +25,10 @@ export class AuthGuard implements CanActivate {
      * @param {JwtService} jwtService
      * @param {Reflector} reflector - An instance of the NestJS Reflector utility.
      */
-    public constructor(private jwtService: JwtService, private reflector: Reflector) {
-    }
+    public constructor(
+        private jwtService: JwtService,
+        private reflector: Reflector,
+    ) {}
 
     /**
      * Determines if user can access certain routes based on the token.
@@ -46,19 +51,42 @@ export class AuthGuard implements CanActivate {
 
         // Extracts token from the header of the request
         const token: string = this.extractTokenFromHeader(request);
+
         if (!token) {
-            // If no token is found, throws an unauthorized exception
             throw new UnauthorizedException();
         }
+
         try {
             // Verifies the token and assigns the payload to the request object.
             request["user"] = await this.jwtService.verifyAsync(token, {
                 secret: process.env.JWT_SECRET_KEY,
             });
-
         } catch {
             throw new UnauthorizedException();
         }
+
+        const isEmployeeOnly: boolean = this.reflector.getAllAndOverride<boolean>(IS_EMPLOYEE_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+
+        if (isEmployeeOnly) {
+            if (!(request.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || request.user.authorizationLevel === AuthorizationLevel.ADMIN)) {
+                throw new UnauthorizedException("Unauthorized access. Employee or higher only.");
+            }
+        }
+
+        const isAdminOnly: boolean = this.reflector.getAllAndOverride<boolean>(IS_ADMIN_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+
+        if (isAdminOnly) {
+            if (request.user.authorizationLevel !== AuthorizationLevel.ADMIN) {
+                throw new UnauthorizedException("Unauthorized access. Admin only.");
+            }
+        }
+
         return true;
     }
 
