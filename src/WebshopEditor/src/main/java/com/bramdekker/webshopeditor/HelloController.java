@@ -1,13 +1,14 @@
 package com.bramdekker.webshopeditor;
 
 import com.bramdekker.webshopeditor.services.DatabaseService;
+
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 public class HelloController {
     @FXML
@@ -17,38 +18,25 @@ public class HelloController {
     protected void onHelloButtonClick() {
         welcomeText.setText("Checking database connection...");
 
-        runDatabaseConnectionTask();
+        checkDatabaseConnection();
     }
 
-    private void runDatabaseConnectionTask() {
-        Task<Connection> connectionTask = new Task<>() {
-            @Override
-            protected Connection call() {
-                return DatabaseService.getInstance().returnConnection();
-            }
-        };
+    private void checkDatabaseConnection() {
+        CompletableFuture<Connection> future = DatabaseService.getInstance().returnConnection();
 
-        new Thread(connectionTask).start();
-
-        connectionTask.setOnSucceeded(workerStateEvent -> updateWelcomeTextBasedOnConnectionValidity(connectionTask.getValue()));
-        connectionTask.setOnFailed(workerStateEvent -> showDatabaseConnectionFailedMessage());
-    }
-
-    private void updateWelcomeTextBasedOnConnectionValidity(Connection connection) {
-        try {
-            boolean connectionValid = isConnectionValid(connection);
-            Platform.runLater(() -> welcomeText.setText(connectionValid ? "Database connection is working" : "Database connection is NOT working"));
-        } catch (SQLException ex) {
-            showDatabaseConnectionFailedMessage();
+        future.thenAccept(this::updateWelcomeText).exceptionally(ex -> {
             ex.printStackTrace();
-        }
+            return null;
+        });
     }
 
-    private boolean isConnectionValid(Connection connection) throws SQLException {
-        return connection.isValid(2);
-    }
-
-    private void showDatabaseConnectionFailedMessage() {
-        welcomeText.setText("Exception occurred: Database connection is NOT working");
+    private void updateWelcomeText(Connection connection) {
+        Platform.runLater(() -> {
+            try {
+                welcomeText.setText(connection.isValid(2) ? "Database connection is working" : "Database connection is NOT working");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
