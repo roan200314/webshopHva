@@ -126,17 +126,6 @@ export class UserService {
     }
 
     /**
-     *
-     * @return {Promise<boolean>} - Returns true if user exists, false otherwise.
-     */
-    public async getUser(id: number): Promise<boolean> {
-        const user: User = await this.usersRepository.findOne({
-            where: { id },
-        });
-        return !!user;
-    }
-
-    /**
      * Checks whether a user with a certain email exists.
      *
      * @param {string} email - The email to check.
