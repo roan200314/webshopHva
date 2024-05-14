@@ -41,6 +41,7 @@ dependencies {
     implementation('org.controlsfx:controlsfx:11.1.2')
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
     implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("io.github.cdimascio:dotenv-java:3.0.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
