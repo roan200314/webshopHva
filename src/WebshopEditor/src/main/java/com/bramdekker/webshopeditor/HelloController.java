@@ -22,21 +22,23 @@ public class HelloController {
     }
 
     private void checkDatabaseConnection() {
-        CompletableFuture<Connection> future = DatabaseService.getInstance().returnConnection();
-
-        future.thenAccept(this::updateWelcomeText).exceptionally(ex -> {
-            ex.printStackTrace();
-            return null;
-        });
+        DatabaseService.getInstance()
+            .returnConnection()
+            .thenApplyAsync(connection -> {
+                try {
+                    return connection.isValid(2);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            })
+            .thenAcceptAsync(this::updateWelcomeText)
+            .exceptionally(ex -> {
+                ex.printStackTrace();
+                return null;
+            });
     }
 
-    private void updateWelcomeText(Connection connection) {
-        Platform.runLater(() -> {
-            try {
-                welcomeText.setText(connection.isValid(2) ? "Database connection is working" : "Database connection is NOT working");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    private void updateWelcomeText(Boolean valid) {
+        Platform.runLater(() -> welcomeText.setText(valid ? "Database connection is working" : "Database connection is NOT working"));
     }
 }
