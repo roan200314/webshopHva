@@ -18,6 +18,6 @@ export class OrderItem {
     @Column({ type: "json", nullable: true })
     public imageURLs?: string[];
 
-    @ManyToOne(() => Order, order => order.products)
+    @ManyToOne(() => Order, (order) => order.products)
     public order: Order;
 }
