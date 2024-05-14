@@ -9,5 +9,4 @@ module com.bramdekker.webshopeditor {
 
     opens com.bramdekker.webshopeditor to javafx.fxml;
     exports com.bramdekker.webshopeditor;
-    exports com.bramdekker.webshopeditor.services;
 }
