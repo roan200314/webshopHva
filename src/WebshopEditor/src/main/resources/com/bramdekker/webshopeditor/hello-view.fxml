@@ -19,5 +19,6 @@
       <VBox.margin>
          <Insets />
       </VBox.margin></Button>
-   <Button fx:id="button_import" onAction="#importButtonClick" mnemonicParsing="false" text="Import from database" translateX="213.0" translateY="-60.0" />
+   <Button fx:id="button_import" mnemonicParsing="false" onAction="#importButtonClick" text="Import from database" translateX="213.0" translateY="-60.0" />
+   <Button fx:id="convertToCsv" mnemonicParsing="false" onAction="#convertToCsvClick" text="Export to csv" />
 </VBox>

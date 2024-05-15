@@ -7,9 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
+import java.io.*;
 import java.sql.*;
+import java.util.concurrent.ExecutionException;
 
 
+@SuppressWarnings("ALL")
 public class HelloController {
     @FXML
     private Label welcomeText;
@@ -19,6 +22,9 @@ public class HelloController {
 
     @FXML
     private Button button_import;
+
+    @FXML
+    private Button convertToCsv;
 
     @FXML
     private Button button_export;
@@ -56,41 +62,113 @@ public class HelloController {
     }
 
     @FXML
+    protected void exportButtonClick() {
+//        // Path to the CSV file to be exported
+//        String csvFilePath = "../orderitem_export.csv";
+//
+//        try {
+//            Connection connection = DatabaseService.getInstance().returnConnection().get();
+//            try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
+//                // Read the CSV file
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    // Split the line into individual values
+//                    String[] values = line.split(",");
+//
+//                    // Insert the values into the database
+//                    try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO orderitem (id, name, description, price) VALUES (?, ?, ?, ?)")) {
+//                        preparedStatement.setInt(1, Integer.parseInt(values[0].trim()));
+//                        preparedStatement.setString(2, values[1].trim());
+//                        preparedStatement.setString(3, values[2].trim());
+//                        preparedStatement.setFloat(4, Float.parseFloat(values[3].trim()));
+//
+//                        // Execute the insert statement
+//                        preparedStatement.executeUpdate();
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                        // Handle SQLException appropriately
+//                    }
+//                }
+//
+//                // Show a success message or update UI if needed
+//                Platform.runLater(() -> {
+//                    // Update UI or show a success message
+//                    textarea_text.setText("Data from " + csvFilePath + " imported into the database successfully.");
+//                });
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                // Handle IOException appropriately
+//            } finally {
+//                connection.close(); // Close the connection after use
+//            }
+//        } catch (InterruptedException | ExecutionException | SQLException e) {
+//            e.printStackTrace();
+//            // Handle InterruptedException, ExecutionException, and SQLException appropriately
+//        }
+    }
+
+
+    @FXML
+    protected void convertToCsvClick() {
+        //haal de text op uit de textarea
+        StringBuilder csvData = new StringBuilder();
+        csvData.append(textarea_text.getParagraphs());
+
+        // Schrijf de CSV-geformatteerde string naar een CSV-bestand
+        try (PrintWriter writer = new PrintWriter("orderitem_import.csv")) {
+            writer.write(csvData.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            // Behandel de uitzondering als het bestand niet gevonden is
+        }
+    }
+
+    @FXML
     protected void importButtonClick() {
         DatabaseService.getInstance()
-        .returnConnection()
+            .returnConnection()
             .thenAcceptAsync(connection -> {
                 try (Statement statement = connection.createStatement();
                      ResultSet resultSet = statement.executeQuery("SELECT * FROM orderitem")) {
-                    StringBuilder ordersText = new StringBuilder();
+
+                    // Bouw een StringBuilder op om de CSV-geformatteerde gegevens op te slaan
+                    StringBuilder csvData = new StringBuilder();
                     ResultSetMetaData metaData = resultSet.getMetaData();
                     int columnCount = metaData.getColumnCount();
-                    ordersText.append("id,\"name\", \"description\", \"price\"\n");
-                    while (resultSet.next()) {
-                            System.out.println(columnCount);
-                            // Retrieve data from the ResultSet
-                            int orderId = resultSet.getInt("id");
-                            String orderName = resultSet.getString("name");
-                            String orderDescription = resultSet.getString("description");
-                            float orderPrice = resultSet.getFloat("price");
 
-                        // Append the details of the current row to the StringBuilder
-                        ordersText.append(orderId)
-                            .append(",")
-                            .append("\"").append(orderName).append("\"") // Surround orderName with double quotes
-                            .append(",")
-                            .append("\"").append(orderDescription).append("\"")
-                            .append(",")
-                            .append("\"").append(orderPrice).append("\"")
-                            .append("\n");
-
+                    // Schrijf de kolomkoppen naar de CSV-geformatteerde string
+                    for (int i = 1; i <= columnCount; i++) {
+                        csvData.append("\"").append(metaData.getColumnName(i)).append("\"");
+                        if (i < columnCount) {
+                            csvData.append(",");
+                        }
                     }
-                    Platform.runLater(() -> textarea_text.setText(ordersText.toString()));
+                    csvData.append("\n");
+
+                    // Schrijf de gegevensrijen naar de CSV-geformatteerde string
+                    while (resultSet.next()) {
+                        for (int i = 1; i <= columnCount; i++) {
+                            String value = resultSet.getString(i);
+                            csvData.append("\"").append(value).append("\"");
+                            if (i < columnCount) {
+                                csvData.append(",");
+                            }
+                        }
+                        csvData.append("\n");
+                    }
+                    // Toon een succesbericht of werk de UI bij indien nodig
+                    Platform.runLater(() -> {
+                        // Werk de UI bij of toon een succesbericht
+                        String text = csvData.toString();
+                        textarea_text.setText(text);
+                    });
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    // Handle SQLException appropriately
+                    // Behandel de SQLException op de juiste manier
                 }
             });
-                }
-            }
+    }
 
+
+
+}
