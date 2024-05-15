@@ -7,10 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
 
 public class HelloController {
     @FXML
@@ -46,7 +44,7 @@ public class HelloController {
                 }
             })
             .thenAcceptAsync(this::updateWelcomeText)
-            .thenRun(this::selectDataFromOrderItem)
+            .thenRun(this::importButtonClick)
             .exceptionally(ex -> {
                 ex.printStackTrace();
                 return null;
@@ -57,25 +55,37 @@ public class HelloController {
         Platform.runLater(() -> welcomeText.setText(valid ? "Database connection is working" : "Database connection is NOT working"));
     }
 
-    private void selectDataFromOrderItem() {
+    @FXML
+    protected void importButtonClick() {
         DatabaseService.getInstance()
         .returnConnection()
             .thenAcceptAsync(connection -> {
                 try (Statement statement = connection.createStatement();
                      ResultSet resultSet = statement.executeQuery("SELECT * FROM orderitem")) {
+                    StringBuilder ordersText = new StringBuilder();
+                    ResultSetMetaData metaData = resultSet.getMetaData();
+                    int columnCount = metaData.getColumnCount();
+                    ordersText.append("id,\"name\", \"description\", \"price\"\n");
                     while (resultSet.next()) {
-                        // Retrieve data from the ResultSet
-                        int orderId = resultSet.getInt("id");
-                        var orderName = resultSet.getString("name");
-                        var orderDescription = resultSet.getString("description");
-                        float orderPrice = resultSet.getFloat("price");
+                            System.out.println(columnCount);
+                            // Retrieve data from the ResultSet
+                            int orderId = resultSet.getInt("id");
+                            String orderName = resultSet.getString("name");
+                            String orderDescription = resultSet.getString("description");
+                            float orderPrice = resultSet.getFloat("price");
 
-                        // Retrieve other columns similarly
+                        // Append the details of the current row to the StringBuilder
+                        ordersText.append(orderId)
+                            .append(",")
+                            .append("\"").append(orderName).append("\"") // Surround orderName with double quotes
+                            .append(",")
+                            .append("\"").append(orderDescription).append("\"")
+                            .append(",")
+                            .append("\"").append(orderPrice).append("\"")
+                            .append("\n");
 
-                        // Process or print the retrieved data
-                        textarea_text.setText("Order id: " + orderId + ". Order name: " + orderName + ". Order description: " + orderDescription + ". Order Price: $" + orderPrice + ",");
-                        // Print or process other columns similarly
                     }
+                    Platform.runLater(() -> textarea_text.setText(ordersText.toString()));
                 } catch (SQLException e) {
                     e.printStackTrace();
                     // Handle SQLException appropriately
