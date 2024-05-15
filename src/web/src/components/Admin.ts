@@ -1,3 +1,4 @@
+// Importeer de benodigde modules en services
 import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { OrderItemService } from "../services/OrderItemService";
@@ -7,7 +8,7 @@ import { OrderItem, UserData } from "@shared/types";
 
 /**
  * @enum AuthorizationLevel
- * @description An enumeration of authorization levels.
+ * @description Een enumeratie van autorisatieniveaus.
  */
 export enum AuthorizationLevel {
     USER = "user",
@@ -16,12 +17,13 @@ export enum AuthorizationLevel {
 }
 
 /**
- * Custom element based on Lit for the header of the webshop.
+ * Aangepast element gebaseerd op Lit voor de header van de webshop.
  *
- * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
+ * @todo De meeste logica in dit component is te simpel. Je moet het grootste deel vervangen door echte implementaties.
  */
 @customElement("admin-root")
 export class Admin extends LitElement {
+    // CSS-stijlen voor dit component
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -68,17 +70,20 @@ export class Admin extends LitElement {
         }
     `;
 
+    // States voor dit component
     @state()
     private _isLoggedIn: boolean = false;
     @state()
     public _cartItemsCount: number = 0;
 
+    // Initialisatie van services
     private _userService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
     private _deleteUserService: UserService = new UserService();
     private selectedAuthorizationLevel: string = "";
 
+    // Lifecycle-methode voor aangesloten component
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
@@ -89,7 +94,7 @@ export class Admin extends LitElement {
     }
 
     /**
-     * Check if the current token is valid and update the cart item total
+     * Controleer of het huidige token geldig is en werk het totale aantal winkelwagenitems bij
      */
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
@@ -100,11 +105,14 @@ export class Admin extends LitElement {
         }
     }
 
+    /**
+     * Haal bestellingen op en toon ze
+     */
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
 
         if (!result || result.length === 0) {
-            console.log("No orders found.");
+            console.log("Geen bestellingen gevonden.");
             return;
         }
 
@@ -130,27 +138,33 @@ export class Admin extends LitElement {
                         @click=${async (): Promise<void> =>
                             await this._orderItemService.deleteOrderFunction(orderdata.id)}
                     >
-                        Delete
+                        Verwijderen
                     </button>
                 `,
                 row,
             );
 
             allOrdersTable.appendChild(row);
-            console.log("data found");
+            console.log("data gevonden");
         });
     }
 
+    /**
+     * Haal de administrator op en toon deze
+     */
     private async getAdmin(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
         if (result) {
             const adminNameDiv: HTMLElement | null = document.getElementById("adminName");
             if (adminNameDiv) {
-                adminNameDiv.innerText = "Hi " + result.user.authorizationLevel + ` ${result.user.name}`;
+                adminNameDiv.innerText = "Hallo " + result.user.authorizationLevel + ` ${result.user.name}`;
             }
         }
     }
 
+    /**
+     * Toon alle gebruikers
+     */
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
         if (!result || result.length === 0) {
@@ -181,17 +195,17 @@ export class Admin extends LitElement {
                             }}
                         >
                             <option value="${AuthorizationLevel.ADMIN}">Admin</option>
-                            <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
-                            <option value="${AuthorizationLevel.USER}">User</option>
+                            <option value="${AuthorizationLevel.EMPLOYEE}">Medewerker</option>
+                            <option value="${AuthorizationLevel.USER}">Gebruiker</option>
                         </select>
                     </td>
                     <td>
                         <button
                             class="btn btn-danger delete-btn"
                             @click=${async (): Promise<void> =>
-                                await this._deleteUserService.deleteFun(userdata.id)}
+                                await this._deleteUserService.deleteFun(userdata.id)}                                
                         >
-                            Delete
+                            Verwijderen
                         </button>
                         <button
                             class="btn btn-success update-btn"
@@ -203,11 +217,11 @@ export class Admin extends LitElement {
                                     );
                                     window.location.reload();
                                 } else {
-                                    console.error("Authorization level is undefined");
+                                    console.error("Autorisatieniveau is niet gedefinieerd");
                                 }
                             }}
                         >
-                            update
+                            bijwerken
                         </button>
                     </td>
                 `,
@@ -218,20 +232,23 @@ export class Admin extends LitElement {
         });
     }
 
+    /**
+     * Handel wijzigingen in autorisatieniveau af
+     */
     public async handleAuthorizationLevelChange(e: Event, userId: number): Promise<void> {
         const selectElement: any = e.target as HTMLSelectElement;
         const newAuthorizationLevel: any = selectElement.value as AuthorizationLevel;
 
         try {
             await this._getUsersService.updateFun(userId, newAuthorizationLevel);
-            console.log("Authorization level updated successfully");
+            console.log("Autorisatieniveau succesvol bijgewerkt");
         } catch (error) {
-            console.error("Failed to update authorization level:", error);
+            console.error("Kon het autorisatieniveau niet bijwerken:", error);
         }
     }
 
     /**
-     * Renders the components
+     * Render de componenten
      */
     protected render(): TemplateResult {
         return html`
