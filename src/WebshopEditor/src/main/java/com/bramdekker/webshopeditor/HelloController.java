@@ -3,7 +3,9 @@ package com.bramdekker.webshopeditor;
 import com.bramdekker.webshopeditor.services.DatabaseService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +15,15 @@ import java.sql.Statement;
 public class HelloController {
     @FXML
     private Label welcomeText;
+
+    @FXML
+    private TextArea textarea_text;
+
+    @FXML
+    private Button button_import;
+
+    @FXML
+    private Button button_export;
 
     @FXML
     protected void onHelloButtonClick() {
@@ -62,7 +73,7 @@ public class HelloController {
                         // Retrieve other columns similarly
 
                         // Process or print the retrieved data
-                        System.out.println("Order id: " + orderId + ". Order name: " + orderName + ". Order description: " + orderDescription + ". Order Price: " + orderPrice);
+                        textarea_text.setText("Order id: " + orderId + ". Order name: " + orderName + ". Order description: " + orderDescription + ". Order Price: $" + orderPrice + ",");
                         // Print or process other columns similarly
                     }
                 } catch (SQLException e) {

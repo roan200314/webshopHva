@@ -195,8 +195,8 @@ export class Admin extends LitElement {
                             }}
                         >
                             <option value="${AuthorizationLevel.ADMIN}">Admin</option>
-                            <option value="${AuthorizationLevel.EMPLOYEE}">Medewerker</option>
-                            <option value="${AuthorizationLevel.USER}">Gebruiker</option>
+                            <option value="${AuthorizationLevel.EMPLOYEE}">Employee</option>
+                            <option value="${AuthorizationLevel.USER}">User</option>
                         </select>
                     </td>
                     <td>
