@@ -5,7 +5,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class HelloController {
     @FXML
@@ -32,6 +35,7 @@ public class HelloController {
                 }
             })
             .thenAcceptAsync(this::updateWelcomeText)
+            .thenRun(this::selectDataFromOrderItem)
             .exceptionally(ex -> {
                 ex.printStackTrace();
                 return null;
@@ -41,4 +45,31 @@ public class HelloController {
     private void updateWelcomeText(Boolean valid) {
         Platform.runLater(() -> welcomeText.setText(valid ? "Database connection is working" : "Database connection is NOT working"));
     }
-}
+
+    private void selectDataFromOrderItem() {
+        DatabaseService.getInstance()
+        .returnConnection()
+            .thenAcceptAsync(connection -> {
+                try (Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT * FROM orderitem")) {
+                    while (resultSet.next()) {
+                        // Retrieve data from the ResultSet
+                        int orderId = resultSet.getInt("id");
+                        var orderName = resultSet.getString("name");
+                        var orderDescription = resultSet.getString("description");
+                        float orderPrice = resultSet.getFloat("price");
+
+                        // Retrieve other columns similarly
+
+                        // Process or print the retrieved data
+                        System.out.println("Order id: " + orderId + ". Order name: " + orderName + ". Order description: " + orderDescription + ". Order Price: " + orderPrice);
+                        // Print or process other columns similarly
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Handle SQLException appropriately
+                }
+            });
+                }
+            }
+
