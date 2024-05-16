@@ -12,7 +12,7 @@
     </padding>
    <Label text="Export and import from database application" />
    <TextArea fx:id="textarea_text" prefHeight="125.0" prefWidth="590.0" />
-   <Button id="button_export" fx:id="button_export" mnemonicParsing="false" text="Export from database" translateX="214.0" translateY="129.0" />
+   <Button id="button_export" fx:id="button_export" onAction="#exportButtonClick" mnemonicParsing="false" text="Export to database" translateX="214.0" translateY="129.0" />
 
     <Label fx:id="welcomeText" />
     <Button alignment="TOP_CENTER" onAction="#onHelloButtonClick" text="Connect" translateY="-27.0" translateZ="70.0">

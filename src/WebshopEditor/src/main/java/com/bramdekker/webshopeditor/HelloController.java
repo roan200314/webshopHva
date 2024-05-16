@@ -61,51 +61,14 @@ public class HelloController {
         Platform.runLater(() -> welcomeText.setText(valid ? "Database connection is working" : "Database connection is NOT working"));
     }
 
+
+    //to do export
     @FXML
     protected void exportButtonClick() {
-//        // Path to the CSV file to be exported
-//        String csvFilePath = "../orderitem_export.csv";
-//
-//        try {
-//            Connection connection = DatabaseService.getInstance().returnConnection().get();
-//            try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
-//                // Read the CSV file
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    // Split the line into individual values
-//                    String[] values = line.split(",");
-//
-//                    // Insert the values into the database
-//                    try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO orderitem (id, name, description, price) VALUES (?, ?, ?, ?)")) {
-//                        preparedStatement.setInt(1, Integer.parseInt(values[0].trim()));
-//                        preparedStatement.setString(2, values[1].trim());
-//                        preparedStatement.setString(3, values[2].trim());
-//                        preparedStatement.setFloat(4, Float.parseFloat(values[3].trim()));
-//
-//                        // Execute the insert statement
-//                        preparedStatement.executeUpdate();
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                        // Handle SQLException appropriately
-//                    }
-//                }
-//
-//                // Show a success message or update UI if needed
-//                Platform.runLater(() -> {
-//                    // Update UI or show a success message
-//                    textarea_text.setText("Data from " + csvFilePath + " imported into the database successfully.");
-//                });
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                // Handle IOException appropriately
-//            } finally {
-//                connection.close(); // Close the connection after use
-//            }
-//        } catch (InterruptedException | ExecutionException | SQLException e) {
-//            e.printStackTrace();
-//            // Handle InterruptedException, ExecutionException, and SQLException appropriately
-//        }
+
     }
+
+
 
 
     @FXML
