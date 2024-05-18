@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 
 import java.io.*;
 import java.sql.*;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 
@@ -66,7 +67,7 @@ public class HelloController {
     @FXML
     protected void exportButtonClick() {
 
-    }
+            }
 
 
 
@@ -75,7 +76,7 @@ public class HelloController {
     protected void convertToCsvClick() {
         //haal de text op uit de textarea
         StringBuilder csvData = new StringBuilder();
-        csvData.append(textarea_text.getParagraphs());
+        csvData.append(textarea_text.getText());
 
         // Schrijf de CSV-geformatteerde string naar een CSV-bestand
         try (PrintWriter writer = new PrintWriter("orderitem_import.csv")) {
@@ -99,20 +100,16 @@ public class HelloController {
                     ResultSetMetaData metaData = resultSet.getMetaData();
                     int columnCount = metaData.getColumnCount();
 
-                    // Schrijf de kolomkoppen naar de CSV-geformatteerde string
-                    for (int i = 1; i <= columnCount; i++) {
-                        csvData.append("\"").append(metaData.getColumnName(i)).append("\"");
-                        if (i < columnCount) {
-                            csvData.append(",");
-                        }
-                    }
-                    csvData.append("\n");
-
                     // Schrijf de gegevensrijen naar de CSV-geformatteerde string
                     while (resultSet.next()) {
                         for (int i = 1; i <= columnCount; i++) {
                             String value = resultSet.getString(i);
-                            csvData.append("\"").append(value).append("\"");
+                            if (value != null) {
+                                value = value.toUpperCase(); // Convert non-null value to uppercase
+                            } else {
+                                value = "NULL"; // Convert null value to "NULL" string (uppercase)
+                            }
+                            csvData.append("").append(value).append("");
                             if (i < columnCount) {
                                 csvData.append(",");
                             }
