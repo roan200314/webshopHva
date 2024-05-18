@@ -31,11 +31,14 @@ export class OrderItems extends LitElement {
 
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         return html`
-            <div class="order-item">
-                <h2 id="name${orderItem.id}">${orderItem.name}</h2>
-                <p id="description${orderItem.id}">${orderItem.description}</p>
-                <p id="price${orderItem.id}">€${orderItem.price}</p>
-            </div>
+        <div class="product">
+          <img src=".${orderItem.imageURLs}" alt="${orderItem.name}"> <!-- Image url will prob need . removed -->
+          <div class="buttons">
+            <button class="more-info-button">More info</button>
+            <span class="base-price">${orderItem.price}</span>
+            <button class="add-to-cart-button">In cart</button>
+          </div>
+        </div>
         `;
     }
 
