@@ -5,7 +5,6 @@ import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
-
 /**
  * @enum AuthorizationLevel
  * @description Een enumeratie van autorisatieniveaus.
@@ -82,15 +81,25 @@ export class Admin extends LitElement {
     private _getUsersService: UserService = new UserService();
     private _deleteUserService: UserService = new UserService();
     private selectedAuthorizationLevel: string = "";
+    private isAdmin: boolean = false;
+    
 
     // Lifecycle-methode voor aangesloten component
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
+        const admin: AuthorizationLevel = AuthorizationLevel.ADMIN;
+        if (result?.user.authorizationLevel) {
+            this.isAdmin = true;
+            console.log("hi");
+        }
 
+        if (this.isAdmin === true) {
         await this.getWelcome();
         await this.getOrderItems();
         await this.getAdmin();
         await this.showAllUsers();
+        }
     }
 
     /**
@@ -98,7 +107,7 @@ export class Admin extends LitElement {
      */
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-
+    
         if (result) {
             this._isLoggedIn = true;
             this._cartItemsCount = result.cartItems?.length || 0;
@@ -110,7 +119,6 @@ export class Admin extends LitElement {
      */
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
-
         if (!result || result.length === 0) {
             console.log("Geen bestellingen gevonden.");
             return;

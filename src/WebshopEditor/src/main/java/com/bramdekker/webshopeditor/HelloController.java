@@ -9,8 +9,6 @@ import javafx.scene.control.TextArea;
 
 import java.io.*;
 import java.sql.*;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 
 @SuppressWarnings("ALL")
@@ -62,12 +60,58 @@ public class HelloController {
         Platform.runLater(() -> welcomeText.setText(valid ? "Database connection is working" : "Database connection is NOT working"));
     }
 
-
-    //to do export
     @FXML
     protected void exportButtonClick() {
+        // Specify the file path of the CSV file
+        String filePath = "orderitem_import.csv";
 
-            }
+        // Read the data from the CSV file and insert or update it in the database
+        try {
+            File csvFile = new File(filePath);
+            DatabaseService.getInstance().returnConnection().thenAcceptAsync(connection -> {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO orderitem (id, name, description, price, imageURLs, orderId) VALUES (?, ?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE " +
+                        "name = VALUES(name), description = VALUES(description), " +
+                        "price = VALUES(price), imageURLs = VALUES(imageURLs), " +
+                        "orderId = VALUES(orderId)")) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            // Split the CSV line by commas
+                            String[] values = line.split(",");
+
+                            // Set values for each column in the prepared statement
+                            for (int i = 0; i < values.length; i++) {
+                                if (values[i].equalsIgnoreCase("NULL")) {
+                                    preparedStatement.setNull(i + 1, Types.VARCHAR); // Set null for VARCHAR column
+                                } else {
+                                    preparedStatement.setString(i + 1, values[i]);
+                                }
+                            }
+
+                            // Execute the insert or update statement
+                            preparedStatement.executeUpdate();
+                        }
+                        // Show success message or update UI if needed
+                    } catch (IOException | SQLException e) {
+                        e.printStackTrace();
+                        // Handle exceptions
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Handle exceptions
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle exceptions
+        }
+    }
+
+
+
+
 
 
 
