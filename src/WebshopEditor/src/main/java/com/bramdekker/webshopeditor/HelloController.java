@@ -17,6 +17,12 @@ public class HelloController {
     private Label welcomeText;
 
     @FXML
+    private Label exportSuccess;
+
+    @FXML
+    private Label csvSuccess;
+
+    @FXML
     private TextArea textarea_text;
 
     @FXML
@@ -49,7 +55,6 @@ public class HelloController {
                 }
             })
             .thenAcceptAsync(this::updateWelcomeText)
-            .thenRun(this::importButtonClick)
             .exceptionally(ex -> {
                 ex.printStackTrace();
                 return null;
@@ -92,6 +97,7 @@ public class HelloController {
 
                             // Execute the insert or update statement
                             preparedStatement.executeUpdate();
+                            Platform.runLater(() -> exportSuccess.setText("export to database was successful"));
                         }
                         // Show success message or update UI if needed
                     } catch (IOException | SQLException e) {
@@ -125,6 +131,7 @@ public class HelloController {
         // Schrijf de CSV-geformatteerde string naar een CSV-bestand
         try (PrintWriter writer = new PrintWriter("orderitem_import.csv")) {
             writer.write(csvData.toString());
+            Platform.runLater(() -> csvSuccess.setText("export to CSV was successful"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             // Behandel de uitzondering als het bestand niet gevonden is
