@@ -67,10 +67,10 @@ public class HelloController {
 
     @FXML
     protected void exportButtonClick() {
-        // Specify the file path of the CSV file
+        // path gelijk maken aan de file
         String filePath = "orderitem_import.csv";
 
-        // Read the data from the CSV file and insert or update it in the database
+        // leest de csv file en update of insert het in de database
         try {
             File csvFile = new File(filePath);
             DatabaseService.getInstance().returnConnection().thenAcceptAsync(connection -> {
@@ -83,10 +83,10 @@ public class HelloController {
                     try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
                         String line;
                         while ((line = br.readLine()) != null) {
-                            // Split the CSV line by commas
+                            // Split de csv bij de komma's
                             String[] values = line.split(",");
 
-                            // Set values for each column in the prepared statement
+                            // sommige punten forced op null zetten
                             for (int i = 0; i < values.length; i++) {
                                 if (values[i].equalsIgnoreCase("NULL")) {
                                     preparedStatement.setNull(i + 1, Types.VARCHAR); // Set null for VARCHAR column
@@ -95,7 +95,7 @@ public class HelloController {
                                 }
                             }
 
-                            // Execute the insert or update statement
+                            // update en insert statement uitvoeren en label updaten met tekst
                             preparedStatement.executeUpdate();
                             Platform.runLater(() -> exportSuccess.setText("export to database was successful"));
                         }
