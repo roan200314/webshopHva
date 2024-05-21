@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import { Order } from "../Models/Entities/Order";
 import { OrderItem } from "../Models/Entities/OrderItem";
 import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
@@ -92,6 +92,6 @@ export class OrderService {
      * @returns {Promise<OrderItem[]>}
      */
     public async searchOrderItemByName(name: string): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find({ where: { name } });
+        return await this.orderItemRepository.find({ where: { name: ILike(`%${name}%`) } });
     }
 }
