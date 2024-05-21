@@ -58,7 +58,6 @@ export class OrderItems extends LitElement {
         super.connectedCallback();
         
         await this.getOrderItems();
-        this.requestUpdate();
     }
 
     private async getOrderItems(): Promise<void> {
@@ -92,4 +91,34 @@ export class OrderItems extends LitElement {
             </section>
         `;
     }
+
+    public renderSearchBar(): TemplateResult {
+        console.log("rendering search bar");
+        return html`
+            <input type="text" class="search-item-bar" placeholder="Search for an item by name" @submit=${this.searchOrderItemByName}/>  
+        `;
+    }
+    
+    public async searchOrderItemByName(event:Event): Promise<void> {
+      event.preventDefault();
+      const nameInput: HTMLInputElement | null = document.querySelector(".search-item-bar");
+      if (nameInput) {
+          console.log("searching for order item by name");
+          const name: string | null = nameInput?.value ?? null;
+    
+          const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/search/${name}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(name),
+          });
+    
+          if (!response.ok) {
+            alert("Could not get order item");
+          } else {
+            alert("Order item retrieved successfully");
+          }
+        }
+      }
 }

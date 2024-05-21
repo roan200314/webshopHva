@@ -82,4 +82,13 @@ export class OrderService {
         await this.orderItemRepository.update(id, orderItem);
         return await this.orderItemRepository.findOne({ where: { id } });
     }
+
+    /**
+     * Searches for an order item by its name.
+     * @param name - The name of the order item to search for.
+     * @returns {Promise<OrderItem[]>}
+     */
+    public async searchOrderItemByName(name: string): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find({ where: { name } });
+    }
 }
