@@ -154,6 +154,28 @@ export class Root extends LitElement {
         #userInfo {
             text-align: center;
         }
+
+        .delete{
+            background-color: #f03e3e;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .delete:hover {
+            cursor: pointer;
+        }
+
+        .edit:hover{
+            cursor: pointer;
+        }
+
+        .edit{
+            background-color: #49f560;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
     `;
 
     @state()
@@ -656,16 +678,18 @@ export class Root extends LitElement {
             <table>
                 <tr>
                     <th>Item</th>
-                    <th>Amount</th>
                     <th>Price</th>
+                    <th>Amount</th>
                     <th>Total</th>
+                    <th>Actions</th>
                 </tr>
                 ${this._cartItems.map((cartItem) => {
                     return html`
                         <tr>
                             <td>${cartItem.item.name}</td>
-                            <td>${cartItem.amount}</td>
                             <td>${cartItem.item.price}</td>
+                            <td>${cartItem.amount}</td>
+                            
                             <td>
                                 <b
                                     >&euro;
@@ -673,6 +697,14 @@ export class Root extends LitElement {
                                         2,
                                     )}</b
                                 >
+                            </td>
+                            <td>
+                                <button class="edit" @click=${this._editCart}>
+                                    <img src="/assets/img/edit.png" alt="Edit" width="20" height="20">
+                                </button>
+                                <button class="delete" @click="${this._deleteCart}">
+                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20">
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -685,6 +717,15 @@ export class Root extends LitElement {
                 </button>
             </div>
         `;
+    }
+
+
+    private _deleteCart(): any{
+
+    }
+
+    private _editCart(): any{
+
     }
 
     private calculateTotalPrice(): number {
