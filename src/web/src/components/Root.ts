@@ -21,6 +21,16 @@ enum RouterPage {
 }
 
 /**
+ * @enum AuthorizationLevel
+ * @description Een enumeratie van autorisatieniveaus.
+ */
+export enum AuthorizationLevel {
+    USER = "user",
+    EMPLOYEE = "employee",
+    ADMIN = "admin",
+}
+
+/**
  * Custom element based on Lit for the header of the webshop.
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
@@ -374,7 +384,7 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderLogoutInNav()} ${this.renderAdminInNav()}
+                    ${this.renderProductInNav()} ${this.renderAdminInNav()} ${this.renderLogoutInNav()} 
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -802,7 +812,8 @@ export class Root extends LitElement {
      */
 
     private renderAdminInNav(): TemplateResult {
-        if (this._isLoggedIn === true) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        if (this._user.authorizationLevel === AuthorizationLevel.ADMIN) {
             return html` <div>
                 <a href="/admin-page.html" target="">
                     <button>Admin</button>

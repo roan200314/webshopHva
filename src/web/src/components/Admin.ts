@@ -88,8 +88,8 @@ export class Admin extends LitElement {
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-        const admin: AuthorizationLevel = AuthorizationLevel.ADMIN;
-        if (result?.user.authorizationLevel) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        if (result?.user.authorizationLevel === AuthorizationLevel.ADMIN) {
             this.isAdmin = true;
             console.log("hi");
         }
@@ -208,15 +208,8 @@ export class Admin extends LitElement {
                         </select>
                     </td>
                     <td>
-                        <button
-                            class="btn btn-danger delete-btn"
-                            @click=${async (): Promise<void> =>
-                                await this._deleteUserService.deleteFun(userdata.id)}                                
-                        >
-                            Verwijderen
-                        </button>
-                        <button
-                            class="btn btn-success update-btn"
+                    <button
+                            class="btn btn-primary update-btn"
                             @click=${async (): Promise<void> => {
                                 if (this.selectedAuthorizationLevel) {
                                     await this._getUsersService.updateFun(
@@ -231,6 +224,14 @@ export class Admin extends LitElement {
                         >
                             bijwerken
                         </button>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> =>
+                                await this._deleteUserService.deleteFun(userdata.id)}                                
+                        >
+                            Verwijderen
+                        </button>
+
                     </td>
                 `,
                 row,
