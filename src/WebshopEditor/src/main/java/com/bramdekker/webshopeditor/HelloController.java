@@ -116,12 +116,6 @@ public class HelloController {
     }
 
 
-
-
-
-
-
-
     @FXML
     protected void convertToCsvClick() {
         //haal de text op uit de textarea
@@ -179,7 +173,4 @@ public class HelloController {
                 }
             });
     }
-
-
-
 }
