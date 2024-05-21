@@ -56,7 +56,6 @@ export class AuthService {
             };
 
             this.Logger.log(`User ${loginResult.email} logged in successfully`);
-            await this.mailService.sendAccountConfirmationMail(loginResult.email, loginResult.name);
 
             return {
                 access_token: await this.jwtService.signAsync(payload),
@@ -81,6 +80,7 @@ export class AuthService {
 
         try {
             await this.usersService.registerUser(createUserDto);
+            await this.mailService.confirmAccountRegistration(createUserDto.email, createUserDto.name);
         } catch (e) {
             this.Logger.error(`Failed to register user: ${createUserDto.email}`);
             throw new BadRequestException("Failed to register user");

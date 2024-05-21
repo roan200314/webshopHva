@@ -20,7 +20,7 @@ config({ path: ".env.local", override: true });
             secret: process.env.JWT_SECRET_KEY,
             signOptions: { expiresIn: "7d" },
         }),
-        MailModule
+        MailModule,
     ],
     providers: [
         AuthService,

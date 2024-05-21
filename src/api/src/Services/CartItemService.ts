@@ -13,7 +13,7 @@ export class CartItemService {
     public async getCartItems(userId: number): Promise<CartItem[]> {
         return await this.cartItemRepository.find({
             where: {
-                user: {id: userId},
+                user: { id: userId },
             },
             relations: ["item"],
         });
