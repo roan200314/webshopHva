@@ -6,6 +6,7 @@ import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { User } from "../Models/Entities/User";
 import { UserDto } from "../Models/Dto/User/UserDto";
 import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
+import { MailService } from "./MailService";
 
 /**
  * A service provides functionality for user authentication including registration and login.
@@ -21,10 +22,12 @@ export class AuthService {
      *
      * @param {UserService} usersService - An instance of UsersService.
      * @param {JwtService} jwtService - An instance of JwtService.
+     * @param mailService
      */
     public constructor(
         private readonly usersService: UserService,
         private readonly jwtService: JwtService,
+        private readonly mailService: MailService,
     ) {
         this.Logger = new Logger(AuthService.name);
     }
@@ -53,6 +56,7 @@ export class AuthService {
             };
 
             this.Logger.log(`User ${loginResult.email} logged in successfully`);
+            await this.mailService.sendAccountConfirmationMail(loginResult.email, loginResult.name);
 
             return {
                 access_token: await this.jwtService.signAsync(payload),
