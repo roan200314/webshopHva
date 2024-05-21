@@ -142,11 +142,11 @@ export class Admin extends LitElement {
     }
 
     private async getAdmin(): Promise<void> {
-        const result: UserData | undefined = await this._userService.getUserData();
+        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
         if (result) {
             const adminNameDiv: HTMLElement | null = document.getElementById("adminName");
             if (adminNameDiv) {
-                adminNameDiv.innerText = "Hi " + result.authorizationLevel + ` ${result.name}`;
+                adminNameDiv.innerText = "Hi " + result.user.authorizationLevel + ` ${result.user.name}`;
             }
         }
     }
@@ -244,7 +244,7 @@ export class Admin extends LitElement {
                     </div>
                 </nav>
             </header>
-            <footer>Copyright &copy; Luca Stars 2024</footer>
+
         `;
     }
 }
