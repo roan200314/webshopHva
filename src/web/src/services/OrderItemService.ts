@@ -37,8 +37,7 @@ export class OrderItemService {
 
         if (!response.ok) {
             console.error(response);
-        }
-        else {
+        } else {
             alert("item deleted successfully");
         }
     }

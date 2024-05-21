@@ -11,14 +11,12 @@ export class CartItemService {
     ) {}
 
     public async getCartItems(userId: number): Promise<CartItem[]> {
-        const userCartItems: CartItem[] = await this.cartItemRepository.find({
+        return await this.cartItemRepository.find({
             where: {
                 user: { id: userId },
             },
             relations: ["item"],
         });
-
-        return userCartItems;
     }
 
     public async addOrderItemToCart(userId: number, orderItemId: number): Promise<CartItem[]> {
