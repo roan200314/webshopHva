@@ -71,7 +71,12 @@ export class AuthGuard implements CanActivate {
         ]);
 
         if (isEmployeeOnly) {
-            if (!(request.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || request.user.authorizationLevel === AuthorizationLevel.ADMIN)) {
+            if (
+                !(
+                    request.user.authorizationLevel === AuthorizationLevel.EMPLOYEE ||
+                    request.user.authorizationLevel === AuthorizationLevel.ADMIN
+                )
+            ) {
                 throw new UnauthorizedException("Unauthorized access. Employee or higher only.");
             }
         }

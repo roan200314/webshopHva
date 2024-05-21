@@ -6,6 +6,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "../Auth/auth.guard";
 import { AuthController } from "../Controllers/AuthController";
 import { config } from "dotenv";
+import { MailModule } from "./MailModule";
 
 config();
 config({ path: ".env.production", override: true });
@@ -19,6 +20,7 @@ config({ path: ".env.local", override: true });
             secret: process.env.JWT_SECRET_KEY,
             signOptions: { expiresIn: "7d" },
         }),
+        MailModule,
     ],
     providers: [
         AuthService,
