@@ -678,7 +678,7 @@ export class Root extends LitElement {
                                 <b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b>
                             </td>
                             <td>
-                                <button class="delete" @click="${this._deleteCart}">
+                                <button class="delete" @click="${(): void => {this._deleteCart(cartItem);}}">
                                     <img src="/assets/img/bin.png" alt="delete" width="20" height="20" />
                                 </button>
                             </td>
@@ -695,7 +695,12 @@ export class Root extends LitElement {
         `;
     }
 
-    private _deleteCart(): any {}
+    private _deleteCart(cartItem: CartItem): void {
+        const index: number = this._cartItems.indexOf(cartItem);
+        this._cartItems.splice(index, 1);
+        this._cartItemsCount = this._cartItems.length || 0;
+        localStorage.setItem("cart", JSON.stringify(this._cartItems));
+    }
 
     private calculateTotalPrice(): number {
         let totalPrice: number = 0;
