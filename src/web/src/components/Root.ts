@@ -672,7 +672,9 @@ export class Root extends LitElement {
                         <tr>
                             <td>${cartItem.item.name}</td>
                             <td>${cartItem.item.price}</td>
-                            <td>${cartItem.amount}</td>
+                            <td>
+                                <input type="number" value=${cartItem.amount} />
+                            </td>
 
                             <td>
                                 <b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b>
