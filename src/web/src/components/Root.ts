@@ -262,7 +262,6 @@ export class Root extends LitElement {
             return;
         }
 
-        console.log(result);
         this._adressData = result;
     }
 
@@ -294,6 +293,7 @@ export class Root extends LitElement {
             alert("Successfully logged in!");
 
             await this.getWelcome();
+            await this.getAddress();
 
             this._currentPage = RouterPage.Home;
         } else {
@@ -755,7 +755,13 @@ export class Root extends LitElement {
         return html`
             <h1 class="title">How do you want to continue?</h1>
             <p>No account? No worries! You can just continue as a guest!</p>
-            <button>Continue as a guest</button>
+            <button
+                @click=${(): void => {
+                    this._currentPage = RouterPage.InfoConfirmation;
+                }}
+            >
+                Continue as a guest
+            </button>
             <p>Or you can log in here:</p>
             <button
                 @click=${(): void => {
@@ -779,8 +785,15 @@ export class Root extends LitElement {
             </div>
             <div class="adressInfo">
                 <form>
-                    <label>Username</label><input type="text" disabled value="${this._name}" /><br />
-                    <label>Email</label><input type="text" disabled value="${this._email}" /><br />
+                    ${
+                        this._isLoggedIn ? 
+                            html`<label>Name</label><input type="text" disabled value="${this._name}" /><br />
+                            <label>Email</label><input type="text" disabled value="${this._email}" /><br />`
+                        :
+                            html`<label>Name</label><input type="text" /><br />
+                            <label>Email</label><input type="text" /><br />`
+                    }
+
                     <label>Street</label>
                     <input
                         type="text"
