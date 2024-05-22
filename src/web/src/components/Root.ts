@@ -673,7 +673,7 @@ export class Root extends LitElement {
                             <td>${cartItem.item.name}</td>
                             <td>${cartItem.item.price}</td>
                             <td>
-                                <input type="number" value=${cartItem.amount} />
+                                <input type="number" value=${cartItem.amount} @change="${(e: Event): void => this._changeCartAmount(e, cartItem)}" />
                             </td>
 
                             <td>
@@ -695,6 +695,22 @@ export class Root extends LitElement {
                 </button>
             </div>
         `;
+    }
+
+    private _changeCartAmount(e: Event, cartItem: CartItem): void {
+        const newAmount: number = Number.parseInt((e.target as HTMLInputElement).value);
+        
+        // Remove previous
+        const index: number = this._cartItems.indexOf(cartItem);
+        this._cartItems.splice(index, 1);
+        this._cartItems.push({
+            item: cartItem.item,
+            amount: newAmount
+        });
+
+        this.requestUpdate();
+
+        localStorage.setItem("cart", JSON.stringify(this._cartItems));
     }
 
     private _deleteCart(cartItem: CartItem): void {
