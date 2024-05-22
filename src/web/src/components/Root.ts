@@ -780,8 +780,8 @@ export class Root extends LitElement {
             <h1 class="title">Confirm your information</h1>
             <div id="steps">
                 <div class="stepnmbr">Step 1</div>
-                <div class="stepnmbr" id="currentstep">Step 2</div>
-                <div class="stepnmbr">Step 3</div>
+                <div class="stepnmbr">Step 2</div>
+                <div class="stepnmbr" id="currentstep">Step 3</div>
             </div>
             <div class="adressInfo">
                 <form>
@@ -817,11 +817,16 @@ export class Root extends LitElement {
                 </form>
             </div>
             <div class="nxtstep">
-                <button class="button" type="submit" @click="${this._renderOrderConfirmation}">
+                <button class="button" type="submit" @click="${this.order}">
                     Next Step
                 </button>
             </div>
         `;
+    }
+
+    private async order(): Promise<void> {
+        await this._orderItemService.order(this._cartItems, this._adressData);
+        this._renderOrderConfirmation();
     }
 
     /**
