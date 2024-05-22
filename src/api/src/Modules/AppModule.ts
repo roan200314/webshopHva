@@ -9,9 +9,10 @@ import { CartItemModule } from "./CartItemModule";
 import { OrderModule } from "./OrderModule";
 import { AddressModule } from "./AddressModule";
 import { MailModule } from "./MailModule";
+import { GamesModule } from "./GamesModule";
 
 @Module({
-    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule, AddressModule, MailModule],
+    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule, AddressModule, MailModule, GamesModule],
     controllers: [AppController],
     providers: [AppService],
 })
