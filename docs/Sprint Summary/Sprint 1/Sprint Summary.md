@@ -44,11 +44,11 @@ Eind datum: 06/05/2024
 ## Test Users
 
 ### Admin Account
-- **Email**: docent@hva.nl
+- **IEmail**: docent@hva.nl
 - **Wachtwoord**: Test123!
 
 ### Regulier Account
-- **Email**: test@test.nl
+- **IEmail**: test@test.nl
 - **Wachtwoord**: Test123!
 
 ## Deployment Information
