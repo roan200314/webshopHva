@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
@@ -8,6 +8,9 @@ import { CreateUserDto } from "../Models/Dto/User/CreateUserDto";
 import { plainToClass } from "class-transformer";
 import { UserDto } from "../Models/Dto/User/UserDto";
 import { AuthorizationLevel } from "@shared/types";
+import { EmailConfirmation } from "../Models/Entities/EmailConfirmation";
+import { MailService } from "./MailService";
+import * as crypto from "node:crypto";
 
 /**
  * A service handles user related operations including registration and login.
@@ -16,15 +19,21 @@ import { AuthorizationLevel } from "@shared/types";
  */
 @Injectable()
 export class UserService {
+
     /**
      * Initialization of UsersService class involves injecting a user's repository.
      *
      * @constructor
      * @param {Repository<User>} usersRepository - A repository to perform various operations on user data.
+     * @param emailConfirmationRepository
+     * @param mailService
      */
     public constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
+        @InjectRepository(EmailConfirmation)
+        private emailConfirmationRepository: Repository<EmailConfirmation>,
+        private readonly mailService: MailService,
     ) {}
 
     /**
@@ -46,6 +55,29 @@ export class UserService {
 
         // Create and save the user object in the database
         await this.usersRepository.save(user);
+    }
+
+    public async generateEmailToken(email: string): Promise<string | null> {
+        const user: User = await this.usersRepository.findOne({
+            where: { email: email },
+        });
+
+        if (!user) {
+            return null;
+        }
+
+        const token: string = crypto.randomUUID();
+
+        const emailConfirmation: EmailConfirmation = new EmailConfirmation();
+        emailConfirmation.user = user;
+        emailConfirmation.confirmationToken = token;
+        emailConfirmation.confirmed = false;
+        user.emailConfirmation = emailConfirmation;
+
+        await this.emailConfirmationRepository.save(emailConfirmation);
+        await this.usersRepository.save(user);
+
+        return token;
     }
 
     /**
@@ -73,6 +105,31 @@ export class UserService {
             // If the password doesn't match, return null
             return null;
         }
+    }
+
+    public async confirmEmail(token: string): Promise<{ message: string; status: number }> {
+        const emailConfirmation: EmailConfirmation = await this.emailConfirmationRepository.findOne({
+            where: { confirmationToken: token },
+            relations: ["user"]
+        });
+
+        if (!emailConfirmation) {
+            throw new BadRequestException("Invalid token");
+        }
+
+        if (emailConfirmation.confirmed) {
+            throw new BadRequestException("Email already confirmed");
+        }
+
+        emailConfirmation.confirmed = true;
+        await this.emailConfirmationRepository.save(emailConfirmation);
+
+        await this.mailService.confirmAccountRegistration(emailConfirmation.user.email, emailConfirmation.user.name);
+
+        return {
+            message: "Email confirmed successfully",
+            status: 200
+        };
     }
 
     /**
