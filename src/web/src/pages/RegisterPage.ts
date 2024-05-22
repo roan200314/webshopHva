@@ -95,9 +95,11 @@ export class RegisterPage extends LitElement {
     }
 
     private renderField(fieldName: string): TemplateResult {
+        const capitalizedFieldName: string = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+        
         return html`
             <label>
-                ${fieldName}
+                ${capitalizedFieldName}
                 <input
                         type="${fieldName === "password" ? "password" : "text"}"
                         .value="${this.userForm[fieldName as keyof RegisterForm]}"

@@ -102,7 +102,6 @@ export class NavbarComponent extends LitElement {
                     <a href="/index" class="navbar-item">Home</a>
                     ${this.isLoggedIn
                             ? html`
-                                <a href="/contact" class="navbar-item">Contact</a>
                                 ${this.authorizedLevel === AuthorizationLevel.ADMIN
                                         ? html`
                                             <a href="/admin" class="navbar-item">Admin Page</a>
