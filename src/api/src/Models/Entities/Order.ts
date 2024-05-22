@@ -13,6 +13,18 @@ export class Order {
     @Column({ type: "varchar", length: 255, nullable: false })
     public status: string;
 
+    @Column({ type: "varchar", length: 255, nullable: false })
+    public street: string;
+
+    @Column({ type: "varchar", length: 255, nullable: false })
+    public city: string;
+
+    @Column({ type: "varchar", length: 255, nullable: false })
+    public zip: string;
+
+    @Column({ type: "varchar", length: 255, nullable: false })
+    public country: string;
+
     @ManyToOne(() => User, (user) => user.orders)
     public user: User;
 }
