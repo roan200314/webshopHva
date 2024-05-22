@@ -38,6 +38,7 @@ export class GameService {
             if (!response.ok) {
                 console.error(response);
             }
+            location.reload();
         }
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import { Games } from "../Models/Entities/Games";
 
 @Injectable()
@@ -21,4 +21,13 @@ export class GamesService {
         await this.gamesRepository.delete(id);
         return { message: "Game removed successfully" };
     }
+
+        /**
+     * Searches for an order item by its name.
+     * @param name - The name of the order item to search for.
+     * @returns {Promise<Games[]>}
+     */
+        public async searchGameItemByName(name: string): Promise<Games[]> {
+            return await this.gamesRepository.find({ where: { title: ILike(`%${name}%`) } });
+        }
 }

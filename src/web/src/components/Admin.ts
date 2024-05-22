@@ -146,7 +146,6 @@ private async getGames(): Promise<void> {
                         class="btn btn-danger delete-btn"
                         @click=${async (): Promise<void> => {
                             await this._getGamesService.deleteGameFunction(gamedata.id);
-                            location.reload(); // Reload the page after deletion
                         }}
                     >
                         Verwijderen
