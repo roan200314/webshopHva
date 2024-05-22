@@ -10,6 +10,7 @@ import { UserDto } from "../Models/Dto/User/UserDto";
 import { AuthorizationLevel } from "@shared/types";
 import { EmailConfirmation } from "../Models/Entities/EmailConfirmation";
 import { MailService } from "./MailService";
+import * as crypto from "node:crypto";
 
 /**
  * A service handles user related operations including registration and login.
