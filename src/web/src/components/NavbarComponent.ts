@@ -5,6 +5,7 @@ import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { UserData } from "@shared/types";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
+import { TokenService } from "../services/TokenService";
 
 @customElement("navbar-component")
 export class NavbarComponent extends LitElement {
@@ -19,6 +20,7 @@ export class NavbarComponent extends LitElement {
     private authorizedLevel: AuthorizationLevel = AuthorizationLevel.USER;
 
     private userService: UserService = new UserService();
+    private tokenService: TokenService = new TokenService();
 
     public static styles = css`
         .navbar {
@@ -55,6 +57,17 @@ export class NavbarComponent extends LitElement {
                 margin-top: 0.5rem;
             }
         }
+        .logout {
+            background-color: #FF6347; /* Tomato color for example */
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 15px -4px rgba(0, 0, 0, 0.3);
+        }
+        .logout:hover {
+            background-color: #FF4500; /* Orangered color on hover */
+        }
     `;
 
     public async connectedCallback(): Promise<void> {
@@ -71,18 +84,23 @@ export class NavbarComponent extends LitElement {
                             ? html`
                                 <a href="/contact" class="navbar-item">Contact</a>
                                 ${this.authorizedLevel === AuthorizationLevel.ADMIN
-                                        ? html`<a href="/admin" class="navbar-item">Admin Page</a>`
+                                        ? html`
+                                            <a href="/admin" class="navbar-item">Admin Page</a>
+                                        `
                                         : nothing }
                             `
                             : nothing }
                 </nav>
                 <nav class="right-nav">
                     ${this.isLoggedIn
-                            ? html`<span class="navbar-item">Hello, ${this.userData?.name}</span>`
+                            ? html`
+                                <span class="navbar-item">Hello, ${this.userData?.name}</span>
+                                <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
+                            `
                             : html`
-                      <a href="/login" class="navbar-item">Login</a>
-                      <a href="/register" class="navbar-item">Register</a>
-                    `}
+                                <a href="/login" class="navbar-item">Login</a>
+                                <a href="/register" class="navbar-item">Register</a>
+                            `}
                 </nav>
             </div>
         `;
@@ -96,5 +114,14 @@ export class NavbarComponent extends LitElement {
         this.isLoggedIn = true;
         this.userData = userInformation.user;
         this.authorizedLevel = userInformation.user.authorizationLevel;
+    }
+
+    private handleLogout(): void {
+        this.isLoggedIn = false;
+        this.userData = undefined;
+        this.authorizedLevel = AuthorizationLevel.USER;
+
+        this.tokenService.removeToken();
+        window.location.href = "/";
     }
 }
