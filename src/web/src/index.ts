@@ -6,3 +6,5 @@ export * from "./components/OrderItems";
 export * from "./components/OrderItemSearch";
 export * from "./components/GameItemSearch";
 export * from "./components/EmailConfirmation";
+export * from "./components/GameItems.ts";
+
