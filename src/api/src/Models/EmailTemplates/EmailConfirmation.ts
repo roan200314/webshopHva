@@ -4,7 +4,7 @@ export class EmailConfirmation {
 
     public constructor(userName: string, token: string) {
         this.userName = userName;
-        this.confirmationUrl = `${process.env.WEBSITE_URL}/emailconfirmation?token=${token}`;
+        this.confirmationUrl = `${process.env.WEBSITE_URL}emailconfirmation.html?token=${token}`;
     }
 
     public generate(): string {
