@@ -20,7 +20,7 @@ export enum AuthorizationLevel {
  * @todo De meeste logica in dit component is te simpel. Je moet het grootste deel vervangen door echte implementaties.
  */
 @customElement("admin-root")
-export class AdminComponent extends LitElement {
+export class AdminPage extends LitElement {
     // CSS-stijlen voor dit component
     public static styles = css`
         header {

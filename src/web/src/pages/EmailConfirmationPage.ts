@@ -2,7 +2,7 @@ import { UserService } from "../services/UserService";
 import { customElement, state } from "lit/decorators.js";
 import { css, html, LitElement, TemplateResult } from "lit";
 
-@customElement("email-confirmation")
+@customElement("email-confirmation-page")
 export class EmailConfirmationComponent extends LitElement {
     private userService: UserService = new UserService();
 

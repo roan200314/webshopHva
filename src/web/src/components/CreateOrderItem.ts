@@ -2,7 +2,7 @@ import { LitElement, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
-import { AuthorizationLevel } from "../pages/AdminComponent";
+import { AuthorizationLevel } from "../pages/AdminPage";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
 
