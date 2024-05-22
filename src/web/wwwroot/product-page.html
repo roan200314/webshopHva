@@ -22,7 +22,7 @@
           <order-item-search></order-item-search>
         </form>     
         <ul class="navbar-links">
-          <li><a href="#" class="selected">Games</a></li>
+          <li><a href="#">Games</a></li>
           <li><a href="#">Merchandise</a></li>
           <li><a href="#">News</a></li>
         </ul>  
@@ -34,13 +34,11 @@
     </nav>
     <ul class="product-filter">
       <li><span class="filter-title">Filter: </span></li>
-      <li class="filter-option"><a href="#">Genre</a></li>
-      <li class="filter-option"><a href="#" class="selected">Rating</a></li>
-      <li class="filter-option"><a href="#">Name</a></li>
-      <li class="filter-option"><a href="#">Price</a></li>
-      <li class="filter-option"><a href="#">Offers</a></li>
+      <li class="filter-option"><a href="#" id="price-filter">Price</a></li>
+      <li class="filter-option"><a href="#" id="name-filter">Name</a></li>
+      <li class="filter-option"><a href="#" id="offer-filter">Offers</a></li>
     </ul>
-    <order-items></order-items> <!-- Add the custom element here -->
+    <order-items></order-items>
     <create-order-item></create-order-item>
   </div>
   <footer> 

@@ -1,5 +1,5 @@
-import { LitElement, html, TemplateResult, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, TemplateResult, html, css } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
 
@@ -47,6 +47,11 @@ export class OrderItems extends LitElement {
             font-weight: bold;
             color: #333;
         }
+
+        .filter-option.selected {
+            font-weight: bold;
+            text-decoration: underline;
+        }
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
@@ -54,17 +59,73 @@ export class OrderItems extends LitElement {
     @property({ type: Array })
     public orderItems: OrderItem[] = [];
 
+    @state()
+    private _isPriceAscending: boolean = false;
+
+    @state()
+    private _isNameAscending: boolean = false;
+
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
         await this.getOrderItems();
+        this.attachFilterListeners();
     }
 
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
         if (result) {
             this.orderItems = result;
+        }
+    }
+
+    private attachFilterListeners(): void {
+        const priceFilter:HTMLLIElement | null = document.querySelector("#price-filter");
+        if (priceFilter) {
+            priceFilter.addEventListener("click", () => this.toggleSortOrder("price"));
+        }
+
+        const nameFilter:HTMLLIElement | null = document.querySelector("#name-filter");
+        if (nameFilter) {
+            nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
+        }
+    }
+
+    private toggleSortOrder(type: "price" | "name"): void {
+        if (type === "price") {
+            this._isPriceAscending = !this._isPriceAscending;
+            this.sortByPrice();
+        } else if (type === "name") {
+            this._isNameAscending = !this._isNameAscending;
+            this.sortByName();
+        }
+        this.updateFilterSelection(type);
+    }
+
+    private sortByPrice(): void {
+        if (this._isPriceAscending) {
+            this.orderItems = [...this.orderItems].sort((a, b) => a.price - b.price);
         } else {
-          return;
+            this.orderItems = [...this.orderItems].sort((a, b) => b.price - a.price);
+        }
+        this.requestUpdate();
+    }
+
+    private sortByName(): void {
+        if (this._isNameAscending) {
+            this.orderItems = [...this.orderItems].sort((a, b) => a.name.localeCompare(b.name));
+        } else {
+            this.orderItems = [...this.orderItems].sort((a, b) => b.name.localeCompare(a.name));
+        }
+        this.requestUpdate();
+    }
+
+    private updateFilterSelection(type: "price" | "name"): void {
+        const filters:any = document.querySelectorAll(".filter-option a");
+        filters.forEach((filter: HTMLLIElement) => filter.classList.remove("selected"));
+
+        const selectedFilter:HTMLLIElement | null = document.querySelector(`#${type}-filter`);
+        if (selectedFilter) {
+            selectedFilter.classList.add("selected");
         }
     }
 

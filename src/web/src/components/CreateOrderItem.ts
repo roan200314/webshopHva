@@ -65,6 +65,8 @@ export class CreateOrderItem extends LitElement {
                     @input=${this.updateDescription}
                     required
                 ></textarea>
+                <label for="image">ImageURL</label>
+                <input type="text" id="image" name="image" @input=${this.updateImage}/>
                 <button type="submit">Create</button>
             </form>
         `;
@@ -95,6 +97,15 @@ export class CreateOrderItem extends LitElement {
     private updateDescription(event: InputEvent): void {
         const input: HTMLInputElement = event.target as HTMLInputElement;
         this.orderItem.description = input.value;
+    }
+
+    /**
+     * Updates the image of the order item.
+     * @param event
+     */
+    private updateImage(event: InputEvent): void {
+        const input: HTMLInputElement = event.target as HTMLInputElement;
+        this.orderItem.imageURLs = [input.value];
     }
 
     /**
