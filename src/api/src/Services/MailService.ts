@@ -1,21 +1,37 @@
 import { Injectable } from "@nestjs/common";
 import { ApiFailReason, ApiFailResponse, PromiseReject, PromiseResolve } from "../Models/Interfaces/IEmail";
 import { Email } from "../Models/Entities/Email";
-import { RegistrationEmail } from "../Models/EmailTemplates/RegistrationConfirmation";
+import { AccountRegistration } from "../Models/EmailTemplates/AccountRegistration";
+import { EmailConfirmation } from "../Models/EmailTemplates/EmailConfirmation";
 
 @Injectable()
 export class MailService {
+
+    public async emailConfirmation(emailAddress: string, name: string, emailToken: string): Promise<void> {
+        try {
+            const email: Email = {
+                to: [{ address: emailAddress, name: name }],
+                subject: "Email Confirmation",
+                from: { address: "noreply@webshop.com", name: "WebShop" },
+                html: new EmailConfirmation(name, emailToken).generate()
+            };
+
+            await this.sendEmail(email);
+        } catch (reason) {
+            console.log(reason);
+        }
+    }
+
     public async confirmAccountRegistration(emailAddress: string, name: string): Promise<void> {
         try {
-            const email: Email = new Email();
-            email.to = [{ address: emailAddress, name: name }];
-            email.subject = "Registration Confirmation";
-            email.from = { address: "noreply@webshop.com", name: "WebShop" };
-            email.html = new RegistrationEmail(name, emailAddress).generate();
+            const email: Email = {
+                to: [{ address: emailAddress, name: name }],
+                subject: "Registration Confirmation",
+                from: { address: "noreply@webshop.com", name: "WebShop" },
+                html: new AccountRegistration(name, emailAddress).generate()
+            };
 
-            const data: string = await this.sendEmail(email);
-
-            console.log(data);
+            await this.sendEmail(email);
         } catch (reason) {
             console.log(reason);
         }

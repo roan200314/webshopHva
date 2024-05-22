@@ -69,6 +69,22 @@ export class UserService {
         return true;
     }
 
+    public async confirmEmail(token: string): Promise<string> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/confirmEmail/${token}`, {
+            method: "POST",
+        });
+
+        // eslint-disable-next-line @typescript-eslint/typedef
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            console.error(response);
+            return responseData.message;
+        }
+
+        return responseData.message;
+    }
+
     /**
      * Handles user welcome message containing user and cart data. Requires a valid token.
      *
