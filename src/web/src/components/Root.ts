@@ -18,6 +18,7 @@ enum RouterPage {
     ShoppingCart = "shoppingCart",
     OrderConfirmation = "orderConfirmation",
     InfoConfirmation = "infoConfirmation",
+    UserConfirmation = "userconfirmation",
 }
 
 /**
@@ -345,13 +346,14 @@ export class Root extends LitElement {
      * @param orderItem Order item to add to the cart
      */
     private addItemToCart(orderItem: OrderItem): void {
-        const cartItem: CartItem | undefined = this._cartItems.find((cartItem) => cartItem.item.id === orderItem.id);
+        const cartItem: CartItem | undefined = this._cartItems.find(
+            (cartItem) => cartItem.item.id === orderItem.id,
+        );
 
-
-        if(cartItem === undefined) {
+        if (cartItem === undefined) {
             this._cartItems.push({
                 item: orderItem,
-                amount: 1
+                amount: 1,
             });
         } else {
             cartItem.amount++;
@@ -380,6 +382,9 @@ export class Root extends LitElement {
                 break;
             case RouterPage.OrderConfirmation:
                 contentTemplate = this._renderOrderConfirmation();
+                break;
+            case RouterPage.UserConfirmation:
+                contentTemplate = this._renderUserConfirmation();
                 break;
             case RouterPage.InfoConfirmation:
                 contentTemplate = this._renderInfoConfirmation();
@@ -673,14 +678,28 @@ export class Root extends LitElement {
                             <td>${cartItem.item.name}</td>
                             <td>${cartItem.item.price}</td>
                             <td>
-                                <input type="number" value=${cartItem.amount} @change="${(e: Event): void => this._changeCartAmount(e, cartItem)}" />
+                                <input
+                                    type="number"
+                                    value=${cartItem.amount}
+                                    @change="${(e: Event): void => this._changeCartAmount(e, cartItem)}"
+                                />
                             </td>
 
                             <td>
-                                <b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b>
+                                <b
+                                    >&euro;
+                                    ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
+                                        2,
+                                    )}</b
+                                >
                             </td>
                             <td>
-                                <button class="delete" @click="${(): void => {this._deleteCart(cartItem);}}">
+                                <button
+                                    class="delete"
+                                    @click="${(): void => {
+                                        this._deleteCart(cartItem);
+                                    }}"
+                                >
                                     <img src="/assets/img/bin.png" alt="delete" width="20" height="20" />
                                 </button>
                             </td>
@@ -690,7 +709,7 @@ export class Root extends LitElement {
             </table>
             <div class="nxtstep">
                 <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
-                <button class="button" type="submit" @click="${this._renderInfoConfirmation}">
+                <button class="button" type="submit" @click="${this._renderUserConfirmation}">
                     Next Step
                 </button>
             </div>
@@ -699,7 +718,7 @@ export class Root extends LitElement {
 
     private _changeCartAmount(e: Event, cartItem: CartItem): void {
         const newAmount: number = Number.parseInt((e.target as HTMLInputElement).value);
-        
+
         // Remove previous
         const index: number = this._cartItems.indexOf(cartItem);
         this._cartItems[index].amount = newAmount;
@@ -724,6 +743,28 @@ export class Root extends LitElement {
         }
 
         return totalPrice;
+    }
+
+    private _renderUserConfirmation(): HTMLTemplateResult {
+        this._currentPage = RouterPage.UserConfirmation;
+
+        if (this._isLoggedIn) {
+            this._currentPage = RouterPage.InfoConfirmation;
+        }
+
+        return html`
+            <h1 class="title">How do you want to continue?</h1>
+            <p>No account? No worries! You can just continue as a guest!</p>
+            <button>Continue as a guest</button>
+            <p>Or you can log in here:</p>
+            <button
+                @click=${(): void => {
+                    this._currentPage = RouterPage.Login;
+                }}
+            >
+                Login
+            </button>
+        `;
     }
 
     private _renderInfoConfirmation(): HTMLTemplateResult {
