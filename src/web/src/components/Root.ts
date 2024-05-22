@@ -702,11 +702,7 @@ export class Root extends LitElement {
         
         // Remove previous
         const index: number = this._cartItems.indexOf(cartItem);
-        this._cartItems.splice(index, 1);
-        this._cartItems.push({
-            item: cartItem.item,
-            amount: newAmount
-        });
+        this._cartItems[index].amount = newAmount;
 
         this.requestUpdate();
 
