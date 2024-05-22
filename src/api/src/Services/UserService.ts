@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
@@ -18,12 +18,15 @@ import { MailService } from "./MailService";
  */
 @Injectable()
 export class UserService {
+    private readonly Logger: Logger;
+
     /**
      * Initialization of UsersService class involves injecting a user's repository.
      *
      * @constructor
      * @param {Repository<User>} usersRepository - A repository to perform various operations on user data.
      * @param emailConfirmationRepository
+     * @param mailService
      */
     public constructor(
         @InjectRepository(User)
@@ -31,7 +34,9 @@ export class UserService {
         @InjectRepository(EmailConfirmation)
         private emailConfirmationRepository: Repository<EmailConfirmation>,
         private readonly mailService: MailService,
-    ) {}
+    ) {
+        this.Logger = new Logger(UserService.name);
+    }
 
     /**
      * Registers a new user in the database.
@@ -55,15 +60,20 @@ export class UserService {
     }
 
     public async generateEmailToken(email: string): Promise<string | null> {
+        this.Logger.log("Generating email confirmation token");
+
         const user: User = await this.usersRepository.findOne({
             where: { email: email },
         });
 
         if (!user) {
+            this.Logger.error("User not found");
             return null;
         }
 
+        this.Logger.log("Creating email confirmation token");
         const token: string = crypto.randomUUID();
+        this.Logger.log("Token created: " + token);
 
         const emailConfirmation: EmailConfirmation = new EmailConfirmation();
         emailConfirmation.user = user;
