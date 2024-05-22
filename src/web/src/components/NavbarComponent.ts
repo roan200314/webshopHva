@@ -17,6 +17,9 @@ export class NavbarComponent extends LitElement {
     private userData: UserData | undefined;
 
     @state()
+    private cartItemCount: number = 0;
+
+    @state()
     private authorizedLevel: AuthorizationLevel = AuthorizationLevel.USER;
 
     private userService: UserService = new UserService();
@@ -38,6 +41,7 @@ export class NavbarComponent extends LitElement {
             transition: color 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 5px;
+            align-self: center;
         }
         .navbar-item:hover {
             background: #3B404B;
@@ -58,7 +62,7 @@ export class NavbarComponent extends LitElement {
             }
         }
         .logout {
-            background-color: #FF6347; /* Tomato color for example */
+            background-color: #FF6347;
             color: #FFFFFF;
             border: none;
             cursor: pointer;
@@ -66,13 +70,29 @@ export class NavbarComponent extends LitElement {
             box-shadow: 0 2px 15px -4px rgba(0, 0, 0, 0.3);
         }
         .logout:hover {
-            background-color: #FF4500; /* Orangered color on hover */
+            background-color: #FF4500;
+        }
+        .navbar-item img.cart-icon {
+            height: 30px;
+            width: 30px;
+            margin-right: 5px;    /* add some space between the icon and the number */
+            vertical-align: middle;  /* align the icon with the number */
+        }
+        .navbar-item span {
+            vertical-align: middle;  /* align the number with the icon */
+            line-height: 30px;
         }
     `;
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
         await this.getUserInformation();
+
+        window.addEventListener("cart-update", (): void => {
+            void (async (): Promise<void> => {
+                await this.getUserInformation();
+            })();
+        });
     }
 
     public render(): TemplateResult {
@@ -94,6 +114,10 @@ export class NavbarComponent extends LitElement {
                 <nav class="right-nav">
                     ${this.isLoggedIn
                             ? html`
+                                <a href="/cart" class="navbar-item">
+                                    <img src="/assets/img/cart.png" alt="Cart" class="cart-icon">
+                                    <span>${this.cartItemCount}</span>
+                                </a>
                                 <span class="navbar-item">Hello, ${this.userData?.name}</span>
                                 <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
                             `
@@ -114,6 +138,8 @@ export class NavbarComponent extends LitElement {
         this.isLoggedIn = true;
         this.userData = userInformation.user;
         this.authorizedLevel = userInformation.user.authorizationLevel;
+
+        this.cartItemCount = userInformation.cartItems?.length || 0;
     }
 
     private handleLogout(): void {
