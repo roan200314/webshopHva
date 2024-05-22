@@ -1,4 +1,4 @@
-import { css, html, HTMLTemplateResult, LitElement, nothing, TemplateResult } from "lit";
+import { css, html, HTMLTemplateResult, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { OrderItem } from "@shared/types/OrderItem";
@@ -155,7 +155,7 @@ export class Root extends LitElement {
             text-align: center;
         }
 
-        .delete{
+        .delete {
             background-color: #f03e3e;
             border: none;
             border-radius: 5px;
@@ -166,11 +166,11 @@ export class Root extends LitElement {
             cursor: pointer;
         }
 
-        .edit:hover{
+        .edit:hover {
             cursor: pointer;
         }
 
-        .edit{
+        .edit {
             background-color: #49f560;
             border: none;
             border-radius: 5px;
@@ -226,6 +226,7 @@ export class Root extends LitElement {
         await this.getWelcome();
         await this.getOrderItems();
         await this.getAddress();
+        this.getCartItems();
     }
 
     /**
@@ -241,8 +242,15 @@ export class Root extends LitElement {
             this._firstname = result.user.firstName || "";
             this._lastname = result.user.lastName || "";
             this._isLoggedIn = true;
-            this._cartItemsCount = result.cartItems?.length || 0;
-            this._cartItems = result.cartItems || [];
+        }
+    }
+
+    private getCartItems(): void {
+        const result: string | null = localStorage.getItem("cart");
+
+        if (result) {
+            this._cartItems = JSON.parse(result);
+            this._cartItemsCount = this._cartItems.length;
         }
     }
 
@@ -318,14 +326,7 @@ export class Root extends LitElement {
     /**
      * Handler for the cart button
      */
-    private async clickCartButton(): Promise<void> {
-        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-
-        if (!result) {
-            return;
-        }
-
-        this._cartItemsCount = result.cartItems?.length || 0;
+    private clickCartButton(): void {
         this._currentPage = RouterPage.ShoppingCart;
     }
 
@@ -343,15 +344,22 @@ export class Root extends LitElement {
      *
      * @param orderItem Order item to add to the cart
      */
-    private async addItemToCart(orderItem: OrderItem): Promise<void> {
-        const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+    private addItemToCart(orderItem: OrderItem): void {
+        const cartItem: CartItem | undefined = this._cartItems.find((cartItem) => cartItem.item.id === orderItem.id);
 
-        if (!result) {
-            return;
+
+        if(cartItem === undefined) {
+            this._cartItems.push({
+                item: orderItem,
+                amount: 1
+            });
+        } else {
+            cartItem.amount++;
+            console.log(cartItem);
         }
 
-        this._cartItems = result;
-        this._cartItemsCount = result?.length || 0;
+        this._cartItemsCount = this._cartItems.length || 0;
+        localStorage.setItem("cart", JSON.stringify(this._cartItems));
     }
 
     /**
@@ -417,10 +425,6 @@ export class Root extends LitElement {
         return html`
             <h1>Welkom op de webshop</h1>
 
-            ${this._isLoggedIn
-                ? nothing
-                : html`<p>Je moet ingelogd zijn om producten aan je winkelmandje toe te kunnen voegen!</p>`}
-
             <div class="order-items">${orderItems}</div>
         `;
     }
@@ -436,39 +440,19 @@ export class Root extends LitElement {
                 <h2 id="name${orderItem.id}" @click=${(): Promise<OrderItem> => this.getSingleOrder(orderItem)}>${orderItem.name}</h2>
                 <p id="description${orderItem.id}">${orderItem.description}</p>
                 <p id="price${orderItem.id}">€${orderItem.price}</p>
-                ${
-                    this._isLoggedIn
-                        ? html`<button
-                              @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}
-                          >
-                              Toevoegen aan winkelmandje
-                          </button>`
-                        : nothing
-                }
-                ${
-                    this._isLoggedIn // should be admin
-                        ? html`<button
-                              @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}
-                          >
-                              Verwijderen
-                          </button>`
-                        : nothing
-                }
+                ${html`<button @click=${(): void => this.addItemToCart(orderItem)}>
+                    Toevoegen aan winkelmandje
+                </button>`}
+                ${html`<button @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}>
+                    Verwijderen
+                </button>`}
 
-                ${
-                    this._isLoggedIn // should be admin
-                        ? html`<button @click=${(): void => this.changeToInputField(orderItem)}>Edit</button>`
-                        : nothing
-                }
-                ${
-                    this._isLoggedIn // should be admin
-                        ? html`<button
-                              @click=${async (): Promise<void> => await this.updateOrderItemLogic(orderItem)}
-                          >
-                              update
-                          </button>`
-                        : nothing
-                }
+                ${html`<button @click=${(): void => this.changeToInputField(orderItem)}>Edit</button>`}
+                ${html`<button
+                    @click=${async (): Promise<void> => await this.updateOrderItemLogic(orderItem)}
+                >
+                    update
+                </button>`}
             </div>
         `;
     }
@@ -689,21 +673,13 @@ export class Root extends LitElement {
                             <td>${cartItem.item.name}</td>
                             <td>${cartItem.item.price}</td>
                             <td>${cartItem.amount}</td>
-                            
+
                             <td>
-                                <b
-                                    >&euro;
-                                    ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
-                                        2,
-                                    )}</b
-                                >
+                                <b>&euro; ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2)}</b>
                             </td>
                             <td>
-                                <button class="edit" @click=${this._editCart}>
-                                    <img src="/assets/img/edit.png" alt="Edit" width="20" height="20">
-                                </button>
                                 <button class="delete" @click="${this._deleteCart}">
-                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20">
+                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20" />
                                 </button>
                             </td>
                         </tr>
@@ -719,14 +695,7 @@ export class Root extends LitElement {
         `;
     }
 
-
-    private _deleteCart(): any{
-
-    }
-
-    private _editCart(): any{
-
-    }
+    private _deleteCart(): any {}
 
     private calculateTotalPrice(): number {
         let totalPrice: number = 0;
@@ -874,10 +843,6 @@ export class Root extends LitElement {
      * Renders the cart button in the navigation
      */
     private renderCartInNav(): TemplateResult {
-        if (!this._isLoggedIn) {
-            return html``;
-        }
-
         return html`<div @click=${this.clickCartButton}>
             <button>Winkelmandje (${this._cartItemsCount} producten)</button>
         </div>`;
