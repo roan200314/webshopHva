@@ -55,4 +55,13 @@ export class OrderItemController {
     ): Promise<OrderItem> {
         return this.orderService.updateOrderItem(id, orderItem);
     }
+
+    @Public()
+    @Get("search/:name")
+    @ApiOperation({ summary: "Searches for an order item by its name" })
+    @ApiResponse({ status: 200, description: "Order Item" })
+    public async searchOrderItemByName(@Param("name") name: string): Promise<OrderItem[]> {
+        
+        return await this.orderService.searchOrderItemByName(name);
+    }
 }

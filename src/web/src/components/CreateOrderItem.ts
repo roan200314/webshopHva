@@ -44,6 +44,7 @@ export class CreateOrderItem extends LitElement {
 
         if (!userData) return;
 
+        
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
         this._isEmployee = !(!userData || (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE));
     }
