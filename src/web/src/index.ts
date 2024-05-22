@@ -2,3 +2,4 @@
 export * from "./components/Root";
 export * from "./components/CreateOrderItem";
 export * from "./components/Admin";
+export * from "./components/EmailConfirmation";

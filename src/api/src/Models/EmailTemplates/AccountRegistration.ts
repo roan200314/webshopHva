@@ -1,4 +1,4 @@
-export class RegistrationEmail {
+export class AccountRegistration {
     private readonly userName: string;
     private readonly userEmail: string;
 
@@ -26,8 +26,6 @@ export class RegistrationEmail {
             <td style="border: 1px solid #dddddd; padding: 8px; text-align: left;">${this.userEmail}</td>
         </tr>
       </table>
-      
-      <p>If you did not request this account, please contact our support team immediately.</p>
       
       <p>Thank you for choosing us!</p>
       

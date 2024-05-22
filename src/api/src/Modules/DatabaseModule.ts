@@ -6,6 +6,7 @@ import { Address } from "../Models/Entities/Address";
 import { CartItem } from "../Models/Entities/CartItem";
 import { Order } from "../Models/Entities/Order";
 import { OrderItem } from "../Models/Entities/OrderItem";
+import { EmailConfirmation } from "../Models/Entities/EmailConfirmation";
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { OrderItem } from "../Models/Entities/OrderItem";
                 username: process.env.DATABASE_USER,
                 password: process.env.DATABASE_PASSWORD,
                 database: process.env.DATABASE_NAME,
-                entities: [User, Address, CartItem, Order, OrderItem],
+                entities: [User, Address, CartItem, Order, OrderItem, EmailConfirmation],
                 synchronize: false,
                 autoLoadEntities: false,
                 logging: false,

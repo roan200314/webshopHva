@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request } from "@nestjs/common";
 import { AuthService } from "../Services/AuthService";
 import { Public } from "../Auth/Decorators/public.decorator";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -34,6 +34,16 @@ export class AuthController {
     @ApiBody({ type: CreateUserDto })
     public async register(@Body() createUserDto: CreateUserDto): Promise<{ message: string }> {
         return await this.authService.register(createUserDto);
+    }
+
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @Post("confirmEmail/:token")
+    @ApiOperation({ summary: "Confirms an email" })
+    @ApiConsumes("application/json")
+    @ApiResponse({ status: 200, description: "Email confirmed successfully!" })
+    public async confirmEmail(@Param("token") token: string): Promise<{ message: string }> {
+        return await this.authService.confirmEmail(token);
     }
 
     @HttpCode(HttpStatus.OK)
