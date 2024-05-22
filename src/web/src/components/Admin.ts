@@ -114,6 +114,7 @@ export class Admin extends LitElement {
         }
     }
 
+    
     /**
      * Haal bestellingen op en toon ze
      */
@@ -124,38 +125,44 @@ export class Admin extends LitElement {
             return;
         }
 
-        const allOrdersTable: HTMLTableSectionElement | null = document.getElementById(
-            "allOrdersTable",
-        ) as HTMLTableSectionElement;
+    
+        const allOrdersTable: HTMLTableSectionElement | null = document.getElementById("allOrdersTable") as HTMLTableSectionElement;
         if (!allOrdersTable) return;
-
+    
         allOrdersTable.innerHTML = "";
-
+    
         result.forEach((orderdata) => {
-            const row: any = document.createElement("tr");
+            const row: HTMLTableRowElement = document.createElement("tr");
             if (!this._isLoggedIn) return;
-
+    
             render(
                 html`
                     <td>${orderdata.id}</td>
                     <td>${orderdata.description}</td>
                     <td>${orderdata.name}</td>
-                    <td>${orderdata.price}</td>
-                    <button
-                        class="btn btn-danger delete-btn"
-                        @click=${async (): Promise<void> =>
-                            await this._orderItemService.deleteOrderFunction(orderdata.id)}
-                    >
-                        Verwijderen
-                    </button>
+                    <td>€${orderdata.price}</td>
+                    <td>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> => {
+                                await this._orderItemService.deleteOrderFunction(orderdata.id);
+                                location.reload(); // Reload the page after deletion
+                            }}
+                        >
+                            Verwijderen
+                        </button>
+                        
+                    </td>
                 `,
                 row,
             );
-
+    
             allOrdersTable.appendChild(row);
             console.log("data gevonden");
         });
+        
     }
+    
 
     /**
      * Haal de administrator op en toon deze
@@ -222,7 +229,7 @@ export class Admin extends LitElement {
                                 }
                             }}
                         >
-                            bijwerken
+                            Bijwerken
                         </button>
                         <button
                             class="btn btn-danger delete-btn"

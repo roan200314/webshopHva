@@ -1,11 +1,13 @@
 package com.bramdekker.webshopeditor;
 
 import com.bramdekker.webshopeditor.services.DatabaseService;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.sql.*;
@@ -63,6 +65,11 @@ public class HelloController {
 
     private void updateWelcomeText(Boolean valid) {
         Platform.runLater(() -> welcomeText.setText(valid ? "Database connection is working" : "Database connection is NOT working"));
+
+        // Create a PauseTransition for the desired delay (e.g., 3 seconds)
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(event -> welcomeText.setText(""));
+        pause.play();
     }
 
     @FXML
@@ -98,6 +105,11 @@ public class HelloController {
                             // update en insert statement uitvoeren en label updaten met tekst
                             preparedStatement.executeUpdate();
                             Platform.runLater(() -> exportSuccess.setText("export to database was successful"));
+
+                            // Create a PauseTransition for the desired delay (e.g., 3 seconds)
+                            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+                            pause.setOnFinished(event -> exportSuccess.setText(""));
+                            pause.play();
                         }
                         // Show success message or update UI if needed
                     } catch (IOException | SQLException e) {
@@ -126,6 +138,10 @@ public class HelloController {
         try (PrintWriter writer = new PrintWriter("orderitem_import.csv")) {
             writer.write(csvData.toString());
             Platform.runLater(() -> csvSuccess.setText("export to CSV was successful"));
+            // Create a PauseTransition for the desired delay (e.g., 3 seconds)
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            pause.setOnFinished(event -> csvSuccess.setText(""));
+            pause.play();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             // Behandel de uitzondering als het bestand niet gevonden is
@@ -167,6 +183,7 @@ public class HelloController {
                         String text = csvData.toString();
                         textarea_text.setText(text);
                     });
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                     // Behandel de SQLException op de juiste manier
