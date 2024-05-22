@@ -74,7 +74,7 @@ export class GameItems extends LitElement {
         return html`
             <div class="product">
                 <h3>${games.title}</h3>
-                <img src="${imageURL}" alt="${games.tags}">
+                <img src="${imageURL}" alt="${games.authors}">
                 <p>${games.descriptionMarkdown}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${games.authors}</span>

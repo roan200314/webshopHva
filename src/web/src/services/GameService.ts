@@ -27,6 +27,24 @@ export class GameService {
         return (await response.json()) as Games[];
     }
 
+    // Search game by name
+    public async searchGameByName(title: string): Promise<number | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}games/search/${title}`, {
+            method: "get",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            console.error(response);
+            return undefined;
+        }
+
+        const game: Games = await response.json();
+        console.log(game.id);
+        return game.id; 
+    }
+
     // Example delete function for games
     public async deleteGameFunction(id: number): Promise<void> {
         const confirmed: any = confirm("Are you sure you want to delete user " + id + "?");
