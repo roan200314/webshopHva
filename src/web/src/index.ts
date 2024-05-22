@@ -4,3 +4,4 @@ export * from "./components/CreateOrderItem";
 export * from "./components/Admin";
 export * from "./components/OrderItems";
 export * from "./components/OrderItemSearch";
+export * from "./components/EmailConfirmation";
