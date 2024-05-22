@@ -4,7 +4,7 @@ import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("order-item-search")
-export class OrderItemSearch extends LitElement {
+export class OrderItemSearchComponent extends LitElement {
     public static styles = css`
         .search-item-bar {
             padding: 10px;

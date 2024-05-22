@@ -4,7 +4,7 @@ import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("order-items")
-export class OrderItems extends LitElement {
+export class OrderItemsComponent extends LitElement {
     public static styles = css`
         .product-section {
             display: grid;

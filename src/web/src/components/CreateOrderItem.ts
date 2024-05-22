@@ -2,13 +2,13 @@ import { LitElement, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
-import { AuthorizationLevel } from "./Admin";
+import { AuthorizationLevel } from "../pages/AdminComponent";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
 
 @customElement("create-order-item")
-export class CreateOrderItem extends LitElement {
-    
+export class CreateOrderItemComponent extends LitElement {
+
     @state()
     private orderItem: any = {
         name: "",

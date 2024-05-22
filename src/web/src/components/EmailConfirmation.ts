@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { css, html, LitElement, TemplateResult } from "lit";
 
 @customElement("email-confirmation")
-export class EmailConfirmation extends LitElement {
+export class EmailConfirmationComponent extends LitElement {
     private userService: UserService = new UserService();
 
     @state()

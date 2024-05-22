@@ -1,7 +1,5 @@
-// Importeer de benodigde modules en services
 import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Games, UserData } from "@shared/types";
@@ -22,7 +20,7 @@ export enum AuthorizationLevel {
  * @todo De meeste logica in dit component is te simpel. Je moet het grootste deel vervangen door echte implementaties.
  */
 @customElement("admin-root")
-export class Admin extends LitElement {
+export class AdminComponent extends LitElement {
     // CSS-stijlen voor dit component
     public static styles = css`
         header {
@@ -78,7 +76,6 @@ export class Admin extends LitElement {
 
     // Initialisatie van services
     private _userService: UserService = new UserService();
-    private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
     private _getGamesService: GameService = new GameService();
     private _deleteUserService: UserService = new UserService();

@@ -8,35 +8,13 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Address, CartItem, UserData } from "@shared/types";
 import { AddressService } from "../services/AddressService";
 
-/** Enumeration to keep track of all the different pages */
-enum RouterPage {
-    Home = "orderItems",
-    Login = "login",
-    Register = "register",
-    products = "product",
-    Admin = "admin",
-    ShoppingCart = "shoppingCart",
-    OrderConfirmation = "orderConfirmation",
-    InfoConfirmation = "infoConfirmation",
-}
-
-/**
- * @enum AuthorizationLevel
- * @description Een enumeratie van autorisatieniveaus.
- */
-export enum AuthorizationLevel {
-    USER = "user",
-    EMPLOYEE = "employee",
-    ADMIN = "admin",
-}
-
 /**
  * Custom element based on Lit for the header of the webshop.
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
  */
 @customElement("webshop-root")
-export class Root extends LitElement {
+export class RootComponent extends LitElement {
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -167,9 +145,6 @@ export class Root extends LitElement {
     `;
 
     @state()
-    private _currentPage: RouterPage = RouterPage.Home;
-
-    @state()
     private _isLoggedIn: boolean = false;
 
     @state()
@@ -188,7 +163,6 @@ export class Root extends LitElement {
 
     private _user: UserData = {
         email: "",
-        password: "",
         name: "",
         id: 0,
     };
