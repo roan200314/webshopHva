@@ -13,6 +13,7 @@ export class OrderService {
         @InjectRepository(OrderItem)
         private orderItemRepository: Repository<OrderItem>,
     ) {}
+
     /**
      * Creates an order item.
      * @param createOrderItemDto - DTO containing the order item details.
@@ -25,6 +26,7 @@ export class OrderService {
         orderItem.description = createOrderItemDto.description;
         await this.orderRepository.save(orderItem);
     }
+
     /**
      * Retrieves all available order items.
      * @returns {Promise<OrderItem[]>}
@@ -32,6 +34,7 @@ export class OrderService {
     public async getAllOrderItems(): Promise<OrderItem[]> {
         return await this.orderItemRepository.find();
     }
+
     /**
      * Creates a new order item.
      * @param orderItem - The order item to create.
