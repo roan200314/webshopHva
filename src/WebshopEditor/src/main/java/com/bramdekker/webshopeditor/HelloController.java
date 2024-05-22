@@ -154,7 +154,7 @@ public class HelloController {
             .returnConnection()
             .thenAcceptAsync(connection -> {
                 try (Statement statement = connection.createStatement();
-                     ResultSet resultSet = statement.executeQuery("SELECT * FROM orderitem")) {
+                     ResultSet resultSet = statement.executeQuery("SELECT title FROM games WHERE 1")) {
 
                     // Bouw een StringBuilder op om de CSV-geformatteerde gegevens op te slaan
                     StringBuilder csvData = new StringBuilder();

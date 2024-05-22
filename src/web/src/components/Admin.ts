@@ -4,7 +4,8 @@ import { customElement, state } from "lit/decorators.js";
 import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { OrderItem, UserData } from "@shared/types";
+import { Games, UserData } from "@shared/types";
+import { GameService } from "../services/GameService";
 /**
  * @enum AuthorizationLevel
  * @description Een enumeratie van autorisatieniveaus.
@@ -79,6 +80,7 @@ export class Admin extends LitElement {
     private _userService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
+    private _getGamesService: GameService = new GameService();
     private _deleteUserService: UserService = new UserService();
     private selectedAuthorizationLevel: string = "";
     private isAdmin: boolean = false;
@@ -96,7 +98,7 @@ export class Admin extends LitElement {
 
         if (this.isAdmin === true) {
         await this.getWelcome();
-        await this.getOrderItems();
+        await this.getGames();
         await this.getAdmin();
         await this.showAllUsers();
         }
@@ -115,53 +117,50 @@ export class Admin extends LitElement {
     }
 
     
-    /**
-     * Haal bestellingen op en toon ze
-     */
-    private async getOrderItems(): Promise<void> {
-        const result: OrderItem[] | undefined = await this._orderItemService.getAll();
-        if (!result || result.length === 0) {
-            console.log("Geen bestellingen gevonden.");
-            return;
-        }
-
-    
-        const allOrdersTable: HTMLTableSectionElement | null = document.getElementById("allOrdersTable") as HTMLTableSectionElement;
-        if (!allOrdersTable) return;
-    
-        allOrdersTable.innerHTML = "";
-    
-        result.forEach((orderdata) => {
-            const row: HTMLTableRowElement = document.createElement("tr");
-            if (!this._isLoggedIn) return;
-    
-            render(
-                html`
-                    <td>${orderdata.id}</td>
-                    <td>${orderdata.description}</td>
-                    <td>${orderdata.name}</td>
-                    <td>€${orderdata.price}</td>
-                    <td>
-                        <button
-                            class="btn btn-danger delete-btn"
-                            @click=${async (): Promise<void> => {
-                                await this._orderItemService.deleteOrderFunction(orderdata.id);
-                                location.reload(); // Reload the page after deletion
-                            }}
-                        >
-                            Verwijderen
-                        </button>
-                        
-                    </td>
-                `,
-                row,
-            );
-    
-            allOrdersTable.appendChild(row);
-            console.log("data gevonden");
-        });
-        
+/**
+ * Haal spellen op en toon ze
+ */
+private async getGames(): Promise<void> {
+    const result: Games[] | undefined = await this._getGamesService.getGames();
+    if (!result || result.length === 0) {
+        console.log("Geen spellen gevonden.");
+        return;
     }
+    const allGamesTable: HTMLTableSectionElement | null = document.getElementById("allGamesTable") as HTMLTableSectionElement;
+    if (!allGamesTable) return;
+
+    allGamesTable.innerHTML = "";
+
+    result.forEach((gamedata) => {
+        const row: HTMLTableRowElement = document.createElement("tr");
+        if (!this._isLoggedIn) return;
+
+        render(
+            html`
+                <td>${gamedata.id}</td>
+                <td>${gamedata.title}</td>
+                <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100"></td>
+                <td>${gamedata.descriptionMarkdown}</td>
+                <td>${gamedata.tags}</td>
+                <td>
+                    <button
+                        class="btn btn-danger delete-btn"
+                        @click=${async (): Promise<void> => {
+                            await this._getGamesService.deleteGameFunction(gamedata.id);
+                            location.reload(); // Reload the page after deletion
+                        }}
+                    >
+                        Verwijderen
+                    </button>
+                </td>
+            `,
+            row,
+        );
+
+        allGamesTable.appendChild(row);
+        console.log("data gevonden");
+    });
+}
     
 
     /**
