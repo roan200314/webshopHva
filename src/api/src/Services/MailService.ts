@@ -6,14 +6,13 @@ import { EmailConfirmation } from "../Models/EmailTemplates/EmailConfirmation";
 
 @Injectable()
 export class MailService {
-
     public async emailConfirmation(emailAddress: string, name: string, emailToken: string): Promise<void> {
         try {
             const email: Email = {
                 to: [{ address: emailAddress, name: name }],
                 subject: "Email Confirmation",
                 from: { address: "noreply@webshop.com", name: "WebShop" },
-                html: new EmailConfirmation(name, emailToken).generate()
+                html: new EmailConfirmation(name, emailToken).generate(),
             };
 
             await this.sendEmail(email);
@@ -28,7 +27,7 @@ export class MailService {
                 to: [{ address: emailAddress, name: name }],
                 subject: "Registration Confirmation",
                 from: { address: "noreply@webshop.com", name: "WebShop" },
-                html: new AccountRegistration(name, emailAddress).generate()
+                html: new AccountRegistration(name, emailAddress).generate(),
             };
 
             await this.sendEmail(email);

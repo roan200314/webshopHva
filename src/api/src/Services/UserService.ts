@@ -19,7 +19,6 @@ import * as crypto from "node:crypto";
  */
 @Injectable()
 export class UserService {
-
     /**
      * Initialization of UsersService class involves injecting a user's repository.
      *
@@ -110,7 +109,7 @@ export class UserService {
     public async confirmEmail(token: string): Promise<{ message: string; status: number }> {
         const emailConfirmation: EmailConfirmation = await this.emailConfirmationRepository.findOne({
             where: { confirmationToken: token },
-            relations: ["user"]
+            relations: ["user"],
         });
 
         if (!emailConfirmation) {
@@ -124,11 +123,14 @@ export class UserService {
         emailConfirmation.confirmed = true;
         await this.emailConfirmationRepository.save(emailConfirmation);
 
-        await this.mailService.confirmAccountRegistration(emailConfirmation.user.email, emailConfirmation.user.name);
+        await this.mailService.confirmAccountRegistration(
+            emailConfirmation.user.email,
+            emailConfirmation.user.name,
+        );
 
         return {
             message: "Email confirmed successfully",
-            status: 200
+            status: 200,
         };
     }
 

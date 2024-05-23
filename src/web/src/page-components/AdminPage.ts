@@ -1,20 +1,10 @@
-// Importeer de benodigde modules en services
 import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Games, UserData } from "@shared/types";
 import { GameService } from "../services/GameService";
-/**
- * @enum AuthorizationLevel
- * @description Een enumeratie van autorisatieniveaus.
- */
-export enum AuthorizationLevel {
-    USER = "user",
-    EMPLOYEE = "employee",
-    ADMIN = "admin",
-}
+import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 
 /**
  * Aangepast element gebaseerd op Lit voor de header van de webshop.
@@ -22,7 +12,7 @@ export enum AuthorizationLevel {
  * @todo De meeste logica in dit component is te simpel. Je moet het grootste deel vervangen door echte implementaties.
  */
 @customElement("admin-root")
-export class Admin extends LitElement {
+export class AdminPage extends LitElement {
     // CSS-stijlen voor dit component
     public static styles = css`
         header {
@@ -78,13 +68,11 @@ export class Admin extends LitElement {
 
     // Initialisatie van services
     private _userService: UserService = new UserService();
-    private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
     private _getGamesService: GameService = new GameService();
     private _deleteUserService: UserService = new UserService();
     private selectedAuthorizationLevel: string = "";
     private isAdmin: boolean = false;
-    
 
     // Lifecycle-methode voor aangesloten component
     public async connectedCallback(): Promise<void> {
@@ -97,10 +85,9 @@ export class Admin extends LitElement {
         }
 
         if (this.isAdmin === true) {
-        await this.getWelcome();
-        await this.getGames();
-        await this.getAdmin();
-        await this.showAllUsers();
+            await this.getWelcome();
+            await this.getGames();
+            await this.showAllUsers();
         }
     }
 
@@ -109,69 +96,58 @@ export class Admin extends LitElement {
      */
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-    
+
         if (result) {
             this._isLoggedIn = true;
             this._cartItemsCount = result.cartItems?.length || 0;
         }
     }
 
-    
-/**
- * Haal spellen op en toon ze
- */
-private async getGames(): Promise<void> {
-    const result: Games[] | undefined = await this._getGamesService.getGames();
-    if (!result || result.length === 0) {
-        console.log("Geen spellen gevonden.");
-        return;
-    }
-    const allGamesTable: HTMLTableSectionElement | null = document.getElementById("allGamesTable") as HTMLTableSectionElement;
-    if (!allGamesTable) return;
-
-    allGamesTable.innerHTML = "";
-
-    result.forEach((gamedata) => {
-        const row: HTMLTableRowElement = document.createElement("tr");
-        if (!this._isLoggedIn) return;
-
-        render(
-            html`
-                <td>${gamedata.id}</td>
-                <td>${gamedata.title}</td>
-                <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100"></td>
-                <td>${gamedata.descriptionMarkdown}</td>
-                <td>
-                    <button
-                        class="btn btn-danger delete-btn"
-                        @click=${async (): Promise<void> => {
-                            await this._getGamesService.deleteGameFunction(gamedata.id);
-                        }}
-                    >
-                        Verwijderen
-                    </button>
-                </td>
-            `,
-            row,
-        );
-
-        allGamesTable.appendChild(row);
-        console.log("data gevonden");
-    });
-}
-    
-
     /**
-     * Haal de administrator op en toon deze
+     * Haal spellen op en toon ze
      */
-    private async getAdmin(): Promise<void> {
-        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-        if (result) {
-            const adminNameDiv: HTMLElement | null = document.getElementById("adminName");
-            if (adminNameDiv) {
-                adminNameDiv.innerText = "Hallo " + result.user.authorizationLevel + ` ${result.user.name}`;
-            }
+    private async getGames(): Promise<void> {
+        const result: Games[] | undefined = await this._getGamesService.getGames();
+        if (!result || result.length === 0) {
+            console.log("Geen spellen gevonden.");
+            return;
         }
+        const allGamesTable: HTMLTableSectionElement | null = document.getElementById(
+            "allGamesTable",
+        ) as HTMLTableSectionElement;
+        if (!allGamesTable) return;
+
+        allGamesTable.innerHTML = "";
+
+        result.forEach((gamedata) => {
+            const row: HTMLTableRowElement = document.createElement("tr");
+            if (!this._isLoggedIn) return;
+
+            render(
+                html`
+                    <td>${gamedata.id}</td>
+                    <td>${gamedata.title}</td>
+                    <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
+                    <td>${gamedata.descriptionMarkdown}</td>
+                    <td>${gamedata.tags}</td>
+                    <td>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> => {
+                                await this._getGamesService.deleteGameFunction(gamedata.id);
+                                location.reload(); // Reload the page after deletion
+                            }}
+                        >
+                            Verwijderen
+                        </button>
+                    </td>
+                `,
+                row,
+            );
+
+            allGamesTable.appendChild(row);
+            console.log("data gevonden");
+        });
     }
 
     /**
@@ -212,7 +188,7 @@ private async getGames(): Promise<void> {
                         </select>
                     </td>
                     <td>
-                    <button
+                        <button
                             class="btn btn-primary update-btn"
                             @click=${async (): Promise<void> => {
                                 if (this.selectedAuthorizationLevel) {
@@ -231,11 +207,10 @@ private async getGames(): Promise<void> {
                         <button
                             class="btn btn-danger delete-btn"
                             @click=${async (): Promise<void> =>
-                                await this._deleteUserService.deleteFun(userdata.id)}                                
+                                await this._deleteUserService.deleteFun(userdata.id)}
                         >
                             Verwijderen
                         </button>
-
                     </td>
                 `,
                 row,
@@ -264,17 +239,6 @@ private async getGames(): Promise<void> {
      * Render de componenten
      */
     protected render(): TemplateResult {
-        return html`
-            <header>
-                <nav>
-                    <div class="logo">
-                        <a href="/index.html">
-                            <img src="/assets/img/logo.png" alt="Logo" />
-                        </a>
-                    </div>
-                </nav>
-            </header>
-
-        `;
+        return html``;
     }
 }

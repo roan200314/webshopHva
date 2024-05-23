@@ -4,7 +4,7 @@ import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("order-item-search")
-export class OrderItemSearch extends LitElement {
+export class OrderItemSearchComponent extends LitElement {
     public static styles = css`
         .search-item-bar {
             padding: 10px;
@@ -14,25 +14,27 @@ export class OrderItemSearch extends LitElement {
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
+
     /**
-     * 
+     *
      * @returns {TemplateResult}
      * Renders the search bar for order items
      */
     public render(): TemplateResult {
         return html`
             <form @submit=${this.searchOrderItemByName}>
-                <input type="text" class="search-item-bar" placeholder="Search for an item by name" />  
+                <input type="text" class="search-item-bar" placeholder="Search for an item by name" />
             </form>
         `;
     }
+
     /**
      * Retrieves all order items
      */
     private async getAllOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
         if (result) {
-            const orderItemsElement:any = document.querySelector("order-items");
+            const orderItemsElement: any = document.querySelector("order-items");
             if (orderItemsElement) {
                 orderItemsElement.orderItems = result;
             }
@@ -40,8 +42,9 @@ export class OrderItemSearch extends LitElement {
             alert("Could not fetch all order items");
         }
     }
+
     /**
-     * 
+     *
      * @param event
      * Searches for an order item by name and displays the result
      */
@@ -65,7 +68,7 @@ export class OrderItemSearch extends LitElement {
 
             if (response.ok) {
                 const orderItems: OrderItem[] = await response.json();
-                const orderItemsElement:any = document.querySelector("order-items");
+                const orderItemsElement: any = document.querySelector("order-items");
                 if (orderItemsElement) {
                     orderItemsElement.orderItems = orderItems;
                 }

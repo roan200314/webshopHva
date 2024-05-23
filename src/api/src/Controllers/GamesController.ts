@@ -22,13 +22,13 @@ export class GamesController {
     @ApiOperation({ summary: "Games Importer" })
     @ApiResponse({ status: 200, description: "Successful import of the games" })
     @Public()
-    @ApiBody({ type: Games, isArray: true})
+    @ApiBody({ type: Games, isArray: true })
     @Post("massImport")
     public async massImport(@Body() games: Games[]): Promise<void> {
         await this.gamesService.massImport(games);
     }
 
-        // deletes user
+    // deletes user
     @HttpCode(HttpStatus.OK)
     @Delete("/:id")
     @Public()
