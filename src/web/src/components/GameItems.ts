@@ -73,7 +73,7 @@ export class GameItems extends LitElement {
     }
 
     private renderGameItem(games: Games): TemplateResult {
-        const gameText: any = games.descriptionMarkdown && games.descriptionMarkdown.length > 50 ? games.descriptionMarkdown.substring(0, 50) + "..." : games.descriptionMarkdown;
+        const gameText: any = games.descriptionMarkdown && games.descriptionMarkdown.length > 100 ? games.descriptionMarkdown.substring(0, 100) + "..." : games.descriptionMarkdown;
         const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
         return html`
             <div class="product">
