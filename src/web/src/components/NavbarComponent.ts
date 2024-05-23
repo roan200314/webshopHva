@@ -1,11 +1,11 @@
-import { html, css, TemplateResult, nothing } from "lit";
+import { css, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { LitElement } from "lit";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { UserData } from "@shared/types";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 import { TokenService } from "../services/TokenService";
+import { CartUpdatedEventDetail } from "../models/interfaces/CartUpdatedEventDetail";
 
 @customElement("navbar-component")
 export class NavbarComponent extends LitElement {
@@ -88,11 +88,13 @@ export class NavbarComponent extends LitElement {
         super.connectedCallback();
         await this.getUserInformation();
 
-        window.addEventListener("cart-update", (): void => {
-            void (async (): Promise<void> => {
-                await this.getUserInformation();
-            })();
+        window.addEventListener("cart-updated", (e) => {
+           this.handleCartUpdated(e as CustomEvent<CartUpdatedEventDetail>);
         });
+    }
+
+    private handleCartUpdated(e: CustomEvent<CartUpdatedEventDetail>): void {
+        this.cartItemCount = e.detail.cartItems.length;
     }
 
     public render(): TemplateResult {

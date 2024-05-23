@@ -2,6 +2,8 @@ import { LitElement, TemplateResult, html, css } from "lit";
 import { customElement, state, property } from "lit/decorators.js";
 import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
+import { UserService } from "../services/UserService";
+import { CartItem } from "@shared/types";
 
 @customElement("order-items")
 export class OrderItemsComponent extends LitElement {
@@ -55,6 +57,7 @@ export class OrderItemsComponent extends LitElement {
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
+    private _userService: UserService = new UserService();
 
     @property({ type: Array })
     public orderItems: OrderItem[] = [];
@@ -67,6 +70,7 @@ export class OrderItemsComponent extends LitElement {
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+
         await this.getOrderItems();
         this.attachFilterListeners();
     }
@@ -141,7 +145,7 @@ export class OrderItemsComponent extends LitElement {
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
-                    <button class="add-to-cart-button">In cart</button>
+                    <button class="add-to-cart-button" @click=${async (): Promise<void> => await this.addToCart(orderItem)}>In cart</button>
                 </div>
             </div>
         `;
@@ -153,5 +157,21 @@ export class OrderItemsComponent extends LitElement {
                 ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
             </section>
         `;
+    }
+
+    private async addToCart(orderItem: OrderItem): Promise<void> {
+        const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+
+        if (result) {
+            this.dispatchEvent(
+                new CustomEvent("cart-updated", {
+                    detail: {
+                        cartItems: result,
+                    },
+                    bubbles: true,
+                    composed: true
+                })
+            );
+        }
     }
 }
