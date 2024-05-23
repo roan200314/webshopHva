@@ -42,7 +42,7 @@ export class OrderItemService {
         }
     }
 
-    public async order(cartItems : CartItem[], adressData : Address) : Promise<void> {
+    public async order(cartItems: CartItem[], adressData: Address) : Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
             method: "POST",
