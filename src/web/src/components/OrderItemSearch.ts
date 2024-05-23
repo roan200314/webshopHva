@@ -14,6 +14,7 @@ export class OrderItemSearchComponent extends LitElement {
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
+
     /**
      *
      * @returns {TemplateResult}
@@ -26,6 +27,7 @@ export class OrderItemSearchComponent extends LitElement {
             </form>
         `;
     }
+
     /**
      * Retrieves all order items
      */
@@ -40,6 +42,7 @@ export class OrderItemSearchComponent extends LitElement {
             alert("Could not fetch all order items");
         }
     }
+
     /**
      *
      * @param event
