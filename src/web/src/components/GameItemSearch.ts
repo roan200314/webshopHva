@@ -55,8 +55,7 @@ export class GameItemSearch extends LitElement {
 
             if (response.ok) {
                 const gameItems: Games[] = await response.json();
-                const gameItemsElement: any = document.getElementsByClassName("product");
-                gameItemsElement.innerHTML = "";
+                const gameItemsElement: any = document.querySelector("game-items");
                 if (gameItemsElement) {
                     gameItemsElement.gameItems = gameItems;
                     console.log(gameItemsElement.gameItems = gameItems);
