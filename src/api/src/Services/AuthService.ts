@@ -6,6 +6,7 @@ import { LoginUserDto } from "../Models/Dto/User/LoginUserDto";
 import { User } from "../Models/Entities/User";
 import { UserDto } from "../Models/Dto/User/UserDto";
 import { AuthorizationLevel } from "../Models/Enumerations/AuthorizationLevel";
+import { MailService } from "./MailService";
 
 /**
  * A service provides functionality for user authentication including registration and login.
@@ -21,10 +22,12 @@ export class AuthService {
      *
      * @param {UserService} usersService - An instance of UsersService.
      * @param {JwtService} jwtService - An instance of JwtService.
+     * @param mailService
      */
     public constructor(
         private readonly usersService: UserService,
         private readonly jwtService: JwtService,
+        private readonly mailService: MailService,
     ) {
         this.Logger = new Logger(AuthService.name);
     }
@@ -75,15 +78,21 @@ export class AuthService {
             throw new BadRequestException("User already exists");
         }
 
-        try {
-            await this.usersService.registerUser(createUserDto);
-        } catch (e) {
-            this.Logger.error(`Failed to register user: ${createUserDto.email}`);
-            throw new BadRequestException("Failed to register user");
+        await this.usersService.registerUser(createUserDto);
+
+        const emailToken: string | null = await this.usersService.generateEmailToken(createUserDto.email);
+        if (!emailToken) {
+            throw new BadRequestException("Failed to generate email token");
         }
+
+        await this.mailService.emailConfirmation(createUserDto.email, createUserDto.name, emailToken);
 
         this.Logger.log(`User ${createUserDto.email} registered successfully`);
         return { message: "User registered successfully" };
+    }
+
+    public async confirmEmail(token: string): Promise<{ message: string }> {
+        return await this.usersService.confirmEmail(token);
     }
 
     /**

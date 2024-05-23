@@ -69,6 +69,22 @@ export class UserService {
         return true;
     }
 
+    public async confirmEmail(token: string): Promise<string> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}auth/confirmEmail/${token}`, {
+            method: "POST",
+        });
+
+        // eslint-disable-next-line @typescript-eslint/typedef
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            console.error(response);
+            return responseData.message;
+        }
+
+        return responseData.message;
+    }
+
     /**
      * Handles user welcome message containing user and cart data. Requires a valid token.
      *
@@ -95,6 +111,7 @@ export class UserService {
         return (await response.json()) as UserHelloResponse;
     }
 
+    //gets all users from db
     public async getUsers(): Promise<UserData[] | undefined> {
         const token: string | undefined = this._tokenService.getToken();
         const responses: Response = await fetch(`${viteConfiguration.API_URL}auth/getUsers`, {
@@ -111,6 +128,7 @@ export class UserService {
         return (await responses.json()) as UserData[];
     }
 
+    //deletes a user based on id
     public async deleteFun(id: number): Promise<void> {
         const confirmed: any = confirm("Are you sure you want to delete user " + id + "?");
         if (confirmed) {
@@ -126,6 +144,7 @@ export class UserService {
         }
     }
 
+    //updates a auth based on id
     public async updateFun(userId: number, newAuthorizationLevel: string): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/update/${userId}`, {

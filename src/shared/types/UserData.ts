@@ -10,9 +10,8 @@ export enum AuthorizationLevel {
 
 export type UserData = {
     id: number;
-    email: string;
-    password: string;
     name: string;
+    email: string;
 
     firstName?: string;
     lastName?: string;

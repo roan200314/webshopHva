@@ -36,9 +36,8 @@ export class UserController {
         @Body() updateData: { authorizationLevel: AuthorizationLevel },
     ): Promise<{ message: string }> {
         await this.userService.updateAuthenticationLevelById(id, updateData.authorizationLevel);
-        return { message: "User " + id +" authorization level updated successfully" };
+        return { message: "User " + id + " authorization level updated successfully" };
     }
-
 
     // gets name, cart items and email
     @ApiOperation({ summary: "Get a welcome message for the user" })

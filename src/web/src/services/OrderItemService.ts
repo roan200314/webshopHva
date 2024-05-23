@@ -1,4 +1,4 @@
-import { OrderItem } from "@shared/types";
+import { Address, CartItem, OrderItem } from "@shared/types";
 import { TokenService } from "./TokenService";
 
 const headers: { "Content-Type": string } = {
@@ -37,9 +37,23 @@ export class OrderItemService {
 
         if (!response.ok) {
             console.error(response);
-        }
-        else {
+        } else {
             alert("item deleted successfully");
+        }
+    }
+
+    public async order(cartItems: CartItem[], adressData: Address) : Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
+            method: "POST",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+                "cartItem": cartItems, "adressData": adressData
+            })
+        });
+
+        if (!response.ok) {
+            console.error(response);
         }
     }
 }
