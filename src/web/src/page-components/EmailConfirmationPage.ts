@@ -2,8 +2,8 @@ import { UserService } from "../services/UserService";
 import { customElement, state } from "lit/decorators.js";
 import { css, html, LitElement, TemplateResult } from "lit";
 
-@customElement("email-confirmation")
-export class EmailConfirmation extends LitElement {
+@customElement("email-confirmation-page")
+export class EmailConfirmationComponent extends LitElement {
     private userService: UserService = new UserService();
 
     @state()
@@ -46,8 +46,14 @@ export class EmailConfirmation extends LitElement {
         }
 
         @keyframes appear {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     `;
 

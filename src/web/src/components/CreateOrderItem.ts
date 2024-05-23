@@ -1,14 +1,12 @@
-import { LitElement, TemplateResult, html } from "lit";
+import { html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
-import { AuthorizationLevel } from "./Admin";
+import { AuthorizationLevel } from "../page-components/AdminPage";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
-
 @customElement("create-order-item")
-export class CreateOrderItem extends LitElement {
-    
+export class CreateOrderItemComponent extends LitElement {
     @state()
     private orderItem: any = {
         name: "",
@@ -21,6 +19,8 @@ export class CreateOrderItem extends LitElement {
 
     @state()
     private _isEmployee: boolean = false;
+    private _tokenService: TokenService = new TokenService();
+    private _userService: UserService = new UserService();
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -29,14 +29,31 @@ export class CreateOrderItem extends LitElement {
         this.render();
     }
 
-    private _tokenService: TokenService = new TokenService();
-    private _userService: UserService = new UserService();
+    public render(): TemplateResult {
+        if (!this._isLoggedIn || !this._isEmployee) return html``;
+
+        return html`
+            <form @submit=${this.createOrderItem}>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" @input=${this.updateName} required/>
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" @input=${this.updatePrice} required/>
+                <label for="description">Description</label>
+                <textarea
+                        id="description"
+                        name="description"
+                        @input=${this.updateDescription}
+                        required
+                ></textarea>
+                <button type="submit">Create</button>
+            </form>
+        `;
+    }
 
     private async handleLogin(): Promise<void> {
         if (this._tokenService.getToken()) {
             this._isLoggedIn = true;
-        }
-        else {
+        } else {
             return;
         }
 
@@ -44,30 +61,12 @@ export class CreateOrderItem extends LitElement {
 
         if (!userData) return;
 
-        
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        this._isEmployee = !(!userData || (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE));
-    }
-
-    public render(): TemplateResult {
-        if (!this._isLoggedIn || !this._isEmployee) return html``;
-
-        return html`
-            <form @submit=${this.createOrderItem}>
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" @input=${this.updateName} required />
-                <label for="price">Price</label>
-                <input type="number" id="price" name="price" @input=${this.updatePrice} required />
-                <label for="description">Description</label>
-                <textarea
-                    id="description"
-                    name="description"
-                    @input=${this.updateDescription}
-                    required
-                ></textarea>
-                <button type="submit">Create</button>
-            </form>
-        `;
+        this._isEmployee = !(
+            !userData ||
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+            (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE)
+        );
     }
 
     /**
@@ -114,8 +113,7 @@ export class CreateOrderItem extends LitElement {
         });
         if (!response.ok) {
             alert("Could not create order item");
-        }
-        else {
+        } else {
             alert("Order item created successfully");
         }
     }

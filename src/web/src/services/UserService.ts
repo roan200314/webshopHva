@@ -128,7 +128,6 @@ export class UserService {
         return (await responses.json()) as UserData[];
     }
 
-
     //deletes a user based on id
     public async deleteFun(id: number): Promise<void> {
         const confirmed: any = confirm("Are you sure you want to delete user " + id + "?");

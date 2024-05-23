@@ -1,4 +1,4 @@
-export type Games = { 
+export type Games = {
     id: number;
     title: string;
     thumbnail: string;
@@ -8,4 +8,4 @@ export type Games = {
     url: string;
     authors: string;
     tags: string;
-}
+};

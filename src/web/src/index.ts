@@ -8,3 +8,6 @@ export * from "./components/GameItemSearch";
 export * from "./components/EmailConfirmation";
 export * from "./components/GameItems.ts";
 
+
+export * from "./components/OrderItems";
+export * from "./components/CreateOrderItem";
