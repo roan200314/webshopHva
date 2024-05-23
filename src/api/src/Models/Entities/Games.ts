@@ -39,7 +39,7 @@ export class Games {
     @ApiProperty()
     public tags: GameTag[];
 
-
     @Column({ type: "decimal", precision: 15, scale: 2, nullable: false })
+    @ApiProperty()
     public price: number;
 }
