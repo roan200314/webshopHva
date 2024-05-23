@@ -81,7 +81,7 @@ export class GameItems extends LitElement {
                 <img class="gameFoto" src="${imageURL}" alt="${games.authors}">
                 <p>${gameText}</p>
                 <div class="buttons">
-                    <span class="base-price">€ ${games.authors}</span>
+                    <span class="base-price">€ ${games.price}</span>
                     <button class="add-to-cart-button">In cart</button>
                 </div>
             </div>

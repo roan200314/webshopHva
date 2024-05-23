@@ -57,9 +57,22 @@ export class GameItemSearch extends LitElement {
                 const gameItems: Games[] = await response.json();
                 const gameItemsElement: any = document.querySelector("game-items");
                 if (gameItemsElement) {
-                    gameItemsElement.gameItems = gameItems;
-                    console.log(gameItems);
-                }
+                    gameItems.forEach((games) => {
+                        const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
+                        console.log(gameItems);
+                        return html`
+                        <div class="product">
+                            <h3>${games.title}</h3>
+                            <img class="gameFoto" src="${imageURL}" alt="${games.authors}">
+                            <p>${games.descriptionMarkdown}</p>
+                            <div class="buttons">
+                                <span class="base-price">€ ${games.authors}</span>
+                                <button class="add-to-cart-button">In cart</button>
+                            </div>
+                        </div>
+                    `;  
+                    }
+                );}
             } else {
                 alert("Could not get game items");
             }

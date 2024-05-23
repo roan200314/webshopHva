@@ -129,7 +129,7 @@ export class AdminPage extends LitElement {
                     <td>${gamedata.title}</td>
                     <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
                     <td>${gamedata.descriptionMarkdown}</td>
-                    <td>${gamedata.tags}</td>
+                    <td>€${gamedata.price}</td>
                     <td>
                         <button
                             class="btn btn-danger delete-btn"
