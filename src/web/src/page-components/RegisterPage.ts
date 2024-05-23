@@ -124,7 +124,7 @@ export class RegisterPage extends LitElement {
         await this.userService.register(this.userForm).then((registrationResult: boolean): void => {
             if (registrationResult) {
                 alert("Successfully registered!");
-                window.location.href = "/login";
+                window.location.href = "/login.html";
             } else {
                 alert("Registration failed!");
             }
