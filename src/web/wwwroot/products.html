@@ -12,34 +12,16 @@
 <body>
   <navbar-component></navbar-component>
   <div class="wrapper">
-    <nav class="navbar">
-      <div class="navbar-logo">
-        <a href="/index.html">
-          <img src="/assets/img/logo.png" alt="Logo" class="logo">
-        </a>
-      </div>
-      <div class="navigation">
-        <form class="nav-search">
-          <game-item-search></game-item-search>
-        </form>     
-        <ul class="navbar-links">
-          <li><a href="#" class="selected">Games</a></li>
-          <li><a href="#">Merchandise</a></li>
-          <li><a href="#">News</a></li>
-        </ul>  
-      </div>
-      <div class="nav-shop">
-        <button class="login-btn btn">Login</button>
-        <i class="fa-solid fa-cart-shopping"></i>
-      </div>
-    </nav>
     <ul class="product-filter">
       <li><span class="filter-title">Filter: </span></li>
       <li class="filter-option"><a href="#" id="price-filter">Price</a></li>
       <li class="filter-option"><a href="#" id="name-filter">Name</a></li>
       <li class="filter-option"><a href="#" id="offer-filter">Offers</a></li>
     </ul>
-    <game-items></game-items> <!-- Add the custom element here -->
+    <form class="nav-search">
+      <order-item-search></order-item-search>
+    </form>
+    <order-items></order-items> <!-- Add the custom element here -->
     <create-order-item></create-order-item>
   </div>
   <footer> 
