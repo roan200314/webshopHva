@@ -1,4 +1,4 @@
-import { css, html, HTMLTemplateResult, LitElement, nothing, TemplateResult } from "lit";
+import { css, html, HTMLTemplateResult, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { OrderItem } from "@shared/types/OrderItem";
@@ -8,13 +8,26 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Address, CartItem, UserData } from "@shared/types";
 import { AddressService } from "../services/AddressService";
 
+/** Enumeration to keep track of all the different pages */
+enum RouterPage {
+    Home = "orderItems",
+    Login = "login",
+    Register = "register",
+    products = "product",
+    Admin = "admin",
+    ShoppingCart = "shoppingCart",
+    OrderConfirmation = "orderConfirmation",
+    InfoConfirmation = "infoConfirmation",
+    UserConfirmation = "userconfirmation",
+}
+
 /**
  * Custom element based on Lit for the header of the webshop.
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
  */
 @customElement("webshop-root")
-export class RootComponent extends LitElement {
+export class Root extends LitElement {
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -142,7 +155,41 @@ export class RootComponent extends LitElement {
         #userInfo {
             text-align: center;
         }
+
+        .delete {
+            background-color: #f03e3e;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .delete:hover {
+            cursor: pointer;
+        }
+
+        .edit:hover {
+            cursor: pointer;
+        }
+
+        .edit {
+            background-color: #49f560;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .infochoice{
+            border: 3px solid #373e98;
+            text-align: center;
+            width: 50%;
+            margin-left: 25%;
+
+
+        }
     `;
+
+    @state()
+    private _currentPage: RouterPage = RouterPage.Home;
 
     @state()
     private _isLoggedIn: boolean = false;
@@ -163,6 +210,7 @@ export class RootComponent extends LitElement {
 
     private _user: UserData = {
         email: "",
+        password: "",
         name: "",
         id: 0,
     };
@@ -188,6 +236,7 @@ export class RootComponent extends LitElement {
         await this.getWelcome();
         await this.getOrderItems();
         await this.getAddress();
+        this.getCartItems();
     }
 
     /**
@@ -203,8 +252,15 @@ export class RootComponent extends LitElement {
             this._firstname = result.user.firstName || "";
             this._lastname = result.user.lastName || "";
             this._isLoggedIn = true;
-            this._cartItemsCount = result.cartItems?.length || 0;
-            this._cartItems = result.cartItems || [];
+        }
+    }
+
+    private getCartItems(): void {
+        const result: string | null = localStorage.getItem("cart");
+
+        if (result) {
+            this._cartItems = JSON.parse(result);
+            this._cartItemsCount = this._cartItems.length;
         }
     }
 
@@ -215,7 +271,6 @@ export class RootComponent extends LitElement {
             return;
         }
 
-        console.log(result);
         this._adressData = result;
     }
 
@@ -233,16 +288,55 @@ export class RootComponent extends LitElement {
     }
 
     /**
+     * Handler for the login form
+     */
+    private async submitLoginForm(): Promise<void> {
+        // TODO: Validation
+
+        const result: boolean = await this._userService.login({
+            email: this._email,
+            password: this._password,
+        });
+
+        if (result) {
+            alert("Successfully logged in!");
+
+            await this.getWelcome();
+            await this.getAddress();
+
+            this._currentPage = RouterPage.Home;
+        } else {
+            alert("Failed to login!");
+        }
+    }
+
+    /**
+     * Handler for the register form
+     */
+    private async submitRegisterForm(): Promise<void> {
+        // TODO: Validation
+
+        const result: boolean = await this._userService.register({
+            email: this._email,
+            firstname: this._firstname,
+            lastname: this._lastname,
+            password: this._password,
+            name: this._name,
+        });
+
+        if (result) {
+            alert("Successfully registered!");
+
+            this._currentPage = RouterPage.Login;
+        } else {
+            alert("Failed to register!");
+        }
+    }
+
+    /**
      * Handler for the cart button
      */
-    private async clickCartButton(): Promise<void> {
-        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-
-        if (!result) {
-            return;
-        }
-
-        this._cartItemsCount = result.cartItems?.length || 0;
+    private clickCartButton(): void {
         this._currentPage = RouterPage.ShoppingCart;
     }
 
@@ -260,15 +354,23 @@ export class RootComponent extends LitElement {
      *
      * @param orderItem Order item to add to the cart
      */
-    private async addItemToCart(orderItem: OrderItem): Promise<void> {
-        const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+    private addItemToCart(orderItem: OrderItem): void {
+        const cartItem: CartItem | undefined = this._cartItems.find(
+            (cartItem) => cartItem.item.id === orderItem.id,
+        );
 
-        if (!result) {
-            return;
+        if (cartItem === undefined) {
+            this._cartItems.push({
+                item: orderItem,
+                amount: 1,
+            });
+        } else {
+            cartItem.amount++;
+            console.log(cartItem);
         }
 
-        this._cartItems = result;
-        this._cartItemsCount = result?.length || 0;
+        this._cartItemsCount = this._cartItems.length || 0;
+        localStorage.setItem("cart", JSON.stringify(this._cartItems));
     }
 
     /**
@@ -289,6 +391,9 @@ export class RootComponent extends LitElement {
                 break;
             case RouterPage.OrderConfirmation:
                 contentTemplate = this._renderOrderConfirmation();
+                break;
+            case RouterPage.UserConfirmation:
+                contentTemplate = this._renderUserConfirmation();
                 break;
             case RouterPage.InfoConfirmation:
                 contentTemplate = this._renderInfoConfirmation();
@@ -313,7 +418,7 @@ export class RootComponent extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderAdminInNav()} ${this.renderLogoutInNav()}
+                    ${this.renderProductInNav()} ${this.renderLogoutInNav()} ${this.renderAdminInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -334,10 +439,6 @@ export class RootComponent extends LitElement {
         return html`
             <h1>Welkom op de webshop</h1>
 
-            ${this._isLoggedIn
-                ? nothing
-                : html`<p>Je moet ingelogd zijn om producten aan je winkelmandje toe te kunnen voegen!</p>`}
-
             <div class="order-items">${orderItems}</div>
         `;
     }
@@ -353,39 +454,19 @@ export class RootComponent extends LitElement {
                 <h2 id="name${orderItem.id}" @click=${(): Promise<OrderItem> => this.getSingleOrder(orderItem)}>${orderItem.name}</h2>
                 <p id="description${orderItem.id}">${orderItem.description}</p>
                 <p id="price${orderItem.id}">€${orderItem.price}</p>
-                ${
-                    this._isLoggedIn
-                        ? html`<button
-                              @click=${async (): Promise<void> => await this.addItemToCart(orderItem)}
-                          >
-                              Toevoegen aan winkelmandje
-                          </button>`
-                        : nothing
-                }
-                ${
-                    this._isLoggedIn // should be admin
-                        ? html`<button
-                              @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}
-                          >
-                              Verwijderen
-                          </button>`
-                        : nothing
-                }
+                ${html`<button @click=${(): void => this.addItemToCart(orderItem)}>
+                    Toevoegen aan winkelmandje
+                </button>`}
+                ${html`<button @click=${async (): Promise<void> => await this.deleteOrderItem(orderItem)}>
+                    Verwijderen
+                </button>`}
 
-                ${
-                    this._isLoggedIn // should be admin
-                        ? html`<button @click=${(): void => this.changeToInputField(orderItem)}>Edit</button>`
-                        : nothing
-                }
-                ${
-                    this._isLoggedIn // should be admin
-                        ? html`<button
-                              @click=${async (): Promise<void> => await this.updateOrderItemLogic(orderItem)}
-                          >
-                              update
-                          </button>`
-                        : nothing
-                }
+                ${html`<button @click=${(): void => this.changeToInputField(orderItem)}>Edit</button>`}
+                ${html`<button
+                    @click=${async (): Promise<void> => await this.updateOrderItemLogic(orderItem)}
+                >
+                    update
+                </button>`}
             </div>
         `;
     }
@@ -595,16 +676,24 @@ export class RootComponent extends LitElement {
             <table>
                 <tr>
                     <th>Item</th>
-                    <th>Amount</th>
                     <th>Price</th>
+                    <th>Amount</th>
                     <th>Total</th>
+                    <th>Actions</th>
                 </tr>
                 ${this._cartItems.map((cartItem) => {
                     return html`
                         <tr>
                             <td>${cartItem.item.name}</td>
-                            <td>${cartItem.amount}</td>
                             <td>${cartItem.item.price}</td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value=${cartItem.amount}
+                                    @change="${(e: Event): void => this._changeCartAmount(e, cartItem)}"
+                                />
+                            </td>
+
                             <td>
                                 <b
                                     >&euro;
@@ -613,17 +702,46 @@ export class RootComponent extends LitElement {
                                     )}</b
                                 >
                             </td>
+                            <td>
+                                <button
+                                    class="delete"
+                                    @click="${(): void => {
+                                        this._deleteCart(cartItem);
+                                    }}"
+                                >
+                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20" />
+                                </button>
+                            </td>
                         </tr>
                     `;
                 })}
             </table>
             <div class="nxtstep">
                 <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
-                <button class="button" type="submit" @click="${this._renderInfoConfirmation}">
+                <button class="button" type="submit" @click="${this._renderUserConfirmation}">
                     Next Step
                 </button>
             </div>
         `;
+    }
+
+    private _changeCartAmount(e: Event, cartItem: CartItem): void {
+        const newAmount: number = Number.parseInt((e.target as HTMLInputElement).value);
+
+        // Remove previous
+        const index: number = this._cartItems.indexOf(cartItem);
+        this._cartItems[index].amount = newAmount;
+
+        this.requestUpdate();
+
+        localStorage.setItem("cart", JSON.stringify(this._cartItems));
+    }
+
+    private _deleteCart(cartItem: CartItem): void {
+        const index: number = this._cartItems.indexOf(cartItem);
+        this._cartItems.splice(index, 1);
+        this._cartItemsCount = this._cartItems.length || 0;
+        localStorage.setItem("cart", JSON.stringify(this._cartItems));
     }
 
     private calculateTotalPrice(): number {
@@ -636,6 +754,41 @@ export class RootComponent extends LitElement {
         return totalPrice;
     }
 
+    private _renderUserConfirmation(): HTMLTemplateResult {
+        this._currentPage = RouterPage.UserConfirmation;
+
+        if (this._isLoggedIn) {
+            this._currentPage = RouterPage.InfoConfirmation;
+        }
+
+        return html`
+         <h1 class="title">How do you want to continue?</h1>
+            <div id="steps">
+                <div class="stepnmbr">Step 1</div>
+                <div class="stepnmbr" id="currentstep">Step 2</div>
+                <div class="stepnmbr">Step 3</div>
+            </div>
+            <div class="infochoice">
+                <p>No account? No worries! You can just continue as a guest!</p>
+                <button class="button"
+                    @click=${(): void => {
+                        this._currentPage = RouterPage.InfoConfirmation;
+                    }}
+                >
+                    Continue as a guest
+                </button>
+                <p>Or you can log in here:</p>
+                <button class="button"
+                    @click=${(): void => {
+                        this._currentPage = RouterPage.Login;
+                    }}
+                >
+                    Login
+                </button>
+            </div>
+        `;
+    }
+
     private _renderInfoConfirmation(): HTMLTemplateResult {
         this._currentPage = RouterPage.InfoConfirmation;
 
@@ -643,13 +796,20 @@ export class RootComponent extends LitElement {
             <h1 class="title">Confirm your information</h1>
             <div id="steps">
                 <div class="stepnmbr">Step 1</div>
-                <div class="stepnmbr" id="currentstep">Step 2</div>
-                <div class="stepnmbr">Step 3</div>
+                <div class="stepnmbr">Step 2</div>
+                <div class="stepnmbr" id="currentstep">Step 3</div>
             </div>
             <div class="adressInfo">
                 <form>
-                    <label>Username</label><input type="text" disabled value="${this._name}" /><br />
-                    <label>Email</label><input type="text" disabled value="${this._email}" /><br />
+                    ${
+                        this._isLoggedIn ? 
+                            html`<label>Name</label><input type="text" disabled value="${this._name}" /><br />
+                            <label>Email</label><input type="text" disabled value="${this._email}" /><br />`
+                        :
+                            html`<label>Name</label><input type="text" /><br />
+                            <label>Email</label><input type="text" /><br />`
+                    }
+
                     <label>Street</label>
                     <input
                         type="text"
@@ -673,11 +833,16 @@ export class RootComponent extends LitElement {
                 </form>
             </div>
             <div class="nxtstep">
-                <button class="button" type="submit" @click="${this._renderOrderConfirmation}">
+                <button class="button" type="submit" @click="${this.order}">
                     Next Step
                 </button>
             </div>
         `;
+    }
+
+    private async order(): Promise<void> {
+        await this._orderItemService.order(this._cartItems, this._adressData);
+        this._renderOrderConfirmation();
     }
 
     /**
@@ -703,7 +868,10 @@ export class RootComponent extends LitElement {
     private _renderOrderConfirmation(): HTMLTemplateResult {
         this._currentPage = RouterPage.OrderConfirmation;
 
-        return html` <h1 class="title">Thank you for ordering!</h1> `;
+        return html` <h1 class="title">Thank you for ordering!</h1>
+        <p>A confirmation email has been sent to your inbox. <br>
+            Can't find it? make sure to check your spam.  </p> 
+         `;
     }
 
     /**
@@ -741,8 +909,7 @@ export class RootComponent extends LitElement {
      */
 
     private renderAdminInNav(): TemplateResult {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        if (this._user.authorizationLevel === AuthorizationLevel.ADMIN) {
+        if (this._isLoggedIn === true) {
             return html` <div>
                 <a href="/admin-page.html" target="">
                     <button>Admin</button>
@@ -773,10 +940,6 @@ export class RootComponent extends LitElement {
      * Renders the cart button in the navigation
      */
     private renderCartInNav(): TemplateResult {
-        if (!this._isLoggedIn) {
-            return html``;
-        }
-
         return html`<div @click=${this.clickCartButton}>
             <button>Winkelmandje (${this._cartItemsCount} producten)</button>
         </div>`;

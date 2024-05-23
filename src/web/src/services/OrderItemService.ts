@@ -41,4 +41,19 @@ export class OrderItemService {
             alert("item deleted successfully");
         }
     }
+
+    public async order(cartItems : CartItem[], adressData : Address) : promise <void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
+            method: "POST",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+                "cartItem": cartItems, "adressData": adressData
+            })
+        });
+
+        if (!response.ok) {
+            console.error(response);
+        }
+    }
 }
