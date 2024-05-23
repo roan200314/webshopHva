@@ -29,6 +29,8 @@ Eind datum: 23/05/2024
 
 - [#47](https://gitlab.fdmci.hva.nl/propedeuse-hbo-ict/onderwijs/2023-2024/out-a-se-ti/blok-4/yoolaacooree89/-/work_items/47) - Azlaan
 - [#65](https://gitlab.fdmci.hva.nl/propedeuse-hbo-ict/onderwijs/2023-2024/out-a-se-ti/blok-4/yoolaacooree89/-/issues/65) - Azlaan
+- [#74](https://gitlab.fdmci.hva.nl/propedeuse-hbo-ict/onderwijs/2023-2024/out-a-se-ti/blok-4/yoolaacooree89/-/issues/74) - Azlaan
+- [#73](https://gitlab.fdmci.hva.nl/propedeuse-hbo-ict/onderwijs/2023-2024/out-a-se-ti/blok-4/yoolaacooree89/-/issues/73) - Azlaan
 
 <br>
 
@@ -66,4 +68,5 @@ Hier zullen hoogstwaarschijnlijk nog bugs uit voortkomen, maar tot op heden zijn
 
 ## Sprint Goal
 Deze sprint hadden we vooral als goal op de puntjes op de i te zetten. We hebben een hoop user stories afgerond, maar nog niet kunnen mergen naar productie. Dit is iets wat we in de volgende sprint zeker gaan doen. 
-We moesten grote veranderingen maken in het algemene design wat er voor zorgt dat we niet in staat waren om alle user stories te mergen op basis van de nieuwe structuur. 
+We moesten grote veranderingen maken in het algemene design wat er voor zorgt dat we niet in staat waren om alle user stories te mergen op basis van de nieuwe structuur. We hadden graag wat meer gedaan willen hebben, 
+maar door de grote hoeveelheid vrije dagen en het onderzoeksverslag wat we moesten inleveren, hebben we niet zoveel kunnen doen als we hadden gehoopt.
