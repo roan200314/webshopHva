@@ -69,6 +69,7 @@ export class GameItemSearch extends LitElement {
                     console.log(gameItemsElement);
                     // Clear previous content
                     gameItemsElement.innerHTML = "";
+                    console.log(gameItemsElement + "no render");
                     // Render each game item
                     gameItems.forEach(game => {
                         const imageURL: any = game.images && game.images.length > 0 ? game.images[0] : "";
