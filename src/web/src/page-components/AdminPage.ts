@@ -4,15 +4,7 @@ import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Games, UserData } from "@shared/types";
 import { GameService } from "../services/GameService";
-/**
- * @enum AuthorizationLevel
- * @description Een enumeratie van autorisatieniveaus.
- */
-export enum AuthorizationLevel {
-    USER = "user",
-    EMPLOYEE = "employee",
-    ADMIN = "admin",
-}
+import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 
 /**
  * Aangepast element gebaseerd op Lit voor de header van de webshop.
