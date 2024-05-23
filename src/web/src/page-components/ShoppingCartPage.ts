@@ -4,6 +4,7 @@ import { Address, CartItem, UserData } from "@shared/types";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { AddressService } from "../services/AddressService";
+import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("shopping-cart-page")
 export class ShoppingCartPage extends LitElement {
@@ -161,6 +162,7 @@ export class ShoppingCartPage extends LitElement {
 
     private userService: UserService = new UserService();
     private _addressService: AddressService = new AddressService();
+    private _orderService: OrderItemService = new OrderItemService();
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -290,6 +292,7 @@ export class ShoppingCartPage extends LitElement {
     }
 
     private _renderOrderConfirmation(): HTMLTemplateResult {
+        void this.order();
         return html` <h1 class="title">Thank you for ordering!</h1> `;
     }
 
@@ -336,5 +339,9 @@ export class ShoppingCartPage extends LitElement {
         });
 
         this._adressData = address || this._adressData;
+    }
+
+    private async order(): Promise<void> {
+        await this._orderService.order(this.cartItems, this._adressData);
     }
 }
