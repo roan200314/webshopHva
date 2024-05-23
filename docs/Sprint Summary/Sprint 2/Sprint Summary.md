@@ -70,3 +70,5 @@ Hier zullen hoogstwaarschijnlijk nog bugs uit voortkomen, maar tot op heden zijn
 Deze sprint hadden we vooral als goal op de puntjes op de i te zetten. We hebben een hoop user stories afgerond, maar nog niet kunnen mergen naar productie. Dit is iets wat we in de volgende sprint zeker gaan doen. 
 We moesten grote veranderingen maken in het algemene design wat er voor zorgt dat we niet in staat waren om alle user stories te mergen op basis van de nieuwe structuur. We hadden graag wat meer gedaan willen hebben, 
 maar door de grote hoeveelheid vrije dagen en het onderzoeksverslag wat we moesten inleveren, hebben we niet zoveel kunnen doen als we hadden gehoopt.
+
+Wel hebben we de website een stuk aantrekkelijker gemaakt en hebben we deze sprint een hoop gebruikerstesten uitgevoerd. Ook hebben we onze grootste UI changes vast gelegd in een apart document. Dit was feedback van de vorige sprint.
