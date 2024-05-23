@@ -95,7 +95,6 @@ export class AdminPage extends LitElement {
         if (this.isAdmin === true) {
             await this.getWelcome();
             await this.getGames();
-            await this.getAdmin();
             await this.showAllUsers();
         }
     }
@@ -157,19 +156,6 @@ export class AdminPage extends LitElement {
             allGamesTable.appendChild(row);
             console.log("data gevonden");
         });
-    }
-
-    /**
-     * Haal de administrator op en toon deze
-     */
-    private async getAdmin(): Promise<void> {
-        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-        if (result) {
-            const adminNameDiv: HTMLElement | null = document.getElementById("adminName");
-            if (adminNameDiv) {
-                adminNameDiv.innerText = "Hallo " + result.user.authorizationLevel + ` ${result.user.name}`;
-            }
-        }
     }
 
     /**
@@ -261,16 +247,6 @@ export class AdminPage extends LitElement {
      * Render de componenten
      */
     protected render(): TemplateResult {
-        return html`
-            <header>
-                <nav>
-                    <div class="logo">
-                        <a href="/index.html">
-                            <img src="/assets/img/logo.png" alt="Logo" />
-                        </a>
-                    </div>
-                </nav>
-            </header>
-        `;
+        return html``;
     }
 }
