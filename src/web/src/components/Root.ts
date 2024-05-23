@@ -177,6 +177,15 @@ export class Root extends LitElement {
             border-radius: 5px;
             padding: 5px;
         }
+
+        .infochoice{
+            border: 3px solid #373e98;
+            text-align: center;
+            width: 50%;
+            margin-left: 25%;
+
+
+        }
     `;
 
     @state()
@@ -753,23 +762,30 @@ export class Root extends LitElement {
         }
 
         return html`
-            <h1 class="title">How do you want to continue?</h1>
-            <p>No account? No worries! You can just continue as a guest!</p>
-            <button
-                @click=${(): void => {
-                    this._currentPage = RouterPage.InfoConfirmation;
-                }}
-            >
-                Continue as a guest
-            </button>
-            <p>Or you can log in here:</p>
-            <button
-                @click=${(): void => {
-                    this._currentPage = RouterPage.Login;
-                }}
-            >
-                Login
-            </button>
+         <h1 class="title">How do you want to continue?</h1>
+            <div id="steps">
+                <div class="stepnmbr">Step 1</div>
+                <div class="stepnmbr" id="currentstep">Step 2</div>
+                <div class="stepnmbr">Step 3</div>
+            </div>
+            <div class="infochoice">
+                <p>No account? No worries! You can just continue as a guest!</p>
+                <button class="button"
+                    @click=${(): void => {
+                        this._currentPage = RouterPage.InfoConfirmation;
+                    }}
+                >
+                    Continue as a guest
+                </button>
+                <p>Or you can log in here:</p>
+                <button class="button"
+                    @click=${(): void => {
+                        this._currentPage = RouterPage.Login;
+                    }}
+                >
+                    Login
+                </button>
+            </div>
         `;
     }
 
@@ -852,7 +868,10 @@ export class Root extends LitElement {
     private _renderOrderConfirmation(): HTMLTemplateResult {
         this._currentPage = RouterPage.OrderConfirmation;
 
-        return html` <h1 class="title">Thank you for ordering!</h1> `;
+        return html` <h1 class="title">Thank you for ordering!</h1>
+        <p>A confirmation email has been sent to your inbox. <br>
+            Can't find it? make sure to check your spam.  </p> 
+         `;
     }
 
     /**
