@@ -109,7 +109,6 @@ export class OrderItemsComponent extends LitElement {
         if (this._isPriceAscending) {
             this.orderItems = [...this.orderItems].sort((a, b) => a.price - b.price);
         } else {
-            return;
             this.orderItems = [...this.orderItems].sort((a, b) => b.price - a.price);
         }
         this.requestUpdate();
