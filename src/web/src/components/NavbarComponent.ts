@@ -99,12 +99,12 @@ export class NavbarComponent extends LitElement {
         return html`
             <div class="navbar">
                 <nav class="left-nav">
-                    <a href="/index" class="navbar-item">Home</a>
-                    <a href="/products" class="navbar-item">Products</a>
+                    <a href="/index.html" class="navbar-item">Home</a>
+                    <a href="/products.html" class="navbar-item">Products</a>
                     ${this.isLoggedIn
                         ? html`
                               ${this.authorizedLevel === AuthorizationLevel.ADMIN
-                                  ? html` <a href="/admin" class="navbar-item">Admin Page</a> `
+                                  ? html` <a href="/admin.html" class="navbar-item">Admin Page</a> `
                                   : nothing}
                           `
                         : nothing}
@@ -112,7 +112,7 @@ export class NavbarComponent extends LitElement {
                 <nav class="right-nav">
                     ${this.isLoggedIn
                         ? html`
-                              <a href="/cart" class="navbar-item">
+                              <a href="/cart.html" class="navbar-item">
                                   <img src="/assets/img/cart.png" alt="Cart" class="cart-icon" />
                                   <span>${this.cartItemCount}</span>
                               </a>
@@ -120,8 +120,8 @@ export class NavbarComponent extends LitElement {
                               <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
                           `
                         : html`
-                              <a href="/login" class="navbar-item">Login</a>
-                              <a href="/register" class="navbar-item">Register</a>
+                              <a href="/login.html" class="navbar-item">Login</a>
+                              <a href="/register.html" class="navbar-item">Register</a>
                           `}
                 </nav>
             </div>
