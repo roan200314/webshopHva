@@ -6,3 +6,8 @@ export * from "./page-components/EmailConfirmationPage";
 export * from "./page-components/LoginPage";
 export * from "./page-components/RegisterPage";
 export * from "./page-components/ShoppingCartPage";
+
+// Product Page
+export * from "./components/OrderItemSearch";
+export * from "./components/OrderItems";
+export * from "./components/CreateOrderItem";
