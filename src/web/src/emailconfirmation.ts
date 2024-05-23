@@ -1,1 +1,1 @@
-export * from "./pages/EmailConfirmationPage";
+export * from "./page-components/EmailConfirmationPage";
