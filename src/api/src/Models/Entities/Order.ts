@@ -10,6 +10,12 @@ export class Order {
     @OneToMany((_) => OrderItem, (orderItem) => orderItem.order, { cascade: true })
     public products: OrderItem[];
 
+    @Column({ type: "varchar", length: 255, nullable: false})
+    public name: string;
+
+    @Column({ type: "varchar", length: 255, nullable: false})
+    public email: string;
+
     @Column({ type: "varchar", length: 255, nullable: false })
     public status: string;
 

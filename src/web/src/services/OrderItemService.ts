@@ -54,8 +54,6 @@ export class OrderItemService {
 
         if (!response.ok) {
             console.error(response);
-        } else {
-            alert("Succesfull order");
         }
     }
 }
