@@ -18,6 +18,14 @@ export class OrderItemController {
         return this.orderService.getAllOrderItems();
     }
 
+    @Public()
+    @Post("order")
+    @ApiOperation({ summary: "Order" })
+    @ApiResponse({ status: 200, description: "Order response" })
+    public async order(@Body() body: any): Promise<void> {
+        return this.orderService.order(body);
+    }
+
     @ApiBearerAuth()
     @EmployeeOnly()
     @Post("create")

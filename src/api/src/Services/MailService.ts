@@ -3,6 +3,8 @@ import { ApiFailReason, ApiFailResponse, PromiseReject, PromiseResolve } from ".
 import { Email } from "../Models/Entities/Email";
 import { AccountRegistration } from "../Models/EmailTemplates/AccountRegistration";
 import { EmailConfirmation } from "../Models/EmailTemplates/EmailConfirmation";
+import { CartItem } from "../Models/Entities/CartItem";
+import { OrderConfirmation } from "../Models/EmailTemplates/OrderConfirmation";
 
 @Injectable()
 export class MailService {
@@ -28,6 +30,21 @@ export class MailService {
                 subject: "Registration Confirmation",
                 from: { address: "noreply@webshop.com", name: "WebShop" },
                 html: new AccountRegistration(name, emailAddress).generate(),
+            };
+
+            await this.sendEmail(email);
+        } catch (reason) {
+            console.log(reason);
+        }
+    }
+
+    public async orderConfirmation(emailAddress: string, name: string, cartItems: CartItem[]): Promise<void> {
+        try {
+            const email: Email = {
+                to: [{ address: emailAddress, name: name }],
+                subject: "Order Confirmation",
+                from: { address: "noreply@webshop.com", name: "WebShop" },
+                html: new OrderConfirmation(name, cartItems).generate(),
             };
 
             await this.sendEmail(email);

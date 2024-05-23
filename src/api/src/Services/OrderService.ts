@@ -4,6 +4,8 @@ import { ILike, Repository } from "typeorm";
 import { Order } from "../Models/Entities/Order";
 import { OrderItem } from "../Models/Entities/OrderItem";
 import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
+import { CartItem, Address } from "@shared/types";
+import { IsNull } from "typeorm";
 
 @Injectable()
 export class OrderService {
@@ -32,7 +34,9 @@ export class OrderService {
      * @returns {Promise<OrderItem[]>}
      */
     public async getAllOrderItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find();
+        return await this.orderItemRepository.find({ where: {
+            order: IsNull()
+         }});
     }
 
     /**
@@ -93,5 +97,35 @@ export class OrderService {
      */
     public async searchOrderItemByName(name: string): Promise<OrderItem[]> {
         return await this.orderItemRepository.find({ where: { name: ILike(`%${name}%`) } });
+    }
+
+    public async order(body: any): Promise<void> {
+        const addressData: Address = body.adressData;
+        const cartItems:CartItem[] = body.cartItem;
+
+        console.log(body);
+
+        const newOrder: Order = new Order();
+        newOrder.street = addressData.street;
+        newOrder.city = addressData.city;
+        newOrder.zip = addressData.zip;
+        newOrder.country = addressData.country;
+        newOrder.status = "complete";
+        newOrder.email = "some@email.com";
+        newOrder.name = "Harry";
+
+        const savedOrder: any = await this.orderRepository.save(newOrder);
+
+        for (const cartItem of cartItems) {
+            for (let i: number = 0; i < cartItem.amount; i++) {
+                const orderItem: any = new OrderItem();
+                orderItem.order = savedOrder;
+                orderItem.name = cartItem.item.name;
+                orderItem.price = cartItem.item.price;
+                orderItem.description = cartItem.item.description;
+
+                await this.orderItemRepository.save(orderItem);
+            }
+        }
     }
 }
