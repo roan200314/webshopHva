@@ -1,5 +1,5 @@
-import { LitElement, html, TemplateResult, css, render } from "lit";
-import { customElement } from "lit/decorators.js";  // Correct path
+import { LitElement, html, TemplateResult, css } from "lit";
+import { customElement } from "lit/decorators.js";
 import { GameService } from "../services/GameService";
 import { Games } from "@shared/types/games";
 
@@ -15,11 +15,6 @@ export class GameItemSearch extends LitElement {
 
     private _gameService: GameService = new GameService();
 
-
-    /**
-     * Renders the search bar for game items
-     * @returns {TemplateResult}
-     */
     public render(): TemplateResult {
         return html`
             <form id="searchForm" @submit=${this.handleSearch}>
@@ -29,9 +24,6 @@ export class GameItemSearch extends LitElement {
         `;
     }
 
-    /**
-     * Retrieves all game items
-     */
     private async getAllGameItems(): Promise<void> {
         const result: Games[] | undefined = await this._gameService.getGames();
         if (result) {
@@ -50,50 +42,27 @@ export class GameItemSearch extends LitElement {
         if (nameInput) {
             const name: string = nameInput.value.trim();
             if (name === "") {
-                // If the search input is empty, fetch all game items
                 await this.getAllGameItems();
                 return;
             }
-    
+
             const response: Response = await fetch(`${viteConfiguration.API_URL}games/search/${name}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-    
+
             if (response.ok) {
                 const gameItems: Games[] = await response.json();
                 const gameItemsElement: any = document.querySelector("game-items");
                 if (gameItemsElement) {
-                    console.log(gameItemsElement);
-                    // Clear previous content
-                    gameItemsElement.innerHTML = "";
-                    console.log(gameItemsElement + "no render");
-                    // Render each game item
-                    gameItems.forEach(game => {
-                        const imageURL: any = game.images && game.images.length > 0 ? game.images[0] : "";
-                        const gameTemplate: any = html`
-                            <div class="product">
-                                <h3>${game.title}</h3>
-                                <img src="${imageURL}" alt="${game.authors}">
-                                <p>${game.descriptionMarkdown}</p>
-                                <div class="buttons">
-                                    <span class="base-price">€ ${game.authors}</span>
-                                    <button class="add-to-cart-button">In cart</button>
-                                </div>
-                            </div>
-                        `;
-                        render(gameTemplate, gameItemsElement);
-                            console.log(gameTemplate);
-                    });
+                    gameItemsElement.gameItems = gameItems;
+                    console.log(gameItems);
                 }
             } else {
                 alert("Could not get game items");
             }
         }
     }
-    
-
-    
 }

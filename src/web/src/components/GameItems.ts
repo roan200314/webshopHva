@@ -53,7 +53,7 @@ export class GameItems extends LitElement {
         }
     `;
 
-    private _gameService: GameService = new GameService();
+    private _gameservice: GameService = new GameService();
 
     @property({ type: Array })
     public games: Games[] = [];
@@ -64,29 +64,24 @@ export class GameItems extends LitElement {
     }
 
     private async getGamesItems(): Promise<void> {
-        try {
-            const result: Games[] | undefined = await this._gameService.getGames();
-            if (result) {
-                this.games = result;
-                console.log("Games fetched successfully:", this.games);
-            } else {
-                console.error("Could not fetch games");
-            }
-        } catch (error) {
-            console.error("Error fetching games:", error);
+        const result: Games[] | undefined = await this._gameservice.getGames();
+        if (result) {
+            this.games = result;
+        } else {
+          return;
         }
     }
 
-    private renderGameItem(game: Games): TemplateResult {
-        const gameText: any = game.descriptionHtml && game.descriptionHtml.length > 100 ? game.descriptionHtml.substring(0, 100) + "..." : game.descriptionMarkdown;
-        const imageURL: any = game.images && game.images.length > 0 ? game.images[0] : "";
+    private renderGameItem(games: Games): TemplateResult {
+        const gameText: any = games.descriptionMarkdown && games.descriptionMarkdown.length > 50 ? games.descriptionMarkdown.substring(0, 50) + "..." : games.descriptionMarkdown;
+        const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
         return html`
             <div class="product">
-                <h3>${game.title}</h3>
-                <img class="gameFoto" src="${imageURL}" alt="${game.authors}">
+                <h3>${games.title}</h3>
+                <img class="gameFoto" src="${imageURL}" alt="${games.authors}">
                 <p>${gameText}</p>
                 <div class="buttons">
-                    <span class="base-price">€ ${game.authors}</span>
+                    <span class="base-price">€ ${games.authors}</span>
                     <button class="add-to-cart-button">In cart</button>
                 </div>
             </div>
@@ -96,7 +91,7 @@ export class GameItems extends LitElement {
     public render(): TemplateResult {
         return html`
             <section class="product-section" id="product-section">
-                ${this.games.map(game => this.renderGameItem(game))}
+                ${this.games.map((games: Games) => this.renderGameItem(games))}
             </section>
         `;
     }
