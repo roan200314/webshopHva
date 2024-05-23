@@ -1,4 +1,4 @@
-import { OrderItem } from "@shared/types";
+import { Address, CartItem, OrderItem } from "@shared/types";
 import { TokenService } from "./TokenService";
 
 const headers: { "Content-Type": string } = {
@@ -42,7 +42,7 @@ export class OrderItemService {
         }
     }
 
-    public async order(cartItems : CartItem[], adressData : Address) : promise <void> {
+    public async order(cartItems : CartItem[], adressData : Address) : Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
             method: "POST",
