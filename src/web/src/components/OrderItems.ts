@@ -64,17 +64,18 @@ export class OrderItemsComponent extends LitElement {
         if (result) {
             this.orderItems = result;
         } else {
-          return;
+            return;
         }
     }
 
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
-        const imageURL:string = orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
+        const imageURL: string =
+            orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
 
         return html`
             <div class="product">
                 <h3>${orderItem.name}</h3>
-                <img src="${imageURL}" alt="${orderItem.name}">
+                <img src="${imageURL}" alt="${orderItem.name}" />
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>

@@ -8,7 +8,7 @@ import { RegisterForm } from "../models/interfaces/AuthForms";
 export class RegisterPage extends LitElement {
     public static styles = css`
         :host {
-            font-family: 'Roboto', sans-serif;
+            font-family: "Roboto", sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -37,7 +37,8 @@ export class RegisterPage extends LitElement {
             display: block;
         }
 
-        .user-form input[type="text"], .user-form input[type="password"] {
+        .user-form input[type="text"],
+        .user-form input[type="password"] {
             width: 100%;
             padding: 15px;
             margin-bottom: 15px;
@@ -51,7 +52,7 @@ export class RegisterPage extends LitElement {
             padding: 15px;
             border: none;
             border-radius: 5px;
-            background: #007BFF;
+            background: #007bff;
             color: white;
             cursor: pointer;
             font-size: 16px;
@@ -82,7 +83,7 @@ export class RegisterPage extends LitElement {
         return html`
             <form class="user-form" @submit=${this.handleSubmit}>
                 ${Object.keys(this.userForm).map(this.renderField.bind(this))}
-                <button> Register </button>
+                <button>Register</button>
             </form>
         `;
     }
@@ -96,25 +97,25 @@ export class RegisterPage extends LitElement {
 
     private renderField(fieldName: string): TemplateResult {
         const capitalizedFieldName: string = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
-        
+
         return html`
             <label>
                 ${capitalizedFieldName}
                 <input
-                        type="${fieldName === "password" ? "password" : "text"}"
-                        .value="${this.userForm[fieldName as keyof RegisterForm]}"
-                        @input=${(e: InputEvent): void => {
-                            this.handleInputChange(fieldName, e);
-                            return;
-                        }}
-                >
+                    type="${fieldName === "password" ? "password" : "text"}"
+                    .value="${this.userForm[fieldName as keyof RegisterForm]}"
+                    @input=${(e: InputEvent): void => {
+                        this.handleInputChange(fieldName, e);
+                        return;
+                    }}
+                />
             </label>
         `;
     }
 
     private handleInputChange(inputKey: string, e: InputEvent): void {
-        const {value} = e.target as HTMLInputElement;
-        this.userForm = {...this.userForm, [inputKey]: value};
+        const { value } = e.target as HTMLInputElement;
+        this.userForm = { ...this.userForm, [inputKey]: value };
     }
 
     private async handleSubmit(e: Event): Promise<void> {

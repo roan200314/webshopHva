@@ -358,7 +358,7 @@ export class RootComponent extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderAdminInNav()} ${this.renderLogoutInNav()} 
+                    ${this.renderProductInNav()} ${this.renderAdminInNav()} ${this.renderLogoutInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>

@@ -15,14 +15,14 @@ export class OrderItemSearchComponent extends LitElement {
 
     private _orderItemService: OrderItemService = new OrderItemService();
     /**
-     * 
+     *
      * @returns {TemplateResult}
      * Renders the search bar for order items
      */
     public render(): TemplateResult {
         return html`
             <form @submit=${this.searchOrderItemByName}>
-                <input type="text" class="search-item-bar" placeholder="Search for an item by name" />  
+                <input type="text" class="search-item-bar" placeholder="Search for an item by name" />
             </form>
         `;
     }
@@ -32,7 +32,7 @@ export class OrderItemSearchComponent extends LitElement {
     private async getAllOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
         if (result) {
-            const orderItemsElement:any = document.querySelector("order-items");
+            const orderItemsElement: any = document.querySelector("order-items");
             if (orderItemsElement) {
                 orderItemsElement.orderItems = result;
             }
@@ -41,7 +41,7 @@ export class OrderItemSearchComponent extends LitElement {
         }
     }
     /**
-     * 
+     *
      * @param event
      * Searches for an order item by name and displays the result
      */
@@ -65,7 +65,7 @@ export class OrderItemSearchComponent extends LitElement {
 
             if (response.ok) {
                 const orderItems: OrderItem[] = await response.json();
-                const orderItemsElement:any = document.querySelector("order-items");
+                const orderItemsElement: any = document.querySelector("order-items");
                 if (orderItemsElement) {
                     orderItemsElement.orderItems = orderItems;
                 }

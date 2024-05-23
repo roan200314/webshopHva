@@ -81,7 +81,6 @@ export class AdminPage extends LitElement {
     private _deleteUserService: UserService = new UserService();
     private selectedAuthorizationLevel: string = "";
     private isAdmin: boolean = false;
-    
 
     // Lifecycle-methode voor aangesloten component
     public async connectedCallback(): Promise<void> {
@@ -94,10 +93,10 @@ export class AdminPage extends LitElement {
         }
 
         if (this.isAdmin === true) {
-        await this.getWelcome();
-        await this.getGames();
-        await this.getAdmin();
-        await this.showAllUsers();
+            await this.getWelcome();
+            await this.getGames();
+            await this.getAdmin();
+            await this.showAllUsers();
         }
     }
 
@@ -106,59 +105,59 @@ export class AdminPage extends LitElement {
      */
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
-    
+
         if (result) {
             this._isLoggedIn = true;
             this._cartItemsCount = result.cartItems?.length || 0;
         }
     }
 
-    
-/**
- * Haal spellen op en toon ze
- */
-private async getGames(): Promise<void> {
-    const result: Games[] | undefined = await this._getGamesService.getGames();
-    if (!result || result.length === 0) {
-        console.log("Geen spellen gevonden.");
-        return;
+    /**
+     * Haal spellen op en toon ze
+     */
+    private async getGames(): Promise<void> {
+        const result: Games[] | undefined = await this._getGamesService.getGames();
+        if (!result || result.length === 0) {
+            console.log("Geen spellen gevonden.");
+            return;
+        }
+        const allGamesTable: HTMLTableSectionElement | null = document.getElementById(
+            "allGamesTable",
+        ) as HTMLTableSectionElement;
+        if (!allGamesTable) return;
+
+        allGamesTable.innerHTML = "";
+
+        result.forEach((gamedata) => {
+            const row: HTMLTableRowElement = document.createElement("tr");
+            if (!this._isLoggedIn) return;
+
+            render(
+                html`
+                    <td>${gamedata.id}</td>
+                    <td>${gamedata.title}</td>
+                    <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
+                    <td>${gamedata.descriptionMarkdown}</td>
+                    <td>${gamedata.tags}</td>
+                    <td>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> => {
+                                await this._getGamesService.deleteGameFunction(gamedata.id);
+                                location.reload(); // Reload the page after deletion
+                            }}
+                        >
+                            Verwijderen
+                        </button>
+                    </td>
+                `,
+                row,
+            );
+
+            allGamesTable.appendChild(row);
+            console.log("data gevonden");
+        });
     }
-    const allGamesTable: HTMLTableSectionElement | null = document.getElementById("allGamesTable") as HTMLTableSectionElement;
-    if (!allGamesTable) return;
-
-    allGamesTable.innerHTML = "";
-
-    result.forEach((gamedata) => {
-        const row: HTMLTableRowElement = document.createElement("tr");
-        if (!this._isLoggedIn) return;
-
-        render(
-            html`
-                <td>${gamedata.id}</td>
-                <td>${gamedata.title}</td>
-                <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100"></td>
-                <td>${gamedata.descriptionMarkdown}</td>
-                <td>${gamedata.tags}</td>
-                <td>
-                    <button
-                        class="btn btn-danger delete-btn"
-                        @click=${async (): Promise<void> => {
-                            await this._getGamesService.deleteGameFunction(gamedata.id);
-                            location.reload(); // Reload the page after deletion
-                        }}
-                    >
-                        Verwijderen
-                    </button>
-                </td>
-            `,
-            row,
-        );
-
-        allGamesTable.appendChild(row);
-        console.log("data gevonden");
-    });
-}
-    
 
     /**
      * Haal de administrator op en toon deze
@@ -211,7 +210,7 @@ private async getGames(): Promise<void> {
                         </select>
                     </td>
                     <td>
-                    <button
+                        <button
                             class="btn btn-primary update-btn"
                             @click=${async (): Promise<void> => {
                                 if (this.selectedAuthorizationLevel) {
@@ -230,11 +229,10 @@ private async getGames(): Promise<void> {
                         <button
                             class="btn btn-danger delete-btn"
                             @click=${async (): Promise<void> =>
-                                await this._deleteUserService.deleteFun(userdata.id)}                                
+                                await this._deleteUserService.deleteFun(userdata.id)}
                         >
                             Verwijderen
                         </button>
-
                     </td>
                 `,
                 row,
@@ -273,7 +271,6 @@ private async getGames(): Promise<void> {
                     </div>
                 </nav>
             </header>
-
         `;
     }
 }

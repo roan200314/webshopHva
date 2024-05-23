@@ -5,10 +5,8 @@ import { UserService } from "../services/UserService";
 import { AuthorizationLevel } from "../pages/AdminPage";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
-
 @customElement("create-order-item")
 export class CreateOrderItemComponent extends LitElement {
-
     @state()
     private orderItem: any = {
         name: "",
@@ -35,8 +33,7 @@ export class CreateOrderItemComponent extends LitElement {
     private async handleLogin(): Promise<void> {
         if (this._tokenService.getToken()) {
             this._isLoggedIn = true;
-        }
-        else {
+        } else {
             return;
         }
 
@@ -44,9 +41,12 @@ export class CreateOrderItemComponent extends LitElement {
 
         if (!userData) return;
 
-        
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        this._isEmployee = !(!userData || (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE));
+        this._isEmployee = !(
+            !userData ||
+            (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN &&
+                userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE)
+        );
     }
 
     public render(): TemplateResult {
@@ -114,8 +114,7 @@ export class CreateOrderItemComponent extends LitElement {
         });
         if (!response.ok) {
             alert("Could not create order item");
-        }
-        else {
+        } else {
             alert("Order item created successfully");
         }
     }

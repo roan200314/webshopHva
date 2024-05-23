@@ -61,7 +61,6 @@ export class OrderItemController {
     @ApiOperation({ summary: "Searches for an order item by its name" })
     @ApiResponse({ status: 200, description: "Order Item" })
     public async searchOrderItemByName(@Param("name") name: string): Promise<OrderItem[]> {
-        
         return await this.orderService.searchOrderItemByName(name);
     }
 }
