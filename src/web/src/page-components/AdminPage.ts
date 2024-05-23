@@ -1,13 +1,12 @@
 import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { OrderItem, UserData } from "@shared/types";
-
+import { Games, UserData } from "@shared/types";
+import { GameService } from "../services/GameService";
 /**
  * @enum AuthorizationLevel
- * @description An enumeration of authorization levels.
+ * @description Een enumeratie van autorisatieniveaus.
  */
 export enum AuthorizationLevel {
     USER = "user",
@@ -16,12 +15,13 @@ export enum AuthorizationLevel {
 }
 
 /**
- * Custom element based on Lit for the header of the webshop.
+ * Aangepast element gebaseerd op Lit voor de header van de webshop.
  *
- * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
+ * @todo De meeste logica in dit component is te simpel. Je moet het grootste deel vervangen door echte implementaties.
  */
 @customElement("admin-root")
-export class Admin extends LitElement {
+export class AdminPage extends LitElement {
+    // CSS-stijlen voor dit component
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -68,28 +68,40 @@ export class Admin extends LitElement {
         }
     `;
 
+    // States voor dit component
     @state()
     private _isLoggedIn: boolean = false;
     @state()
     public _cartItemsCount: number = 0;
 
+    // Initialisatie van services
     private _userService: UserService = new UserService();
-    private _orderItemService: OrderItemService = new OrderItemService();
     private _getUsersService: UserService = new UserService();
+    private _getGamesService: GameService = new GameService();
     private _deleteUserService: UserService = new UserService();
     private selectedAuthorizationLevel: string = "";
+    private isAdmin: boolean = false;
 
+    // Lifecycle-methode voor aangesloten component
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+        const result: UserHelloResponse | undefined = await this._userService.getWelcome();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        if (result?.user.authorizationLevel === AuthorizationLevel.ADMIN) {
+            this.isAdmin = true;
+            console.log("hi");
+        }
 
-        await this.getWelcome();
-        await this.getOrderItems();
-        await this.getAdmin();
-        await this.showAllUsers();
+        if (this.isAdmin === true) {
+            await this.getWelcome();
+            await this.getGames();
+            await this.getAdmin();
+            await this.showAllUsers();
+        }
     }
 
     /**
-     * Check if the current token is valid and update the cart item total
+     * Controleer of het huidige token geldig is en werk het totale aantal winkelwagenitems bij
      */
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
@@ -100,57 +112,69 @@ export class Admin extends LitElement {
         }
     }
 
-    private async getOrderItems(): Promise<void> {
-        const result: OrderItem[] | undefined = await this._orderItemService.getAll();
-
+    /**
+     * Haal spellen op en toon ze
+     */
+    private async getGames(): Promise<void> {
+        const result: Games[] | undefined = await this._getGamesService.getGames();
         if (!result || result.length === 0) {
-            console.log("No orders found.");
+            console.log("Geen spellen gevonden.");
             return;
         }
-
-        const allOrdersTable: HTMLTableSectionElement | null = document.getElementById(
-            "allOrdersTable",
+        const allGamesTable: HTMLTableSectionElement | null = document.getElementById(
+            "allGamesTable",
         ) as HTMLTableSectionElement;
-        if (!allOrdersTable) return;
+        if (!allGamesTable) return;
 
-        allOrdersTable.innerHTML = "";
+        allGamesTable.innerHTML = "";
 
-        result.forEach((orderdata) => {
-            const row: any = document.createElement("tr");
+        result.forEach((gamedata) => {
+            const row: HTMLTableRowElement = document.createElement("tr");
             if (!this._isLoggedIn) return;
 
             render(
                 html`
-                    <td>${orderdata.id}</td>
-                    <td>${orderdata.description}</td>
-                    <td>${orderdata.name}</td>
-                    <td>${orderdata.price}</td>
-                    <button
-                        class="btn btn-danger delete-btn"
-                        @click=${async (): Promise<void> =>
-                            await this._orderItemService.deleteOrderFunction(orderdata.id)}
-                    >
-                        Delete
-                    </button>
+                    <td>${gamedata.id}</td>
+                    <td>${gamedata.title}</td>
+                    <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
+                    <td>${gamedata.descriptionMarkdown}</td>
+                    <td>${gamedata.tags}</td>
+                    <td>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> => {
+                                await this._getGamesService.deleteGameFunction(gamedata.id);
+                                location.reload(); // Reload the page after deletion
+                            }}
+                        >
+                            Verwijderen
+                        </button>
+                    </td>
                 `,
                 row,
             );
 
-            allOrdersTable.appendChild(row);
-            console.log("data found");
+            allGamesTable.appendChild(row);
+            console.log("data gevonden");
         });
     }
 
+    /**
+     * Haal de administrator op en toon deze
+     */
     private async getAdmin(): Promise<void> {
         const result: UserHelloResponse | undefined = await this._userService.getWelcome();
         if (result) {
             const adminNameDiv: HTMLElement | null = document.getElementById("adminName");
             if (adminNameDiv) {
-                adminNameDiv.innerText = "Hi " + result.user.authorizationLevel + ` ${result.user.name}`;
+                adminNameDiv.innerText = "Hallo " + result.user.authorizationLevel + ` ${result.user.name}`;
             }
         }
     }
 
+    /**
+     * Toon alle gebruikers
+     */
     private async showAllUsers(): Promise<void> {
         const result: UserData[] | undefined = await this._getUsersService.getUsers();
         if (!result || result.length === 0) {
@@ -187,14 +211,7 @@ export class Admin extends LitElement {
                     </td>
                     <td>
                         <button
-                            class="btn btn-danger delete-btn"
-                            @click=${async (): Promise<void> =>
-                                await this._deleteUserService.deleteFun(userdata.id)}
-                        >
-                            Delete
-                        </button>
-                        <button
-                            class="btn btn-success update-btn"
+                            class="btn btn-primary update-btn"
                             @click=${async (): Promise<void> => {
                                 if (this.selectedAuthorizationLevel) {
                                     await this._getUsersService.updateFun(
@@ -203,11 +220,18 @@ export class Admin extends LitElement {
                                     );
                                     window.location.reload();
                                 } else {
-                                    console.error("Authorization level is undefined");
+                                    console.error("Autorisatieniveau is niet gedefinieerd");
                                 }
                             }}
                         >
-                            update
+                            Bijwerken
+                        </button>
+                        <button
+                            class="btn btn-danger delete-btn"
+                            @click=${async (): Promise<void> =>
+                                await this._deleteUserService.deleteFun(userdata.id)}
+                        >
+                            Verwijderen
                         </button>
                     </td>
                 `,
@@ -218,20 +242,23 @@ export class Admin extends LitElement {
         });
     }
 
+    /**
+     * Handel wijzigingen in autorisatieniveau af
+     */
     public async handleAuthorizationLevelChange(e: Event, userId: number): Promise<void> {
         const selectElement: any = e.target as HTMLSelectElement;
         const newAuthorizationLevel: any = selectElement.value as AuthorizationLevel;
 
         try {
             await this._getUsersService.updateFun(userId, newAuthorizationLevel);
-            console.log("Authorization level updated successfully");
+            console.log("Autorisatieniveau succesvol bijgewerkt");
         } catch (error) {
-            console.error("Failed to update authorization level:", error);
+            console.error("Kon het autorisatieniveau niet bijwerken:", error);
         }
     }
 
     /**
-     * Renders the components
+     * Render de componenten
      */
     protected render(): TemplateResult {
         return html`
@@ -244,7 +271,6 @@ export class Admin extends LitElement {
                     </div>
                 </nav>
             </header>
-
         `;
     }
 }

@@ -8,25 +8,13 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Address, CartItem, UserData } from "@shared/types";
 import { AddressService } from "../services/AddressService";
 
-/** Enumeration to keep track of all the different pages */
-enum RouterPage {
-    Home = "orderItems",
-    Login = "login",
-    Register = "register",
-    products = "product",
-    Admin = "admin",
-    ShoppingCart = "shoppingCart",
-    OrderConfirmation = "orderConfirmation",
-    InfoConfirmation = "infoConfirmation",
-}
-
 /**
  * Custom element based on Lit for the header of the webshop.
  *
  * @todo Most of the logic in this component is over-simplified. You will have to replace most of if with actual implementions.
  */
 @customElement("webshop-root")
-export class Root extends LitElement {
+export class RootComponent extends LitElement {
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -157,9 +145,6 @@ export class Root extends LitElement {
     `;
 
     @state()
-    private _currentPage: RouterPage = RouterPage.Home;
-
-    @state()
     private _isLoggedIn: boolean = false;
 
     @state()
@@ -178,7 +163,6 @@ export class Root extends LitElement {
 
     private _user: UserData = {
         email: "",
-        password: "",
         name: "",
         id: 0,
     };
@@ -246,51 +230,6 @@ export class Root extends LitElement {
         }
 
         this._orderItems = result;
-    }
-
-    /**
-     * Handler for the login form
-     */
-    private async submitLoginForm(): Promise<void> {
-        // TODO: Validation
-
-        const result: boolean = await this._userService.login({
-            email: this._email,
-            password: this._password,
-        });
-
-        if (result) {
-            alert("Successfully logged in!");
-
-            await this.getWelcome();
-
-            this._currentPage = RouterPage.Home;
-        } else {
-            alert("Failed to login!");
-        }
-    }
-
-    /**
-     * Handler for the register form
-     */
-    private async submitRegisterForm(): Promise<void> {
-        // TODO: Validation
-
-        const result: boolean = await this._userService.register({
-            email: this._email,
-            firstname: this._firstname,
-            lastname: this._lastname,
-            password: this._password,
-            name: this._name,
-        });
-
-        if (result) {
-            alert("Successfully registered!");
-
-            this._currentPage = RouterPage.Login;
-        } else {
-            alert("Failed to register!");
-        }
     }
 
     /**
@@ -374,7 +313,7 @@ export class Root extends LitElement {
                     </div>
 
                     ${this.renderLoginInNav()} ${this.renderRegisterInNav()} ${this.renderCartInNav()}
-                    ${this.renderProductInNav()} ${this.renderLogoutInNav()} ${this.renderAdminInNav()}
+                    ${this.renderProductInNav()} ${this.renderAdminInNav()} ${this.renderLogoutInNav()}
                 </nav>
             </header>
             <main>${contentTemplate}</main>
@@ -802,7 +741,8 @@ export class Root extends LitElement {
      */
 
     private renderAdminInNav(): TemplateResult {
-        if (this._isLoggedIn === true) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        if (this._user.authorizationLevel === AuthorizationLevel.ADMIN) {
             return html` <div>
                 <a href="/admin-page.html" target="">
                     <button>Admin</button>

@@ -17,4 +17,8 @@ export class GamesService {
     public async massImport(games: Games[]): Promise<void> {
         await this.gamesRepository.save(games);
     }
+    public async deleteGame(id: number): Promise<{ message: string }> {
+        await this.gamesRepository.delete(id);
+        return { message: "Game removed successfully" };
+    }
 }

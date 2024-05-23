@@ -3,13 +3,24 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="20.0"
-      fx:controller="com.bramdekker.webshopeditor.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox alignment="CENTER" prefHeight="432.0" prefWidth="630.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bramdekker.webshopeditor.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <Label text="Export and import from database application" />
+   <TextArea fx:id="textarea_text" prefHeight="136.0" prefWidth="590.0" />
+   <Label fx:id="exportSuccess" />
+   <Button id="button_export" fx:id="button_export" mnemonicParsing="false" onAction="#exportButtonClick" text="Export to database" translateX="214.0" translateY="129.0" />
+
+    <Label fx:id="welcomeText" />
+    <Button alignment="TOP_CENTER" onAction="#onHelloButtonClick" text="Connect" translateY="-27.0" translateZ="70.0">
+      <VBox.margin>
+         <Insets />
+      </VBox.margin></Button>
+   <Button fx:id="button_import" mnemonicParsing="false" onAction="#importButtonClick" text="Import from database" translateX="213.0" translateY="-60.0" />
+   <Label fx:id="csvSuccess" />
+   <Button fx:id="convertToCsv" mnemonicParsing="false" onAction="#convertToCsvClick" text="Export to csv" />
 </VBox>

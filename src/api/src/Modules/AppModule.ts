@@ -12,7 +12,16 @@ import { MailModule } from "./MailModule";
 import { GamesModule } from "./GamesModule";
 
 @Module({
-    imports: [DatabaseModule, AuthModule, UserModule, OrderModule, CartItemModule, AddressModule, MailModule, GamesModule],
+    imports: [
+        DatabaseModule,
+        AuthModule,
+        UserModule,
+        OrderModule,
+        CartItemModule,
+        AddressModule,
+        MailModule,
+        GamesModule,
+    ],
     controllers: [AppController],
     providers: [AppService],
 })
