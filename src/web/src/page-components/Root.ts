@@ -233,51 +233,6 @@ export class RootComponent extends LitElement {
     }
 
     /**
-     * Handler for the login form
-     */
-    private async submitLoginForm(): Promise<void> {
-        // TODO: Validation
-
-        const result: boolean = await this._userService.login({
-            email: this._email,
-            password: this._password,
-        });
-
-        if (result) {
-            alert("Successfully logged in!");
-
-            await this.getWelcome();
-
-            this._currentPage = RouterPage.Home;
-        } else {
-            alert("Failed to login!");
-        }
-    }
-
-    /**
-     * Handler for the register form
-     */
-    private async submitRegisterForm(): Promise<void> {
-        // TODO: Validation
-
-        const result: boolean = await this._userService.register({
-            email: this._email,
-            firstname: this._firstname,
-            lastname: this._lastname,
-            password: this._password,
-            name: this._name,
-        });
-
-        if (result) {
-            alert("Successfully registered!");
-
-            this._currentPage = RouterPage.Login;
-        } else {
-            alert("Failed to register!");
-        }
-    }
-
-    /**
      * Handler for the cart button
      */
     private async clickCartButton(): Promise<void> {

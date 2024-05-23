@@ -1,2 +1,8 @@
-// NOTE: This makes sure the component can be rendered by the browser
-export * from "./page-components/Root";
+//export * from "./page-components/Root";
+export * from "./components/NavbarComponent";
+export * from "./page-components/IndexPage";
+export * from "./page-components/AdminPage";
+export * from "./page-components/EmailConfirmationPage";
+export * from "./page-components/LoginPage";
+export * from "./page-components/RegisterPage";
+export * from "./page-components/ShoppingCartPage";
