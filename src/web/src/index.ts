@@ -13,3 +13,6 @@ export * from "./components/GameItems";
 export * from "./components/OrderItemSearch";
 export * from "./components/OrderItems";
 export * from "./components/CreateOrderItem";
+
+// Game Page
+export * from "./page-components/product-page";
