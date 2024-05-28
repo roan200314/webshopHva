@@ -2,7 +2,7 @@ import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { Games, UserData } from "@shared/types";
+import { UserData } from "@shared/types";
 import { GameService } from "../services/GameService";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 

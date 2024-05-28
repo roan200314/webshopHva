@@ -42,12 +42,12 @@ export class GameService {
 
         const game: Games = await response.json();
         console.log(game.id);
-        return game.id; 
+        return game.id;
     }
 
     // Example delete function for games
     public async deleteGameFunction(id: number): Promise<void> {
-        const confirmed: any = confirm("Are you sure you want to delete user " + id + "?");
+        const confirmed: any = confirm("Are you sure you want to delete game " + id + "?");
         if (confirmed) {
             const response: Response = await fetch(`${viteConfiguration.API_URL}games/${id}`, {
                 method: "delete",
