@@ -18,6 +18,14 @@ export class OrderItemController {
         return this.orderService.getAllOrderItems();
     }
 
+    @Public()
+    @Post("order")
+    @ApiOperation({ summary: "Order" })
+    @ApiResponse({ status: 200, description: "Order response" })
+    public async order(@Body() body: any): Promise<void> {
+        return this.orderService.order(body);
+    }
+
     @ApiBearerAuth()
     @EmployeeOnly()
     @Post("create")
@@ -54,5 +62,13 @@ export class OrderItemController {
         @Body() orderItem: OrderItem,
     ): Promise<OrderItem> {
         return this.orderService.updateOrderItem(id, orderItem);
+    }
+
+    @Public()
+    @Get("search/:name")
+    @ApiOperation({ summary: "Searches for an order item by its name" })
+    @ApiResponse({ status: 200, description: "Order Item" })
+    public async searchOrderItemByName(@Param("name") name: string): Promise<OrderItem[]> {
+        return await this.orderService.searchOrderItemByName(name);
     }
 }

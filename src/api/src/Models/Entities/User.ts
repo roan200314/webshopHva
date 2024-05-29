@@ -1,9 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Exclude } from "class-transformer";
 import { Address } from "./Address";
 import { Order } from "./Order";
 import { AuthorizationLevel } from "../Enumerations/AuthorizationLevel";
 import { CartItem } from "./CartItem";
+import { EmailConfirmation } from "./EmailConfirmation";
 
 /**
  * @class User
@@ -29,6 +30,9 @@ export class User {
 
     @Column({ type: "varchar", length: 255, nullable: true })
     public lastName?: string;
+
+    @OneToOne(() => EmailConfirmation, (emailConfirmation) => emailConfirmation.user)
+    public emailConfirmation: EmailConfirmation;
 
     @OneToMany((_) => Address, (address) => address.user)
     public addresses: Address[];

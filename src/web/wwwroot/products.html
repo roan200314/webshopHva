@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Page</title>
+  <link href="/assets/css/product-page.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <navbar-component></navbar-component>
+  <div class="wrapper">
+    <ul class="product-filter">
+      <li><span class="filter-title">Filter: </span></li>
+      <li class="filter-option"><a href="#" id="price-filter">Price</a></li>
+      <li class="filter-option"><a href="#" id="name-filter">Name</a></li>
+      <li class="filter-option"><a href="#" id="offer-filter">Offers</a></li>
+    </ul>
+    <form class="nav-search">
+      <order-item-search></order-item-search>
+    </form>
+    <order-items></order-items> <!-- Add the custom element here -->
+    <create-order-item></create-order-item>
+  </div>
+  <footer> 
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>Customer Service</h3>
+        <ul>
+          <li><a href="#" class="footer-link">Membership</a></li>
+          <li><a href="#" class="footer-link">Returns</a></li>
+          <li><a href="#" class="footer-link">Payments</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="#" class="footer-link">Games</a></li>
+          <li><a href="#" class="footer-link">Merchandise</a></li>
+          <li><a href="#" class="footer-link">Sales & deals</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Privacy</h3>
+        <ul>
+          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+          <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script src="/src/index.ts" type="module"></script>
+</body>
+</html>
