@@ -4,6 +4,8 @@ import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { CartItem } from "@shared/types";
+import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 
 @customElement("order-items")
 export class OrderItemsComponent extends LitElement {
@@ -59,6 +61,9 @@ export class OrderItemsComponent extends LitElement {
     private _orderItemService: OrderItemService = new OrderItemService();
     private _userService: UserService = new UserService();
 
+    @state()
+    private employeeOrHigher: boolean = false;
+    
     @property({ type: Array })
     public orderItems: OrderItem[] = [];
 
@@ -71,6 +76,7 @@ export class OrderItemsComponent extends LitElement {
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
+        await this.getUserInformation();
         await this.getOrderItems();
         this.attachFilterListeners();
     }
@@ -134,8 +140,12 @@ export class OrderItemsComponent extends LitElement {
     }
 
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
-        const imageURL: string =
-            orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
+        const imageURL: string = orderItem.imageURLs && orderItem.imageURLs.length > 0
+            ? orderItem.imageURLs[0]
+            : "";
+
+        const buttonLabel: string = orderItem.featured ? "Remove from Featured" : "Add to Featured";
+        const newFeaturedState: boolean = !orderItem.featured;
 
         return html`
             <div class="product">
@@ -144,7 +154,14 @@ export class OrderItemsComponent extends LitElement {
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
-                    <button class="add-to-cart-button" @click=${async (): Promise<void> => await this.addToCart(orderItem)}>In cart</button>
+                    <button class="add-to-cart-button"
+                            @click=${async (): Promise<void> => await this.addToCart(orderItem)}
+                    >In cart</button>
+                    ${this.employeeOrHigher
+                            ? html`<button class="addFeature"
+                                           @click=${async (): Promise<void> => await this.setOrderItemAsFeatured(orderItem.id, newFeaturedState)}
+                            >${buttonLabel}</button>`
+                            : "" }
                 </div>
             </div>
         `;
@@ -172,5 +189,21 @@ export class OrderItemsComponent extends LitElement {
                 })
             );
         }
+    }
+
+    private async getUserInformation(): Promise<void> {
+        const userInformation: UserHelloResponse | undefined = await this._userService.getWelcome();
+        if (!userInformation || !userInformation.user) return;
+        if (!userInformation.user.authorizationLevel) return;
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        if (userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN) {
+            this.employeeOrHigher = true;
+        }
+    }
+
+    private async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
+        await this._orderItemService.setOrderAsFeatured(id, setFeatured);
+        await this.getOrderItems();
     }
 }
