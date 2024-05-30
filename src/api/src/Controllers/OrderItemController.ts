@@ -37,11 +37,15 @@ export class OrderItemController {
 
     @ApiBearerAuth()
     @EmployeeOnly()
-    @Post("featured/:id")
+    @Post("featured/:id/:setFeatured")
     @ApiOperation({ summary: "Creates a new order item" })
     @ApiResponse({ status: 201, description: "Order Item created" })
-    public async setOrderItemAsFeatured(@Param("id", ParseIntPipe) id: number, @Body() setFeatured: boolean): Promise<void> {
-        await this.orderService.setOrderItemAsFeatured(id, setFeatured);
+    public async setOrderItemAsFeatured(
+        @Param("id", ParseIntPipe) id: number,
+        @Param("setFeatured") setFeatured: string
+    ): Promise<void> {
+        const setFeaturedAsBool: boolean = setFeatured.toLowerCase() === "true";
+        await this.orderService.setOrderItemAsFeatured(id, setFeaturedAsBool);
     }
 
     @Public()

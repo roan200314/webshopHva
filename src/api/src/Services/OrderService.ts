@@ -56,7 +56,9 @@ export class OrderService {
         if (!orderItem) {
             throw new Error("Order item not found");
         }
+
         orderItem.featured = setFeatured;
+
         await this.orderItemRepository.update(id, orderItem);
     }
 
