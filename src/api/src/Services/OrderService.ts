@@ -48,6 +48,18 @@ export class OrderService {
         return await this.orderItemRepository.save(orderItem);
     }
 
+    public async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
+        const orderItem: OrderItem = await this.orderItemRepository.findOne(
+            { where: { id }
+        });
+
+        if (!orderItem) {
+            throw new Error("Order item not found");
+        }
+        orderItem.featured = setFeatured;
+        await this.orderItemRepository.update(id, orderItem);
+    }
+
     /**
      * Retrieves an order item by its ID.
      * @param id - The ID of the order item to retrieve.

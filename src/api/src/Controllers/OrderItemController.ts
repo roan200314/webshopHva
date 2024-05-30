@@ -35,6 +35,15 @@ export class OrderItemController {
         return this.orderService.createOrderItem(orderItem);
     }
 
+    @ApiBearerAuth()
+    @EmployeeOnly()
+    @Post("featured/:id")
+    @ApiOperation({ summary: "Creates a new order item" })
+    @ApiResponse({ status: 201, description: "Order Item created" })
+    public async setOrderItemAsFeatured(@Param("id", ParseIntPipe) id: number, @Body() setFeatured: boolean): Promise<void> {
+        await this.orderService.setOrderItemAsFeatured(id, setFeatured);
+    }
+
     @Public()
     @Get(":id")
     @ApiOperation({ summary: "Retrieves an order item by its ID" })

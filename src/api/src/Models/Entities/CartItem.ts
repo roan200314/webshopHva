@@ -10,9 +10,6 @@ export class CartItem {
     @Column({ type: "integer", default: 0 })
     public amount: number;
 
-    @Column({ type: "boolean", default: false })
-    public featured: boolean;
-
     @ManyToOne(() => OrderItem)
     public item: OrderItem;
 
