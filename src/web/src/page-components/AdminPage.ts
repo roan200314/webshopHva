@@ -5,6 +5,7 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { UserData } from "@shared/types";
 import { GameService } from "../services/GameService";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
+import { Games } from "@shared/types/games";
 
 /**
  * Aangepast element gebaseerd op Lit voor de header van de webshop.

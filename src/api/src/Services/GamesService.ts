@@ -51,4 +51,13 @@ export class GamesService {
     public async searchGameItemByName(name: string): Promise<Games[]> {
         return await this.gamesRepository.find({where: {title: ILike(`%${name}%`)}});
     }
+
+        /**
+     * Retrieves an order item by its ID.
+     * @param id - The ID of the order item to retrieve.
+     * @returns {Promise<Games>}
+     */
+        public async getGameItemById(id: number): Promise<Games> {
+            return await this.gamesRepository.findOne({ where: { id } });
+        }
 }

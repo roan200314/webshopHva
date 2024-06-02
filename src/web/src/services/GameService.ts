@@ -59,4 +59,16 @@ export class GameService {
             location.reload();
         }
     }
+
+    public async getOneGame(id: number): Promise<void> {
+
+        const response: Response = await fetch(`${viteConfiguration.API_URL}games/${id}`, {
+            method: "get",
+        });
+        if (!response.ok) {
+            const game: Games = await response.json();
+            console.log(game);
+            console.error(response);
+        }
+    }
 }

@@ -34,7 +34,7 @@ export class GamesController {
     @Public()
     @ApiOperation({ summary: "Deletes the game based on id" })
     @ApiResponse({ status: 200, description: "Game deleted" })
-    public async deleteUser(@Param("id") id: number): Promise<{ message: string }> {
+    public async deleteGame(@Param("id") id: number): Promise<{ message: string }> {
         return await this.gamesService.deleteGame(id);
     }
 
@@ -45,5 +45,14 @@ export class GamesController {
     public async searchOrderItemByName(@Param("name") name: string): Promise<Games[]> {
         
         return await this.gamesService.searchGameItemByName(name);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Public()
+    @Get("/:id")
+    @ApiOperation({ summary: "Retrieves the game based on id" })
+    @ApiResponse({ status: 200, description: "Game fetched" })
+    public async fetchGame(@Param("id") id: number): Promise<Games> {
+        return await this.gamesService.getGameItemById(id);
     }
 }

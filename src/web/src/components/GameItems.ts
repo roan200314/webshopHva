@@ -77,7 +77,7 @@ export class GameItems extends LitElement {
         const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
         return html`
             <div class="product">
-                <h3>${games.title}</h3>
+                <h3><a href="game.html?=${games.id}">${games.title}</a></h3>
                 <img class="gameFoto" src="${imageURL}" alt="${games.authors}">
                 <p>${gameText}</p>
                 <div class="buttons">
