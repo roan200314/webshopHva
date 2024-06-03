@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, html, css } from "lit";
+import { LitElement, TemplateResult, html, css, PropertyValues } from "lit";
 import { customElement, state, property } from "lit/decorators.js";
 import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
@@ -63,6 +63,27 @@ export class OrderItemsComponent extends LitElement {
         .slider {
             width: 80%;
             margin: auto;
+            position: relative;
+            height: 5px;
+            background-color: #ddd;
+        }
+
+        .slider-handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #f0c040;
+            border-radius: 50%;
+            cursor: pointer;
+            top: -7.5px;
+            z-index: 2;
+        }
+
+        .slider-range {
+            position: absolute;
+            height: 100%;
+            background-color: #f0c040;
+            z-index: 1;
         }
     `;
 
@@ -83,6 +104,16 @@ export class OrderItemsComponent extends LitElement {
 
     @state()
     private _filteredOrderItems: OrderItem[] = [];
+
+    @state()
+    private _sliderMin: number = 0; // Needs to be changed to the minimum price of the order items
+
+    @state()
+    private _sliderMax: number = 1000; // Needs to be changed to the maximum price of the order items
+
+    private _minHandle: HTMLElement | null = null;
+    private _maxHandle: HTMLElement | null = null;
+    private _sliderRange: HTMLElement | null = null;
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
@@ -141,19 +172,19 @@ export class OrderItemsComponent extends LitElement {
     }
 
     private updateFilterSelection(type: "price" | "name"): void {
-        const filters: any = document.querySelectorAll(".filter-option a");
-        filters.forEach((filter: HTMLLIElement) => filter.classList.remove("selected"));
+        const filters: NodeListOf<Element> = document.querySelectorAll(".filter-option a");
+        filters.forEach((filter: Element) => filter.classList.remove("selected"));
 
-        const selectedFilter: HTMLLIElement | null = document.querySelector(`#${type}-filter`);
+        const selectedFilter: HTMLElement | null = document.querySelector(`#${type}-filter`);
         if (selectedFilter) {
             selectedFilter.classList.add("selected");
         }
     }
 
-    private handleSliderChange(event: Event): void {
-        const target:any = event.target as HTMLInputElement;
-        const value:any = Number(target.value);
-        this._priceRange = { ...this._priceRange, [target.name]: value };
+    private handleSliderChange(): void {
+        const min: number = parseFloat(this._minHandle?.style.left || "0");
+        const max: number = parseFloat(this._maxHandle?.style.left || "100");
+        this._priceRange = { min: Math.round(min * 10), max: Math.round(max * 10) };
         this.filterByPriceRange();
     }
 
@@ -184,13 +215,59 @@ export class OrderItemsComponent extends LitElement {
     public render(): TemplateResult {
         return html`
             <div class="slider-container">
+                <div class="slider">
+                    <div id="min-handle" class="slider-handle" style="left: 0;"></div>
+                    <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
+                    <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
+                </div>
                 <label for="min-price">Min Price: €${this._priceRange.min}</label>
-                <input class="slider" type="range" id="min-price" name="min" min="0" max="1000" .value="${String(this._priceRange.min)}" @input="${this.handleSliderChange}" />
+                <label for="max-price">Max Price: €${this._priceRange.max}</label>
             </div>
             <section class="product-section" id="product-section">
                 ${this._filteredOrderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
             </section>
         `;
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this._minHandle = this.shadowRoot?.getElementById("min-handle") as HTMLElement | null;
+        this._maxHandle = this.shadowRoot?.getElementById("max-handle") as HTMLElement | null;
+        this._sliderRange = this.shadowRoot?.getElementById("slider-range") as HTMLElement | null;
+
+        this._minHandle?.addEventListener("mousedown", this.handleDragStart.bind(this, "min"));
+        this._maxHandle?.addEventListener("mousedown", this.handleDragStart.bind(this, "max"));
+    }
+
+    private handleDragStart(handleType: "min" | "max", event: MouseEvent): void {
+        event.preventDefault();
+
+        const handleMouseMove: any = (moveEvent: MouseEvent): void => {
+            const sliderRect: DOMRect = (this.shadowRoot?.querySelector(".slider") as HTMLElement).getBoundingClientRect();
+            let newPosition: number = (moveEvent.clientX - sliderRect.left) / sliderRect.width * 100;
+
+            if (handleType === "min") {
+                newPosition = Math.min(newPosition, parseFloat(this._maxHandle?.style.left || "100") - 5);
+                newPosition = Math.max(newPosition, 0);
+                this._minHandle!.style.left = `${newPosition}%`;
+            } else {
+                newPosition = Math.max(newPosition, parseFloat(this._minHandle?.style.left || "0") + 5);
+                newPosition = Math.min(newPosition, 100);
+                this._maxHandle!.style.left = `${newPosition}%`;
+            }
+
+            this._sliderRange!.style.left = `${this._minHandle?.style.left}`;
+            this._sliderRange!.style.right = `${100 - parseFloat(this._maxHandle?.style.left || "100")}%`;
+
+            this.handleSliderChange();
+        };
+
+        const handleMouseUp: any = (): void => {
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+        };
+
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
     }
 
     private async addToCart(orderItem: OrderItem): Promise<void> {
