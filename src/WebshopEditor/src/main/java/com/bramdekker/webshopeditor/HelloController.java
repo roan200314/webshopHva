@@ -82,7 +82,7 @@ public class HelloController {
             File csvFile = new File(filePath);
             DatabaseService.getInstance().returnConnection().thenAcceptAsync(connection -> {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO orderitem (id, name, description, price, imageURLs, featured, itemType, itemId, orderId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                    "INSERT INTO orderitem (id, name, description, price, imageURLs, featured, itemType, itemId, orderId) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
                         "ON DUPLICATE KEY UPDATE " +
                         "name = VALUES(name), description = VALUES(description), " +
                         "price = VALUES(price), imageURLs = VALUES(imageURLs), " +
