@@ -71,4 +71,12 @@ export class OrderItemController {
     public async searchOrderItemByName(@Param("name") name: string): Promise<OrderItem[]> {
         return await this.orderService.searchOrderItemByName(name);
     }
+
+    @Public()
+    @Get("/:id")
+    @ApiOperation({ summary: "Retrieves the game based on id" })
+    @ApiResponse({ status: 200, description: "Game fetched" })
+    public async fetchGame(@Param("id") id: number): Promise<OrderItem> {
+        return await this.orderService.getGameItemById(id);
+    }
 }

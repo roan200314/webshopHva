@@ -60,17 +60,6 @@ export class GameService {
         }
     }
 
-        public async getOneGame(id: number): Promise<Games | undefined> {
-            const response: Response = await fetch(`${viteConfiguration.API_URL}games/${id}`, {
-                method: "get",
-            });
-            if (response.ok) {
-                const game: Games = await response.json();
-                return game;
-            } else {
-                console.error("Failed to fetch game data:", response.statusText);
-                return undefined;
-            }
-        }
+
     }
     
