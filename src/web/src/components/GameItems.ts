@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { GameService } from "../services/GameService";
 import { Games } from "@shared/types/games";
 
-@customElement("game-items")
+@customElement("order-items")
 export class GameItems extends LitElement {
     public static styles = css`
         .product-section {
@@ -77,7 +77,7 @@ export class GameItems extends LitElement {
         const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
         return html`
             <div class="product">
-                <h3><a href="game.html?=${games.id}">${games.title}</a></h3>
+                <h3><a href="game.html?id=${games.id}">${games.title}</a></h3>
                 <img class="gameFoto" src="${imageURL}" alt="${games.authors}">
                 <p>${gameText}</p>
                 <div class="buttons">

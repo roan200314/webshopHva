@@ -5,7 +5,7 @@ import { OrderItemService } from "../services/OrderItemService";
 import { UserService } from "../services/UserService";
 import { CartItem } from "@shared/types";
 
-@customElement("order-items")
+@customElement("order-itemsa")
 export class OrderItemsComponent extends LitElement {
     public static styles = css`
         .product-section {

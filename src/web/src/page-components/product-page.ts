@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, html, render } from "lit";
+import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { GameService } from "../services/GameService";
 import { Games } from "@shared/types/games";
@@ -13,48 +13,49 @@ const IdOphalen: URL = new URL(currentURL);
 const id: any | null = IdOphalen.searchParams.get("id");
 
 @customElement("game-item-root")
-export class gamePage extends LitElement {
-
-
+export class GamePage extends LitElement {
     private _getGamesService: GameService = new GameService();
+    private gameData: Games | undefined;
 
-    public async connectedCallback(): Promise<void>  {
+    public connectedCallback(): void {
         super.connectedCallback();
-
-        await this.getGameItem();
+        void this.getGameItem();
     }
 
-    /**
-     * Render de componenten
-     */
-    protected render(): TemplateResult {
-        return html``;
+    public render(): TemplateResult {
+        if (!this.gameData) {
+            return html`<p>Loading...</p>`;
+        }
+        return this.renderGameItem(this.gameData);
     }
 
     private async getGameItem(): Promise<void> {
-        const result: Games[] | undefined = await this._getGamesService.getOneGame(id);
-        
-        const gameTable: HTMLTableSectionElement | null = document.querySelector(
-            "game-item-root",
-        ) as HTMLTableSectionElement;
-        if (!gameTable) return;
+        if (!id) {
+            console.error("No ID found in URL");
+            return;
+        }
+        try {
+            const result: Games | undefined = await this._getGamesService.getOneGame(id);
+            this.gameData = result;
+            this.requestUpdate();
+        } catch (error) {
+            console.error("Error fetching game data:", error);
+        }
+    }
 
-        result.forEach((gamedata) => {
-            const row: HTMLTableRowElement = document.createElement("tr");
-
-            render(
-                html`
-                    <td>${gamedata.id}</td>
-                    <td>${gamedata.title}</td>
-                    <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
-                    <td>${gamedata.descriptionMarkdown}</td>
-                    <td>€${gamedata.price}</td>
-                `,
-                row,
-            );
-
-            gameTable.appendChild(row);
-            console.log("data gevonden");
-        });
+    private renderGameItem(game: Games): TemplateResult {
+        const gameText: string = game.descriptionMarkdown && game.descriptionMarkdown.length > 100 ? game.descriptionMarkdown.substring(0, 100) + "..." : game.descriptionMarkdown;
+        const imageURL: string = game.images && game.images.length > 0 ? game.images[0] : "";
+        return html`
+            <div class="product">
+                <h3>${game.title}</h3>
+                <img class="gameFoto" src="${imageURL}" alt="${game.authors}">
+                <p>${gameText}</p>
+                <div class="buttons">
+                    <span class="base-price">€ ${game.price}</span>
+                    <button class="add-to-cart-button">In cart</button>
+                </div>
+            </div>
+        `;
     }
 }
