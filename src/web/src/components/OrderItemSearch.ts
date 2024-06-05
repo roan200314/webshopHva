@@ -9,7 +9,7 @@ export class OrderItemSearchComponent extends LitElement {
         .search-item-bar {
             padding: 10px;
             font-size: 1em;
-            width: 90%;
+            width: 70%;
         }
     `;
 
@@ -47,6 +47,7 @@ export class OrderItemSearchComponent extends LitElement {
      *
      * @param event
      * Searches for an order item by name and displays the result
+     * Currently, the search does not get filtered order items
      */
     private async searchOrderItemByName(event: Event): Promise<void> {
         event.preventDefault();

@@ -12,16 +12,19 @@
 <body>
   <navbar-component></navbar-component>
   <div class="wrapper">
-    <ul class="product-filter">
-      <li><span class="filter-title">Sort by: </span></li>
-      <li class="filter-option"><a href="#" id="price-filter">Price</a></li>
-      <li class="filter-option"><a href="#" id="name-filter">Name</a></li>
-    </ul>
-    <form class="nav-search">
-      <order-item-search></order-item-search>
-    </form>
-    <order-items></order-items>
-    <create-order-item></create-order-item>
+    <div class="sidebar">
+      <ul class="product-filter">
+        <li><span class="filter-title">Sort by: </span></li>
+        <li class="filter-option"><a href="#" id="price-filter">Price</a></li>
+        <li class="filter-option"><a href="#" id="name-filter">Name</a></li>
+      </ul>
+      <form class="nav-search">
+        <order-item-search></order-item-search>
+      </form>
+    </div>
+    <div class="main-content">
+      <order-items></order-items>
+    </div>
   </div>
   <footer> 
     <div class="footer-content">

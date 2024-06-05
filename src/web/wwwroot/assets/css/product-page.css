@@ -11,10 +11,26 @@ body {
 .wrapper {
     width: 80%;
     margin: auto;
+    position: relative;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 20px;
 }
 
 
-
+.main-content {
+    width: 80%;
+    margin-left: 20%; 
+}
 
 .navbar-links {
     list-style: none;
