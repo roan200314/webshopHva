@@ -13,29 +13,8 @@ body {
     margin: auto;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    background-color: #333;
-}
 
-.navbar-logo .logo {
-    height: 50px;
-}
 
-.navigation {
-    display: flex;
-    align-items: center;
-}
-
-.nav-search .search-bar {
-    padding: 5px;
-    margin-right: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
 
 .navbar-links {
     list-style: none;
