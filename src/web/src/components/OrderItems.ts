@@ -54,7 +54,7 @@ export class OrderItemsComponent extends LitElement {
             font-weight: bold;
             text-decoration: underline;
         }
-
+        
         .slider-container {
             margin: 20px 0;
             text-align: center;
@@ -85,6 +85,7 @@ export class OrderItemsComponent extends LitElement {
             background-color: #f0c040;
             z-index: 1;
         }
+
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
@@ -103,9 +104,6 @@ export class OrderItemsComponent extends LitElement {
     private _priceRange: { min: number, max: number } = { min: 0, max: 1000 };
 
     @state()
-    private _filteredOrderItems: OrderItem[] = [];
-
-    @state()
     private _sliderMin: number = 0; // Needs to be changed to the minimum price of the order items
 
     @state()
@@ -122,65 +120,6 @@ export class OrderItemsComponent extends LitElement {
         this.attachFilterListeners();
     }
 
-    private async getOrderItems(): Promise<void> {
-        const result: OrderItem[] | undefined = await this._orderItemService.getAll();
-        if (result) {
-            this.orderItems = result;
-            this._filteredOrderItems = result;
-        }
-    }
-
-    private attachFilterListeners(): void {
-        const priceFilter: HTMLLIElement | null = document.querySelector("#price-filter");
-        if (priceFilter) {
-            priceFilter.addEventListener("click", () => this.toggleSortOrder("price"));
-        }
-
-        const nameFilter: HTMLLIElement | null = document.querySelector("#name-filter");
-        if (nameFilter) {
-            nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
-        }
-    }
-
-    private toggleSortOrder(type: "price" | "name"): void {
-        if (type === "price") {
-            this._isPriceAscending = !this._isPriceAscending;
-            this.sortByPrice();
-        } else if (type === "name") {
-            this._isNameAscending = !this._isNameAscending;
-            this.sortByName();
-        }
-        this.updateFilterSelection(type);
-    }
-
-    private sortByPrice(): void {
-        if (this._isPriceAscending) {
-            this._filteredOrderItems = [...this._filteredOrderItems].sort((a, b) => a.price - b.price);
-        } else {
-            this._filteredOrderItems = [...this._filteredOrderItems].sort((a, b) => b.price - a.price);
-        }
-        this.requestUpdate();
-    }
-
-    private sortByName(): void {
-        if (this._isNameAscending) {
-            this._filteredOrderItems = [...this._filteredOrderItems].sort((a, b) => a.name.localeCompare(b.name));
-        } else {
-            this._filteredOrderItems = [...this._filteredOrderItems].sort((a, b) => b.name.localeCompare(a.name));
-        }
-        this.requestUpdate();
-    }
-
-    private updateFilterSelection(type: "price" | "name"): void {
-        const filters: NodeListOf<Element> = document.querySelectorAll(".filter-option a");
-        filters.forEach((filter: Element) => filter.classList.remove("selected"));
-
-        const selectedFilter: HTMLElement | null = document.querySelector(`#${type}-filter`);
-        if (selectedFilter) {
-            selectedFilter.classList.add("selected");
-        }
-    }
-
     private handleSliderChange(): void {
         const min: number = parseFloat(this._minHandle?.style.left || "0");
         const max: number = parseFloat(this._maxHandle?.style.left || "100");
@@ -189,44 +128,10 @@ export class OrderItemsComponent extends LitElement {
     }
 
     private filterByPriceRange(): void {
-        this._filteredOrderItems = this.orderItems.filter(item =>
+        this.orderItems = this.orderItems.filter(item =>
             item.price >= this._priceRange.min && item.price <= this._priceRange.max
         );
         this.requestUpdate();
-    }
-
-    private renderOrderItem(orderItem: OrderItem): TemplateResult {
-        const imageURL: string =
-            orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
-
-        return html`
-            <div class="product">
-                <h3>${orderItem.name}</h3>
-                <img src="${imageURL}" alt="${orderItem.name}" />
-                <p>${orderItem.description}</p>
-                <div class="buttons">
-                    <span class="base-price">€ ${orderItem.price}</span>
-                    <button class="add-to-cart-button" @click=${async (): Promise<void> => await this.addToCart(orderItem)}>In cart</button>
-                </div>
-            </div>
-        `;
-    }
-
-    public render(): TemplateResult {
-        return html`
-            <div class="slider-container">
-                <div class="slider">
-                    <div id="min-handle" class="slider-handle" style="left: 0;"></div>
-                    <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
-                    <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
-                </div>
-                <label for="min-price">Min Price: €${this._priceRange.min}</label>
-                <label for="max-price">Max Price: €${this._priceRange.max}</label>
-            </div>
-            <section class="product-section" id="product-section">
-                ${this._filteredOrderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
-            </section>
-        `;
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
@@ -268,6 +173,100 @@ export class OrderItemsComponent extends LitElement {
 
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
+    }
+
+
+    private async getOrderItems(): Promise<void> {
+        const result: OrderItem[] | undefined = await this._orderItemService.getAll();
+        if (result) {
+            this.orderItems = result;
+        }
+    }
+
+    private attachFilterListeners(): void {
+        const priceFilter:HTMLLIElement | null = document.querySelector("#price-filter");
+        if (priceFilter) {
+            priceFilter.addEventListener("click", () => this.toggleSortOrder("price"));
+        }
+
+        const nameFilter:HTMLLIElement | null = document.querySelector("#name-filter");
+        if (nameFilter) {
+            nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
+        }
+    }
+
+    private toggleSortOrder(type: "price" | "name"): void {
+        if (type === "price") {
+            this._isPriceAscending = !this._isPriceAscending;
+            this.sortByPrice();
+        } else if (type === "name") {
+            this._isNameAscending = !this._isNameAscending;
+            this.sortByName();
+        }
+        this.updateFilterSelection(type);
+    }
+
+    private sortByPrice(): void {
+        if (this._isPriceAscending) {
+            this.orderItems = [...this.orderItems].sort((a, b) => a.price - b.price);
+        } else {
+            this.orderItems = [...this.orderItems].sort((a, b) => b.price - a.price);
+        }
+        this.requestUpdate();
+    }
+
+    private sortByName(): void {
+        if (this._isNameAscending) {
+            this.orderItems = [...this.orderItems].sort((a, b) => a.name.localeCompare(b.name));
+        } else {
+            this.orderItems = [...this.orderItems].sort((a, b) => b.name.localeCompare(a.name));
+        }
+        this.requestUpdate();
+    }
+
+    private updateFilterSelection(type: "price" | "name"): void {
+        const filters:any = document.querySelectorAll(".filter-option a");
+        filters.forEach((filter: HTMLLIElement) => filter.classList.remove("selected"));
+
+        const selectedFilter:HTMLLIElement | null = document.querySelector(`#${type}-filter`);
+        if (selectedFilter) {
+            selectedFilter.classList.add("selected");
+        }
+    }
+
+    private renderOrderItem(orderItem: OrderItem): TemplateResult {
+        const imageURL: string =
+            orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
+
+        return html`
+            <div class="product">
+                <h3>${orderItem.name}</h3>
+                <img src="${imageURL}" alt="${orderItem.name}" />
+                <p>${orderItem.description}</p>
+                <div class="buttons">
+                    <span class="base-price">€ ${orderItem.price}</span>
+                    <button class="add-to-cart-button" @click=${async (): Promise<void> => await this.addToCart(orderItem)}>In cart</button>
+                </div>
+            </div>
+        `;
+    }
+
+    public render(): TemplateResult {
+        return html`
+            <div class="slider-container">
+                <div class="slider">
+                    <div id="min-handle" class="slider-handle" style="left: 0;"></div>
+                    <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
+                    <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
+                </div>
+                <label for="min-price">Min Price: €${this._priceRange.min}</label>
+                <label for="max-price">Max Price: €${this._priceRange.max}</label>
+            </div>
+
+            <section class="product-section" id="product-section">
+                ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
+            </section>
+        `;
     }
 
     private async addToCart(orderItem: OrderItem): Promise<void> {
