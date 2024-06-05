@@ -25,6 +25,9 @@ export class OrderItem {
     @Column({ type: "json", nullable: true })
     public imageURLs?: string[];
 
+    @Column({ type: "boolean", default: false })
+    public featured: boolean;
+
     @ManyToOne(() => Order, (order) => order.products)
     public order: Order;
 
