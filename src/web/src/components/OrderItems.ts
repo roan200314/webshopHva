@@ -90,9 +90,11 @@ export class OrderItemsComponent extends LitElement {
 
     private _orderItemService: OrderItemService = new OrderItemService();
     private _userService: UserService = new UserService();
-
     @property({ type: Array })
     public orderItems: OrderItem[] = [];
+
+    @property({ type: Array })
+    public unfilteredOrderItems: OrderItem[] = [];
 
     @state()
     private _isPriceAscending: boolean = false;
@@ -128,7 +130,7 @@ export class OrderItemsComponent extends LitElement {
     }
 
     private filterByPriceRange(): void {
-        this.orderItems = this.orderItems.filter(item =>
+        this.orderItems = this.unfilteredOrderItems.filter(item =>
             item.price >= this._priceRange.min && item.price <= this._priceRange.max
         );
         this.requestUpdate();
@@ -179,6 +181,7 @@ export class OrderItemsComponent extends LitElement {
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
         if (result) {
+            this.unfilteredOrderItems = result;
             this.orderItems = result;
         }
     }
