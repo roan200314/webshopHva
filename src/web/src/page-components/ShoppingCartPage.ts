@@ -207,11 +207,11 @@ export class ShoppingCartPage extends LitElement {
 
 
 
-        await this.fetchCartItems();
+        this.getCartItems();
 
         window.addEventListener("cart-update", (): void => {
-            void (async (): Promise<void> => {
-                await this.fetchCartItems();
+            void ((): void => {
+                this.getCartItems();
             })();
         });
     }
@@ -227,10 +227,7 @@ export class ShoppingCartPage extends LitElement {
     }
 
     private _email: string = "";
-    private _password: string = "";
     private _name: string = "";
-    private _firstname: string = "";
-    private _lastname: string = "";
 
      /**
      * Check if the current token is valid and update the cart item total
@@ -242,21 +239,10 @@ export class ShoppingCartPage extends LitElement {
             this._user = result.user;
             this._email = result.user.email;
             this._name = result.user.name;
-            this._firstname = result.user.firstName || "";
-            this._lastname = result.user.lastName || "";
             this._isLoggedIn = true;
         }
     }
-
-    private async fetchCartItems(): Promise<void> {
-        const userInformation: UserHelloResponse | undefined = await this.userService.getWelcome();
-        if (userInformation && userInformation.cartItems) {
-            this.cartItems = userInformation.cartItems;
-            this._user = userInformation.user;
-        }
-    }
-
-    
+   
     private getCartItems(): void {
         const result: string | null = localStorage.getItem("cart");
 
@@ -368,6 +354,15 @@ export class ShoppingCartPage extends LitElement {
         this.cartItems.splice(index, 1);
         this._cartItemsCount = this.cartItems.length || 0;
         localStorage.setItem("cart", JSON.stringify(this.cartItems));
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems: this.cartItems,
+                },
+                bubbles: true,
+                composed: true
+            })
+        );
     }
 
     private _renderInfoConfirmation(): HTMLTemplateResult {
