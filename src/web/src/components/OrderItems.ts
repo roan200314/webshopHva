@@ -61,7 +61,7 @@ export class OrderItemsComponent extends LitElement {
         }
 
         .slider {
-            width: 80%;
+            width: 50%;
             margin: auto;
             position: relative;
             height: 5px;
@@ -106,10 +106,10 @@ export class OrderItemsComponent extends LitElement {
     private _priceRange: { min: number, max: number } = { min: 0, max: 1000 };
 
     @state()
-    private _sliderMin: number = 0; // Needs to be changed to the minimum price of the order items
+    private _sliderMin: number = 0; 
 
     @state()
-    private _sliderMax: number = 1000; // Needs to be changed to the maximum price of the order items
+    private _sliderMax: number = 1000; 
 
     private _minHandle: HTMLElement | null = null;
     private _maxHandle: HTMLElement | null = null;
@@ -125,7 +125,7 @@ export class OrderItemsComponent extends LitElement {
     private handleSliderChange(): void {
         const min: number = parseFloat(this._minHandle?.style.left || "0");
         const max: number = parseFloat(this._maxHandle?.style.left || "100");
-        this._priceRange = { min: Math.round(min * 10), max: Math.round(max * 10) };
+        this._priceRange = { min: Math.round(min * (this._sliderMax - this._sliderMin) / 100 + this._sliderMin), max: Math.round(max * (this._sliderMax - this._sliderMin) / 100 + this._sliderMin) };
         this.filterByPriceRange();
     }
 
@@ -177,12 +177,17 @@ export class OrderItemsComponent extends LitElement {
         document.addEventListener("mouseup", handleMouseUp);
     }
 
-
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
         if (result) {
             this.unfilteredOrderItems = result;
             this.orderItems = result;
+            
+            // Calculate the minimum and maximum prices
+            const prices: number[] = result.map(item => item.price);
+            this._sliderMin = Math.min(...prices);
+            this._sliderMax = Math.max(...prices);
+            this._priceRange = { min: this._sliderMin, max: this._sliderMax };
         }
     }
 
@@ -255,7 +260,8 @@ export class OrderItemsComponent extends LitElement {
     }
 
     public render(): TemplateResult {
-        return html`
+        const sidebar: HTMLElement | null = document.querySelector(".sidebar");
+        const slider: any = html`
             <div class="slider-container">
                 <div class="slider">
                     <div id="min-handle" class="slider-handle" style="left: 0;"></div>
@@ -264,13 +270,17 @@ export class OrderItemsComponent extends LitElement {
                 </div>
                 <label for="min-price">Min Price: €${this._priceRange.min}</label>
                 <label for="max-price">Max Price: €${this._priceRange.max}</label>
-            </div>
-
+            </div>`;
+        if (sidebar) {
+        }
+        return html`
+            ${slider}
             <section class="product-section" id="product-section">
                 ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
             </section>
         `;
     }
+
 
     private async addToCart(orderItem: OrderItem): Promise<void> {
         const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
