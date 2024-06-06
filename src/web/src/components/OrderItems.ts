@@ -2,7 +2,6 @@ import { LitElement, TemplateResult, html, css } from "lit";
 import { customElement, state, property } from "lit/decorators.js";
 import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
-import { UserService } from "../services/UserService";
 import { CartItem } from "@shared/types";
 
 @customElement("order-items")
@@ -57,7 +56,6 @@ export class OrderItemsComponent extends LitElement {
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
-    private _userService: UserService = new UserService();
 
     @property({ type: Array })
     public orderItems: OrderItem[] = [];
@@ -145,7 +143,7 @@ export class OrderItemsComponent extends LitElement {
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
-                    <button class="add-to-cart-button" @click=${async (): Promise<void> => await this.addToCart(orderItem)}>In cart</button>
+                    <button class="add-to-cart-button" @click=${ (): void => this.addToCart(orderItem)}>In cart</button>
                 </div>
             </div>
         `;
@@ -159,19 +157,28 @@ export class OrderItemsComponent extends LitElement {
         `;
     }
 
-    private async addToCart(orderItem: OrderItem): Promise<void> {
-        const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+    private addToCart(orderItem: OrderItem): void {
+        const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+        const cartItem: CartItem | undefined = cartItems.find((cartItem) => cartItem.item.id === orderItem.id);
 
-        if (result) {
-            this.dispatchEvent(
-                new CustomEvent("cart-updated", {
-                    detail: {
-                        cartItems: result,
-                    },
-                    bubbles: true,
-                    composed: true
-                })
-            );
+        if(cartItem === undefined) {
+            cartItems.push({
+                item: orderItem,
+                amount: 1
+            });
+        } else {
+            cartItem.amount++;
         }
+
+        localStorage.setItem("cart", JSON.stringify(cartItems));
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems: cartItems,
+                },
+                bubbles: true,
+                composed: true
+            })
+        );
     }
 }
