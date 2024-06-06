@@ -37,7 +37,7 @@ export class CreateOrderItemComponent extends LitElement {
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" @input=${this.updateName} required/>
                 <label for="price">Price</label>
-                <input type="number" id="price" name="price" @input=${this.updatePrice} required/>
+                <input type="number" step="0.01" id="price" name="price" @input=${this.updatePrice} required/>
                 <label for="description">Description</label>
                 <textarea
                         id="description"
@@ -113,6 +113,7 @@ export class CreateOrderItemComponent extends LitElement {
      */
     private async createOrderItem(event: Event): Promise<void> {
         event.preventDefault();
+        this.orderItem.itemType = "Merchandise";
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/create`, {
             method: "POST",
