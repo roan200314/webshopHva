@@ -18,6 +18,14 @@ export class OrderItemController {
         return this.orderService.getAllOrderItems();
     }
 
+    @Public()
+    @Post("order")
+    @ApiOperation({ summary: "Order" })
+    @ApiResponse({ status: 200, description: "Order response" })
+    public async order(@Body() body: any): Promise<void> {
+        return this.orderService.order(body);
+    }
+
     @ApiBearerAuth()
     @EmployeeOnly()
     @Post("create")
@@ -25,6 +33,19 @@ export class OrderItemController {
     @ApiResponse({ status: 201, description: "Order Item created" })
     public createOrderItem(@Body() orderItem: OrderItem): Promise<OrderItem> {
         return this.orderService.createOrderItem(orderItem);
+    }
+
+    @ApiBearerAuth()
+    @EmployeeOnly()
+    @Post("featured/:id/:setFeatured")
+    @ApiOperation({ summary: "Creates a new order item" })
+    @ApiResponse({ status: 201, description: "Order Item created" })
+    public async setOrderItemAsFeatured(
+        @Param("id", ParseIntPipe) id: number,
+        @Param("setFeatured") setFeatured: string
+    ): Promise<void> {
+        const setFeaturedAsBool: boolean = setFeatured.toLowerCase() === "true";
+        await this.orderService.setOrderItemAsFeatured(id, setFeaturedAsBool);
     }
 
     @Public()

@@ -1,4 +1,4 @@
-import { OrderItem } from "@shared/types";
+import { Address, CartItem, OrderItem } from "@shared/types";
 import { TokenService } from "./TokenService";
 
 const headers: { "Content-Type": string } = {
@@ -28,6 +28,19 @@ export class OrderItemService {
         return (await response.json()) as OrderItem[];
     }
 
+    public async setOrderAsFeatured(id: number, featured: boolean): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const featuredAsString: string = featured ? "true" : "false";
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/featured/${id}/${featuredAsString}`, {
+            method: "POST",
+            headers: { ...headers, authorization: `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            console.error(response);
+        }
+    }
+
     public async deleteOrderFunction(id: number): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${id}`, {
@@ -39,6 +52,21 @@ export class OrderItemService {
             console.error(response);
         } else {
             alert("item deleted successfully");
+        }
+    }
+
+    public async order(cartItems: CartItem[], adressData: Address) : Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
+            method: "POST",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+                "cartItem": cartItems, "adressData": adressData
+            })
+        });
+
+        if (!response.ok) {
+            console.error(response);
         }
     }
 }
