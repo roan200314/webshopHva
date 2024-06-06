@@ -143,7 +143,7 @@ export class NavbarComponent extends LitElement {
         this.userData = userInformation.user;
         this.authorizedLevel = userInformation.user.authorizationLevel;
 
-        this.cartItemCount = userInformation.cartItems?.length || 0;
+        this.cartItemCount = JSON.parse(localStorage.getItem("cart") || "[]").length;
     }
 
     private handleLogout(): void {
