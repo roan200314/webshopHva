@@ -150,7 +150,7 @@ export class GamePage extends LitElement {
 
     private renderGameItem(game: OrderItem): TemplateResult {
         const imageURL: string = game.imageURLs && game.imageURLs.length > 0 ? game.imageURLs[0] : "";
-        const oldPrice: string = 2 * game.price;
+        const oldPrice: any = 2 * game.price;
         return html`
             <div class="product">
                 <h3>${game.name}</h3>

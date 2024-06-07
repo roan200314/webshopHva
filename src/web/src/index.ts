@@ -16,3 +16,6 @@ export * from "./components/CreateOrderItem";
 
 // Game Page
 export * from "./page-components/product-page";
+export * from "./components/review";
+
+
