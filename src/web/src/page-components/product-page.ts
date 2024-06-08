@@ -8,7 +8,7 @@ import { OrderItem } from "@shared/types";
 export class GamePage extends LitElement {
     private _getOrderItem: OrderItemService = new OrderItemService();
     private gameData: Games | undefined;
-    private id: number | null = null;
+    private ids: number | null = null;
 
     public static styles = css`
         :host {
@@ -18,6 +18,7 @@ export class GamePage extends LitElement {
         }
         .product {
             display: flex;
+            float: left;
             flex-direction: column;
             align-items: center;
             max-width: 800px;
@@ -109,7 +110,7 @@ export class GamePage extends LitElement {
 
     public connectedCallback(): void {
         super.connectedCallback();
-        this.id = this.getIdFromURL();
+        this.ids = this.getIdFromURL();
         if (this.id !== null) {
             void this.getGameItem();
         } else {
@@ -136,7 +137,7 @@ export class GamePage extends LitElement {
             return;
         }
         try {
-            const result: OrderItem | undefined = await this._getOrderItem.getOneGame(this.id);
+            const result: OrderItem | undefined = await this._getOrderItem.getOneGame(this.ids);
             if (result) {
                 this.gameData = result;
                 this.requestUpdate();

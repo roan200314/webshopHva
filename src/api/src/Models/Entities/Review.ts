@@ -1,22 +1,24 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./User";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty } from "@nestjs/swagger";
 import { Games } from "./Games";
+import { User } from "./User";
 
-/**
- * @class User
- * @classdesc Entity representing a User in the system
- */
 @Entity("Review")
 export class Review {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @OneToOne(() => User, (user) => user.id)
-    public userId: Review;
+    @Column({ type: "text", nullable: false })
+    @ApiProperty()
+    public content: string;
 
-    @OneToOne(() => Games, (game) => game.id)
-    public gameId: Review;
+    @Column({ type: "int", nullable: false })
+    @ApiProperty()
+    public rating: number;
 
-    @Column({ type: "varchar", length: 255, nullable: false })
-    public text: string;
+    @ManyToOne(() => Games, game => game.reviews)
+    public game: Games;
+
+    @ManyToOne(() => User, user => user.reviews)
+    public user: User;
 }
