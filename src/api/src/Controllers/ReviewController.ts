@@ -2,7 +2,7 @@ import { Controller, Post, Body } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { ReviewService } from "src/Services/ReviewService";
 import { CreateReviewDto } from "src/Models/Dto/Item/CreateReviewDto";
-import { Review as ReviewType } from "@shared/types/review"; // Import the shared type
+import { Review as ReviewType } from "@shared/types/review";
 
 @ApiTags("Reviews")
 @Controller("reviews")

@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { ReviewService } from "../services/ReviewService";
+import { UserData } from "@shared/types/UserData";
 
 @customElement("game-review")
 export class GameReviewComponent extends LitElement {
@@ -9,6 +10,26 @@ export class GameReviewComponent extends LitElement {
     `;
 
     private reviewService = new ReviewService();
+    private ids: number | null = null;
+
+    @state()
+    private userData: UserData | undefined;
+
+    public connectedCallback(): void {
+        super.connectedCallback();
+        this.ids = this.getIdFromURL();
+        if (this.id !== null) {
+            void this.render();
+        } else {
+            console.error("No ID found in URL");
+        }
+    }
+
+    private getIdFromURL(): number | null {
+        const urlParams: URLSearchParams = new URLSearchParams(window.location.search);
+        const id: string | null = urlParams.get("id");
+        return id ? Number(id) : null;
+    }
 
     public render(): ReturnType<LitElement["render"]> {
         return html`
@@ -23,7 +44,7 @@ export class GameReviewComponent extends LitElement {
     }
 
     public handleSubmit(event: Event): void {
-        this.reviewService.createReview(event, this.reviewContent, this.rating).catch(err => console.error(err));
+        this.reviewService.createReview(event, this.reviewContent, this.rating, this.userData.id, this.ids).catch(err => console.error(err));
     }
 
     public handleContentInput(event: InputEvent): void {
@@ -43,4 +64,6 @@ export class GameReviewComponent extends LitElement {
 
     private reviewContent: string = "";
     private rating: number = 0;
+
+
 }
