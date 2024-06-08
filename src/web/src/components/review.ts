@@ -2,6 +2,8 @@ import { LitElement, html, css } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { ReviewService } from "../services/ReviewService";
 import { UserData } from "@shared/types/UserData";
+import { UserService } from "../services/UserService";
+import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
 @customElement("game-review")
 export class GameReviewComponent extends LitElement {
@@ -9,14 +11,17 @@ export class GameReviewComponent extends LitElement {
         /* Add your component's styles here */
     `;
 
+    private userService: UserService = new UserService();
     private reviewService = new ReviewService();
     private ids: number | null = null;
+    private userId: number | null = null;
 
     @state()
     private userData: UserData | undefined;
 
-    public connectedCallback(): void {
+    public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+        await this.getUserInformation();
         this.ids = this.getIdFromURL();
         if (this.id !== null) {
             void this.render();
@@ -42,9 +47,15 @@ export class GameReviewComponent extends LitElement {
             </form>
         `;
     }
+    private async getUserInformation(): Promise<void> {
+        const userInformation: UserHelloResponse | undefined = await this.userService.getWelcome();
+        if (!userInformation || !userInformation.user) return;
+
+        this.userData = userInformation?.user;
+    }
 
     public handleSubmit(event: Event): void {
-        this.reviewService.createReview(event, this.reviewContent, this.rating, this.userData.id, this.ids).catch(err => console.error(err));
+        this.reviewService.createReview(event, this.reviewContent, this.rating, this.userData?.id, this.ids).catch(err => console.error(err));
     }
 
     public handleContentInput(event: InputEvent): void {
