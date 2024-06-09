@@ -5,6 +5,7 @@ import { OrderItemService } from "../services/OrderItemService";
 import { CartItem } from "@shared/types";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
+import { UserService } from "../services/UserService";
 
 @customElement("order-items")
 export class OrderItemsComponent extends LitElement {
@@ -58,6 +59,10 @@ export class OrderItemsComponent extends LitElement {
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
+    private _userService: UserService = new UserService();
+
+    @state()
+    private loggedIn: boolean = false;
 
     @state()
     private employeeOrHigher: boolean = false;
@@ -173,24 +178,44 @@ export class OrderItemsComponent extends LitElement {
         `;
     }
 
-    private addToCart(orderItem: OrderItem): void {
-        const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
-        const cartItem: CartItem | undefined = cartItems.find((cartItem) => cartItem.item.id === orderItem.id);
+    private async addToCart(orderItem: OrderItem): Promise<void> {
+        let cartItems: CartItem[] = [];
 
-        if(cartItem === undefined) {
-            cartItems.push({
-                item: orderItem,
-                amount: 1
-            });
-        } else {
-            cartItem.amount++;
+        if (this.loggedIn) {
+            const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+
+            if (result) {
+                cartItems = result;
+            }
         }
+        else {
+            try {
+                cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+            } catch (error) {
+                console.error("Error parsing cart items from localStorage", error);
+            }
 
-        localStorage.setItem("cart", JSON.stringify(cartItems));
+            const cartItem: CartItem | undefined = cartItems.find((ci: CartItem) => ci.item.id === orderItem.id);
+
+            if(cartItem === undefined) {
+                cartItems.push({
+                    item: orderItem,
+                    amount: 1
+                });
+            } else {
+                cartItem.amount++;
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cartItems));
+        }
+        this.dispatchCartUpdatedEvent(cartItems);
+    }
+
+    private dispatchCartUpdatedEvent(cartItems: CartItem[]): void {
         this.dispatchEvent(
             new CustomEvent("cart-updated", {
                 detail: {
-                    cartItems: cartItems,
+                    cartItems,
                 },
                 bubbles: true,
                 composed: true
@@ -201,6 +226,9 @@ export class OrderItemsComponent extends LitElement {
     private async getUserInformation(): Promise<void> {
         const userInformation: UserHelloResponse | undefined = await this._userService.getWelcome();
         if (!userInformation || !userInformation.user) return;
+
+        this.loggedIn = true;
+
         if (!userInformation.user.authorizationLevel) return;
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison

@@ -205,8 +205,6 @@ export class ShoppingCartPage extends LitElement {
         await this.getWelcome();
         await this.getAddress();
 
-
-
         this.getCartItems();
 
         window.addEventListener("cart-update", (): void => {
@@ -237,6 +235,7 @@ export class ShoppingCartPage extends LitElement {
 
         if (result) {
             this._user = result.user;
+            this.cartItems = result.cartItems ? result.cartItems : [];
             this._email = result.user.email;
             this._name = result.user.name;
             this._isLoggedIn = true;
@@ -244,6 +243,8 @@ export class ShoppingCartPage extends LitElement {
     }
    
     private getCartItems(): void {
+         if (this._isLoggedIn) return;
+
         const result: string | null = localStorage.getItem("cart");
 
         if (result) {
