@@ -1,4 +1,4 @@
-import { CartItem } from "../Entities/CartItem";
+import { CartItem } from "@shared/types";
 
 export class OrderConfirmation {
     private readonly userName: string;

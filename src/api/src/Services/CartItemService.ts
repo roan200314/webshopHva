@@ -40,4 +40,50 @@ export class CartItemService {
 
         return await this.getCartItems(userId);
     }
+
+    public async removeOrderItemFromCart(userId: number, orderItemId: number): Promise<CartItem[]> {
+        const cartItem: CartItem | undefined = await this.cartItemRepository.findOne({
+            where: {
+                user: { id: userId },
+                item: { id: orderItemId },
+            },
+        });
+
+        if (cartItem) {
+            if (cartItem.amount > 1) {
+                cartItem.amount -= 1;
+                await this.cartItemRepository.save(cartItem);
+            } else {
+                await this.cartItemRepository.remove(cartItem);
+            }
+        }
+
+        return await this.getCartItems(userId);
+    }
+
+    public async setCartItemAmount(userId: number, orderItemId: number, amount: number): Promise<CartItem[]> {
+        const cartItem: CartItem | undefined = await this.cartItemRepository.findOne({
+            where: {
+                user: { id: userId },
+                item: { id: orderItemId },
+            },
+        });
+
+        if (cartItem) {
+            if (amount > 0) {
+                cartItem.amount = amount;
+                await this.cartItemRepository.save(cartItem);
+            } else {
+                await this.cartItemRepository.remove(cartItem);
+            }
+        } else {
+            await this.cartItemRepository.save({
+                user: { id: userId },
+                item: { id: orderItemId },
+                amount: amount,
+            });
+        }
+
+        return await this.getCartItems(userId);
+    }
 }
