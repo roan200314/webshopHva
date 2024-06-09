@@ -87,6 +87,7 @@ export class NavbarComponent extends LitElement {
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
         await this.getUserInformation();
+        this.setLoggedOutShoppingCartAmount();
 
         window.addEventListener("cart-updated", (e) => {
            this.handleCartUpdated(e as CustomEvent<CartUpdatedEventDetail>);
@@ -122,6 +123,10 @@ export class NavbarComponent extends LitElement {
                               <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
                           `
                         : html`
+                             <a href="/cart.html" class="navbar-item">
+                                  <img src="/assets/img/cart.png" alt="Cart" class="cart-icon" />
+                                  <span>${this.cartItemCount}</span>
+                              </a>
                               <a href="/login.html" class="navbar-item">Login</a>
                               <a href="/register.html" class="navbar-item">Register</a>
                           `}
@@ -138,8 +143,13 @@ export class NavbarComponent extends LitElement {
         this.isLoggedIn = true;
         this.userData = userInformation.user;
         this.authorizedLevel = userInformation.user.authorizationLevel;
-
         this.cartItemCount = userInformation.cartItems?.length || 0;
+    }
+
+    private setLoggedOutShoppingCartAmount(): void {
+        if (!this.isLoggedIn) {
+            this.cartItemCount = JSON.parse(localStorage.getItem("cart") || "[]").length;
+        }
     }
 
     private handleLogout(): void {

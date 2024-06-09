@@ -9,28 +9,6 @@ import { OrderItemService } from "../services/OrderItemService";
 @customElement("shopping-cart-page")
 export class ShoppingCartPage extends LitElement {
 
-    @state()
-    private shoppingCartStep: number = 1;
-
-    @state()
-    private cartItems: CartItem[] = [];
-
-    @state()
-    private _user: UserData = {
-        id: 0,
-        name: "",
-        email: "",
-    };
-
-    private _adressData: Address = {
-        id: 0,
-        street: "",
-        city: "",
-        zip: "",
-        country: "",
-        user: this._user,
-    };
-
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -158,31 +136,77 @@ export class ShoppingCartPage extends LitElement {
         #userInfo {
             text-align: center;
         }
-    `;
 
+        .delete {
+            background-color: #f03e3e;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .delete:hover {
+            cursor: pointer;
+        }
+
+        .edit:hover {
+            cursor: pointer;
+        }
+
+        .edit {
+            background-color: #49f560;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .infochoice {
+            border: 3px solid #373e98;
+            text-align: center;
+            width: 50%;
+            margin-left: 25%;
+        }
+    `;
+    @state()
+    public _cartItemsCount: number = 0;
+    @state()
+    private shoppingCartStep: number = 1;
+    @state()
+    private cartItems: CartItem[] = [];
+    @state()
+    private _isLoggedIn: boolean = false;
+    @state()
+    private _user: UserData = {
+        id: 0,
+        name: "",
+        email: "",
+    };
+    private _adressData: Address = {
+        id: 0,
+        street: "",
+        city: "",
+        zip: "",
+        country: "",
+        user: this._user,
+    };
     private userService: UserService = new UserService();
     private _addressService: AddressService = new AddressService();
     private _orderService: OrderItemService = new OrderItemService();
+    private _email: string = "";
+    private _name: string = "";
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
         this.render();
+        await this.getWelcome();
+        await this.getAddress();
 
-        await this.fetchCartItems();
+        this.getCartItems();
 
         window.addEventListener("cart-update", (): void => {
-            void (async (): Promise<void> => {
-                await this.fetchCartItems();
+            void ((): void => {
+                this.getCartItems();
             })();
         });
-    }
-
-    private async fetchCartItems(): Promise<void> {
-        const userInformation: UserHelloResponse | undefined = await this.userService.getWelcome();
-        if (userInformation && userInformation.cartItems) {
-            this.cartItems = userInformation.cartItems;
-            this._user = userInformation.user;
-        }
     }
 
     public render(): TemplateResult {
@@ -194,15 +218,52 @@ export class ShoppingCartPage extends LitElement {
 
         if (this.shoppingCartStep === 1) {
             return this.renderShoppingCart();
-        }
-        else if (this.shoppingCartStep === 2) {
+        } else if (this.shoppingCartStep === 2) {
+            return this._renderUserConfirmation();
+        } else if (this.shoppingCartStep === 3) {
+            console.log("hi");
             return this._renderInfoConfirmation();
-        }
-        else if (this.shoppingCartStep === 3) {
+        } else if (this.shoppingCartStep === 4) {
             return this._renderOrderConfirmation();
         }
 
         return html``;
+    }
+
+    private async getAddress(): Promise<void> {
+        const result: Address | undefined = await this._addressService.getAddressForUser();
+
+        if (!result) {
+            return;
+        }
+
+        this._adressData = result;
+    }
+
+    /**
+     * Check if the current token is valid and update the cart item total
+     */
+    private async getWelcome(): Promise<void> {
+        const result: UserHelloResponse | undefined = await this.userService.getWelcome();
+
+        if (result) {
+            this._user = result.user;
+            this.cartItems = result.cartItems ? result.cartItems : [];
+            this._email = result.user.email;
+            this._name = result.user.name;
+            this._isLoggedIn = true;
+        }
+    }
+
+    private getCartItems(): void {
+        if (this._isLoggedIn) return;
+
+        const result: string | null = localStorage.getItem("cart");
+
+        if (result) {
+            this.cartItems = JSON.parse(result);
+            this._cartItemsCount = this.cartItems.length;
+        }
     }
 
     private renderShoppingCart(): TemplateResult {
@@ -212,8 +273,8 @@ export class ShoppingCartPage extends LitElement {
             <h1 class="title">Just a few steps left to go!</h1>
             <div id="steps">
                 <div class="stepnmbr" id="currentstep" @click="${(): void => this.updateStep(1)}">Step 1</div>
-                <div class="stepnmbr" @click="${(): void => this.updateStep(2)}">Step 2</div>
-                <div class="stepnmbr" @click="${(): void => this.updateStep(3)}">Step 3</div>
+                <div class="stepnmbr" @click="${(): void => this.updateStep(3)}">Step 2</div>
+                <div class="stepnmbr" @click="${(): void => this.updateStep(4)}">Step 3</div>
             </div>
             <table>
                 <tr>
@@ -221,6 +282,7 @@ export class ShoppingCartPage extends LitElement {
                     <th>Amount</th>
                     <th>Price</th>
                     <th>Total</th>
+                    <th>Actions</th>
                 </tr>
                 ${this.cartItems.map((cartItem) => {
                     return html`
@@ -229,12 +291,27 @@ export class ShoppingCartPage extends LitElement {
                             <td>${cartItem.amount}</td>
                             <td>${cartItem.item.price}</td>
                             <td>
+                                <input
+                                        type="number"
+                                        value=${cartItem.amount}
+                                        @change="${async (e: Event): Promise<void> => await this._changeCartAmount(e, cartItem)}"
+                                />
+                            </td>
+                            <td>
                                 <b
                                 >&euro;
                                     ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
                                             2,
                                     )}</b
                                 >
+                            </td>
+                            <td>
+                                <button
+                                        class="delete"
+                                        @click="${async (): Promise<void> => await this._deleteCart(cartItem)}"
+                                >
+                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20"/>
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -249,43 +326,124 @@ export class ShoppingCartPage extends LitElement {
         `;
     }
 
+    private async _changeCartAmount(e: Event, cartItem: CartItem): Promise<void> {
+        const newAmount: number = Number.parseInt((e.target as HTMLInputElement).value);
+
+        if (this._isLoggedIn) {
+            const result: CartItem[] | undefined = await this.userService.setCartItemAmount(cartItem.item.id, newAmount);
+            if (result) {
+                this.cartItems = result;
+                this._cartItemsCount = this.cartItems.length;
+            }
+        }
+        else {
+            // Remove previous
+            const index: number = this.cartItems.indexOf(cartItem);
+            this.cartItems[index].amount = newAmount;
+            localStorage.setItem("cart", JSON.stringify(this.cartItems));
+        }
+
+        this.requestUpdate();
+    }
+
+    private async _deleteCart(cartItem: CartItem): Promise<void> {
+        if (this._isLoggedIn) {
+            const result: CartItem[] | undefined = await this.userService.removeOrderItemFromCart(cartItem.item.id);
+            if (result) {
+                this.cartItems = result;
+                this._cartItemsCount = this.cartItems.length;
+            }
+        } else {
+            const index: number = this.cartItems.indexOf(cartItem);
+            this.cartItems.splice(index, 1);
+            this._cartItemsCount = this.cartItems.length || 0;
+            localStorage.setItem("cart", JSON.stringify(this.cartItems));
+        }
+
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems: this.cartItems,
+                },
+                bubbles: true,
+                composed: true
+            })
+        );
+    }
+
     private _renderInfoConfirmation(): HTMLTemplateResult {
         return html`
             <h1 class="title">Confirm your information</h1>
             <div id="steps">
                 <div class="stepnmbr" @click="${(): void => this.updateStep(1)}">Step 1</div>
-                <div class="stepnmbr" id="currentstep" @click="${(): void => this.updateStep(2)}">Step 2</div>
-                <div class="stepnmbr" @click="${(): void => this.updateStep(3)}">Step 3</div>
+                <div class="stepnmbr" id="currentstep" @click="${(): void => this.updateStep(3)}">Step 2</div>
+                <div class="stepnmbr" @click="${(): void => this.updateStep(4)}">Step 3</div>
             </div>
             <div class="adressInfo">
                 <form>
-                    <label>Username</label><input type="text" disabled value="${this._user.name}" /><br />
-                    <label>Email</label><input type="text" disabled value="${this._user.email}" /><br />
+                    ${
+                            this._isLoggedIn ?
+                                    html`<label>Name</label><input type="text" disabled value="${this._name}"/><br/>
+                                    <label>Email</label><input type="text" disabled value="${this._email}"/><br/>`
+                                    :
+                                    html`<label>Name</label><input type="text"/><br/>
+                                    <label>Email</label><input type="text"/><br/>`
+                    }
+
                     <label>Street</label>
                     <input
-                        type="text"
-                        @change="${this._onChangeStreet}"
-                        value="${this._adressData.street}"
-                    /><br />
+                            type="text"
+                            @change="${this._onChangeStreet}"
+                            value="${this._adressData.street}"
+                    /><br/>
                     <label>City</label>
                     <input
-                        type="text"
-                        @change="${this._onChangeCity}"
-                        value="${this._adressData.city}"
-                    /><br />
+                            type="text"
+                            @change="${this._onChangeCity}"
+                            value="${this._adressData.city}"
+                    /><br/>
                     <label>Zip</label>
-                    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}" /><br />
+                    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}"/><br/>
                     <label>Country</label
                     ><input
                         type="text"
                         @change="${this._onChangeCountry}"
                         value="${this._adressData.country}"
-                    /><br />
+                /><br/>
                 </form>
             </div>
             <div class="nxtstep">
-                <button class="button" type="submit" @click="${(): number => this.shoppingCartStep = 3}">
+                <button class="button" type="submit" @click="${(): number => this.shoppingCartStep = 4}">
                     Next Step
+                </button>
+            </div>
+        `;
+    }
+
+    private _renderUserConfirmation(): HTMLTemplateResult {
+        if (this._isLoggedIn) {
+            return this._renderInfoConfirmation();
+        }
+
+        return html`
+            <h1 class="title">How do you want to continue?</h1>
+            <div id="steps">
+                <div class="stepnmbr" id="currentstep" @click="${(): void => this.updateStep(1)}">Step 1</div>
+                <div class="stepnmbr" @click="${(): void => this.updateStep(3)}">Step 2</div>
+                <div class="stepnmbr" @click="${(): void => this.updateStep(4)}">Step 3</div>
+            </div>
+            <div class="infochoice">
+                <p>No account? No worries! You can just continue as a guest!</p>
+                <button class="button"
+                        @click=${(): void => {
+                            this.shoppingCartStep = 3;
+                        }}
+                >
+                    Continue as a guest
+                </button>
+                <p>Or you can log in here:</p>
+                <button class="button" href="">
+                    Login
                 </button>
             </div>
         `;
@@ -316,14 +474,17 @@ export class ShoppingCartPage extends LitElement {
         this._adressData.street = (e.target as HTMLInputElement).value;
         await this.changeAddress();
     }
+
     private async _onChangeCity(e: Event): Promise<void> {
         this._adressData.city = (e.target as HTMLInputElement).value;
         await this.changeAddress();
     }
+
     private async _onChangeZip(e: Event): Promise<void> {
         this._adressData.zip = (e.target as HTMLInputElement).value;
         await this.changeAddress();
     }
+
     private async _onChangeCountry(e: Event): Promise<void> {
         this._adressData.country = (e.target as HTMLInputElement).value;
         await this.changeAddress();
