@@ -4,8 +4,9 @@ import { ILike, Repository } from "typeorm";
 import { Order } from "../Models/Entities/Order";
 import { OrderItem } from "../Models/Entities/OrderItem";
 import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
-import { CartItem, Address } from "@shared/types";
+import { Address, CartItem } from "@shared/types";
 import { IsNull } from "typeorm";
+import { MailService } from "./MailService";
 
 @Injectable()
 export class OrderService {
@@ -14,6 +15,7 @@ export class OrderService {
         private orderRepository: Repository<Order>,
         @InjectRepository(OrderItem)
         private orderItemRepository: Repository<OrderItem>,
+        private readonly mailService: MailService,
     ) {}
 
     /**
@@ -113,9 +115,9 @@ export class OrderService {
         return await this.orderItemRepository.find({ where: { name: ILike(`%${name}%`) } });
     }
 
-    public async order(body: any): Promise<void> {
+    public async order(body: any, user?): Promise<void> {
         const addressData: Address = body.adressData;
-        const cartItems:CartItem[] = body.cartItem;
+        const cartItems: CartItem[] = body.cartItem;
 
         console.log(body);
 
@@ -127,6 +129,13 @@ export class OrderService {
         newOrder.status = "complete";
         newOrder.email = "some@email.com";
         newOrder.name = "Harry";
+
+        if (user) {
+            newOrder.email = user.email;
+            newOrder.name = user.name;
+
+            await this.mailService.orderConfirmation(user.email, user.name, cartItems);
+        }
 
         const savedOrder: any = await this.orderRepository.save(newOrder);
 

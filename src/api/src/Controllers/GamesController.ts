@@ -43,7 +43,6 @@ export class GamesController {
     @ApiOperation({ summary: "Searches for an game item by its name" })
     @ApiResponse({ status: 200, description: "Game Item" })
     public async searchOrderItemByName(@Param("name") name: string): Promise<Games[]> {
-        
         return await this.gamesService.searchGameItemByName(name);
     }
 
