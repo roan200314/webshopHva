@@ -120,7 +120,9 @@ export class NavbarComponent extends LitElement {
                                   <span>${this.cartItemCount}</span>
                               </a>
                               <span class="navbar-item">Hello, ${this.userData?.name}</span>
+                              <a href="/myAccount.html" class="navbar-item">My Account</a>
                               <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
+
                           `
                         : html`
                              <a href="/cart.html" class="navbar-item">
