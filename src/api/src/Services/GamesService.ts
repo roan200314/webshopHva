@@ -52,5 +52,5 @@ export class GamesService {
         return await this.gamesRepository.find({where: {title: ILike(`%${name}%`)}});
     }
 
-
+    
 }

@@ -1,3 +1,4 @@
+import { Review } from "@shared/types/review";
 import { TokenService } from "./TokenService";
 
 export class ReviewService {
@@ -34,5 +35,19 @@ export class ReviewService {
         } else {
             alert("Review posted successfully");
         }
+    }
+    public async getReviews(gameId: number): Promise<Review[]> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}reviews/getAll?gameId=${gameId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error("Failed to fetch reviews");
+        }
+    
+        return await response.json();
     }
 }

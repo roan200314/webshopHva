@@ -44,4 +44,10 @@ export class ReviewService {
             gameId: review.game.id,
         };
     }
+    public async getReviews(gameId: number): Promise<Review[]> {
+        return await this.reviewRepository.find({
+          where: { game: { id: gameId } },
+          relations: ['game', 'user'],
+        });
+      }
 }
