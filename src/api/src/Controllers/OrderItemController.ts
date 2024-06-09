@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Request } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { OrderService } from "../Services/OrderService";
 import { Public } from "../Auth/Decorators/public.decorator";
@@ -22,8 +22,16 @@ export class OrderItemController {
     @Post("order")
     @ApiOperation({ summary: "Order" })
     @ApiResponse({ status: 200, description: "Order response" })
-    public async order(@Body() body: any): Promise<void> {
+    public async orderWithoutAccount(@Body() body: any): Promise<void> {
         return this.orderService.order(body);
+    }
+
+    @ApiBearerAuth()
+    @Post("orderWAccount")
+    @ApiOperation({ summary: "Order" })
+    @ApiResponse({ status: 200, description: "Order response" })
+    public async orderWithAccount(@Body() body: any, @Request() req): Promise<void> {
+        return this.orderService.order(body, req.user);
     }
 
     @ApiBearerAuth()
