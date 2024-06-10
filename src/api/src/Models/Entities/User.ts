@@ -5,6 +5,7 @@ import { Order } from "./Order";
 import { AuthorizationLevel } from "../Enumerations/AuthorizationLevel";
 import { CartItem } from "./CartItem";
 import { EmailConfirmation } from "./EmailConfirmation";
+import { Review } from "./Review";
 
 /**
  * @class User
@@ -34,15 +35,18 @@ export class User {
     @OneToOne(() => EmailConfirmation, (emailConfirmation) => emailConfirmation.user)
     public emailConfirmation: EmailConfirmation;
 
-    @OneToMany((_) => Address, (address) => address.user)
+    @OneToMany(() => Address, (address) => address.user)
     public addresses: Address[];
 
-    @OneToMany((_) => Order, (order) => order.user)
+    @OneToMany(() => Order, (order) => order.user)
     public orders: Order[];
 
     @Column({ type: "enum", enum: AuthorizationLevel, default: AuthorizationLevel.USER })
     public authorizationLevel: AuthorizationLevel;
 
-    @OneToMany((_) => CartItem, (cartItem) => cartItem.user)
+    @OneToMany(() => Review, (review) => review.user)
+    public reviews: Review[];
+
+    @OneToMany(() => CartItem, (cartItem) => cartItem.user)
     public cart: CartItem[];
 }

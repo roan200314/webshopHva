@@ -7,7 +7,7 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 import { UserService } from "../services/UserService";
 
-@customElement("order-items")
+@customElement("order-itemsa")
 export class OrderItemsComponent extends LitElement {
     public static styles = css`
         .product-section {

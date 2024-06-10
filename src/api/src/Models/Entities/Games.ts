@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
+import { Review } from "./Review";
 import { GameTag } from "../Enumerations/GameTag";
 
 @Entity("Games")
@@ -38,4 +39,7 @@ export class Games {
     @Column({ type: "simple-array", nullable: false })
     @ApiProperty()
     public tags: GameTag[];
+
+    @OneToMany(() => Review, review => review.game)
+    public reviews: Review[];
 }

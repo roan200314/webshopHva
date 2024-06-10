@@ -2,9 +2,10 @@ import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { Games, UserData } from "@shared/types";
+import { UserData } from "@shared/types";
 import { GameService } from "../services/GameService";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
+import { Games } from "@shared/types/games";
 
 /**
  * Aangepast element gebaseerd op Lit voor de header van de webshop.
@@ -129,7 +130,7 @@ export class AdminPage extends LitElement {
                     <td>${gamedata.title}</td>
                     <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
                     <td>${gamedata.descriptionMarkdown}</td>
-                    <td>${gamedata.tags}</td>
+                    <td>€${gamedata.price}</td>
                     <td>
                         <button
                             class="btn btn-danger delete-btn"

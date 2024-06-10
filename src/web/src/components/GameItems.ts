@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { GameService } from "../services/GameService";
 import { Games } from "@shared/types/games";
 
-@customElement("game-items")
+@customElement("order-items")
 export class GameItems extends LitElement {
     public static styles = css`
         .product-section {
@@ -47,6 +47,10 @@ export class GameItems extends LitElement {
             font-weight: bold;
             color: #333;
         }
+
+        .gameFoto {
+            max-width: 300px;
+        }
     `;
 
     private _gameservice: GameService = new GameService();
@@ -69,15 +73,15 @@ export class GameItems extends LitElement {
     }
 
     private renderGameItem(games: Games): TemplateResult {
-        const imageURL: string = games.images && games.images.length > 0 ? games.images[0] : "";
-
+        const gameText: any = games.descriptionMarkdown && games.descriptionMarkdown.length > 100 ? games.descriptionMarkdown.substring(0, 100) + "..." : games.descriptionMarkdown;
+        const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
         return html`
             <div class="product">
-                <h3>${games.title}</h3>
-                <img src="${imageURL}" alt="${games.authors}" />
-                <p>${games.descriptionMarkdown}</p>
+                <h3><a href="game.html?id=${games.id}">${games.title}</a></h3>
+                <img class="gameFoto" src="${imageURL}" alt="${games.authors}">
+                <p>${gameText}</p>
                 <div class="buttons">
-                    <span class="base-price">€ ${games.authors}</span>
+                    <span class="base-price">€ ${games.price}</span>
                     <button class="add-to-cart-button">In cart</button>
                 </div>
             </div>
