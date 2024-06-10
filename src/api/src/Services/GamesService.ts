@@ -12,8 +12,7 @@ export class GamesService {
         private orderItemRepository: Repository<OrderItem>,
         @InjectRepository(Games)
         private gamesRepository: Repository<Games>,
-    ) {
-    }
+    ) {}
 
     public async getAllGames(): Promise<Games[]> {
         return await this.gamesRepository.find();
@@ -23,7 +22,7 @@ export class GamesService {
         const savedGames: Games[] = await this.gamesRepository.save(games);
 
         // For each saved game, create an order item
-        const orderItems: OrderItem[] = savedGames.map(game => {
+        const orderItems: OrderItem[] = savedGames.map((game) => {
             return new OrderItem({
                 name: game.title,
                 description: game.descriptionMarkdown,
@@ -40,7 +39,7 @@ export class GamesService {
 
     public async deleteGame(id: number): Promise<{ message: string }> {
         await this.gamesRepository.delete(id);
-        return {message: "Game removed successfully"};
+        return { message: "Game removed successfully" };
     }
 
     /**
@@ -49,6 +48,6 @@ export class GamesService {
      * @returns {Promise<Games[]>}
      */
     public async searchGameItemByName(name: string): Promise<Games[]> {
-        return await this.gamesRepository.find({where: {title: ILike(`%${name}%`)}});
+        return await this.gamesRepository.find({ where: { title: ILike(`%${name}%`) } });
     }
 }
