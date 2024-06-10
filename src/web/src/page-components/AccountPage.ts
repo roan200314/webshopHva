@@ -59,7 +59,6 @@ export class AccountPage extends LitElement {
                         <hr>
                         <h2>Order ${order.id}:</h2>
                         <ul>
-                            <li><b>ID: ${order.id}</b></li>
                             <li><b>Address:</b> ${order.street}, ${order.city}, ${order.country}</li>
                             <li><b>Products:</b></li>
                             <ul>
@@ -67,7 +66,6 @@ export class AccountPage extends LitElement {
                                     return html`
                                         <li>
                                             <b>${orderItem.name}</b> (&euro;${orderItem.price})
-                                            <br>${orderItem.description}
                                         </li>
                                     `;
                                 })}
