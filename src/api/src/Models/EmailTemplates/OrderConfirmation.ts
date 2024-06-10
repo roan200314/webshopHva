@@ -1,4 +1,4 @@
-import { CartItem } from "../Entities/CartItem";
+import { CartItem } from "@shared/types";
 
 export class OrderConfirmation {
     private readonly userName: string;
@@ -10,13 +10,16 @@ export class OrderConfirmation {
     }
 
     public generate(): string {
-        const orderDetails: string = this.orders.map((cartItem: CartItem) =>
-            `<tr>
+        const orderDetails: string = this.orders
+            .map(
+                (cartItem: CartItem) =>
+                    `<tr>
             <td style="border: 1px solid #dddddd; padding: 8px; text-align: left;">${cartItem.item.name}</td>
             <td style="border: 1px solid #dddddd; padding: 8px; text-align: left;">${cartItem.amount}</td>
             <td style="border: 1px solid #dddddd; padding: 8px; text-align: left;">${cartItem.item.price}</td>
-        </tr>`
-        ).join("");
+        </tr>`,
+            )
+            .join("");
 
         return `
     <div style="font-family: Arial, sans-serif;">

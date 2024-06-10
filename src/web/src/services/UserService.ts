@@ -186,4 +186,56 @@ export class UserService {
 
         return (await response.json()) as CartItem[];
     }
+
+    /**
+     * Handles removing an order item from the cart of the current user. Requires a valid token.
+     *
+     * @returns Current number of order items in the cart when successful, otherwise `false`.
+     */
+    public async removeOrderItemFromCart(id: number): Promise<CartItem[] | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
+
+        if (!token) {
+            return undefined;
+        }
+
+        const response: Response = await fetch(`${viteConfiguration.API_URL}users/cart/${id}`, {
+            method: "delete",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            console.error(response.body);
+
+            return undefined;
+        }
+
+        return (await response.json()) as CartItem[];
+    }
+
+    /**
+     * Handles setting the amount of an order item in the cart of the current user. Requires a valid token.
+     *
+     * @returns Current number of order items in the cart when successful, otherwise `false`.
+     */
+    public async setCartItemAmount(id: number, amount: number): Promise<CartItem[] | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
+
+        if (!token) {
+            return undefined;
+        }
+
+        const response: Response = await fetch(`${viteConfiguration.API_URL}users/cart/${id}/${amount}`, {
+            method: "post",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            console.error(response.body);
+
+            return undefined;
+        }
+
+        return (await response.json()) as CartItem[];
+    }
 }

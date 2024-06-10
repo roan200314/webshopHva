@@ -4,4 +4,5 @@ export type OrderItem = {
     description?: string;
     price: number;
     imageURLs?: string[];
+    featured: boolean;
 };

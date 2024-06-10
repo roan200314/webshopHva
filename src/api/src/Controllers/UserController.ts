@@ -63,4 +63,33 @@ export class UserController {
     public async addOrderItemToCart(@Request() req, @Param("id") id: number): Promise<CartItem[]> {
         return await this.cartItemService.addOrderItemToCart(req.user.id, id);
     }
+
+    @ApiOperation({ summary: "Remove an order item from the user’s cart" })
+    @ApiResponse({
+        status: 200,
+        description: "Total number of order items in the cart after removing the item",
+    })
+    @ApiParam({ name: "id", description: "The id of the order item to remove from the cart" })
+    @ApiBearerAuth()
+    @Delete("cart/:id")
+    public async removeOrderItemFromCart(@Request() req, @Param("id") id: number): Promise<CartItem[]> {
+        return await this.cartItemService.removeOrderItemFromCart(req.user.id, id);
+    }
+
+    @ApiOperation({ summary: "Set the amount of an order item in the user’s cart" })
+    @ApiResponse({
+        status: 200,
+        description: "Total number of order items in the cart after setting the amount",
+    })
+    @ApiParam({ name: "id", description: "The id of the order item to set the amount for" })
+    @ApiParam({ name: "amount", description: "The amount to set for the order item" })
+    @ApiBearerAuth()
+    @Post("cart/:id/:amount")
+    public async setCartItemAmount(
+        @Request() req,
+        @Param("id") id: number,
+        @Param("amount") amount: number,
+    ): Promise<CartItem[]> {
+        return await this.cartItemService.setCartItemAmount(req.user.id, id, amount);
+    }
 }

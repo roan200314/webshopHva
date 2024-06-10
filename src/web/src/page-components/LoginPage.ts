@@ -120,7 +120,6 @@ export class LoginPage extends LitElement {
 
         await this.userService.login(this.userForm).then((loginResult: boolean): void => {
             if (loginResult) {
-                alert("Successfully logged in!");
                 window.location.href = "/";
             } else {
                 alert("Login failed!");

@@ -28,6 +28,22 @@ export class OrderItemService {
         return (await response.json()) as OrderItem[];
     }
 
+    public async setOrderAsFeatured(id: number, featured: boolean): Promise<void> {
+        const token: string | undefined = this._tokenService.getToken();
+        const featuredAsString: string = featured ? "true" : "false";
+        const response: Response = await fetch(
+            `${viteConfiguration.API_URL}orderItems/featured/${id}/${featuredAsString}`,
+            {
+                method: "POST",
+                headers: { ...headers, authorization: `Bearer ${token}` },
+            },
+        );
+
+        if (!response.ok) {
+            console.error(response);
+        }
+    }
+
     public async deleteOrderFunction(id: number): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
         const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/${id}`, {
@@ -42,18 +58,34 @@ export class OrderItemService {
         }
     }
 
-    public async order(cartItems: CartItem[], adressData: Address) : Promise<void> {
+    public async order(cartItems: CartItem[], adressData: Address): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
-        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
-            method: "POST",
-            headers: { ...headers, authorization: `Bearer ${token}` },
-            body: JSON.stringify({
-                "cartItem": cartItems, "adressData": adressData
-            })
-        });
 
-        if (!response.ok) {
-            console.error(response);
+        if (token) {
+            const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/orderWAccount`, {
+                method: "POST",
+                headers: { ...headers, authorization: `Bearer ${token}` },
+                body: JSON.stringify({
+                    cartItem: cartItems,
+                    adressData: adressData,
+                }),
+            });
+
+            if (!response.ok) {
+                console.error(response);
+            }
+        } else {
+            const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/order`, {
+                method: "POST",
+                body: JSON.stringify({
+                    cartItem: cartItems,
+                    adressData: adressData,
+                }),
+            });
+
+            if (!response.ok) {
+                console.error(response);
+            }
         }
     }
 }
