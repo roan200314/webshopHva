@@ -1,9 +1,11 @@
 export class Contact {
     private readonly name: string;
+    private readonly email: string;
     private readonly message: string;
 
-    public constructor(name: string, message: string) {
+    public constructor(name: string, email: string, message: string) {
         this.name = name;
+        this.email = email;
         this.message = message;
     }
 
@@ -14,6 +16,7 @@ export class Contact {
                     <h1 style="color: #2a7aea;">Webshop Contact Form</h1>
                     <div style="text-align: left; margin-top: 20px;">
                         <p><strong>Name:</strong> ${this.name}</p>
+                        <p><strong>Email:</strong> ${this.email}</p>
                         <p><strong>Message:</strong></p>
                         <p>${this.message}</p>
                     </div>

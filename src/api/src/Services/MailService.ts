@@ -61,7 +61,7 @@ export class MailService {
                 to: [{ address: "bram-dekker@live.nl", name: "WebShop" }],
                 subject: contactEmailDto.title,
                 from: { address: emailAddress, name: name },
-                html: new Contact(name, contactEmailDto.message).generate(),
+                html: new Contact(name, emailAddress, contactEmailDto.message).generate(),
             };
 
             await this.sendEmail(email);

@@ -16,7 +16,7 @@ export class ContactController {
     @ApiBearerAuth()
     @ApiBody({ type: ContactEmailDto })
     @Post("send")
-    public async sendContactEmail(@Request() req, @Body() contactEmail: ContactEmailDto): Promise<void> {
+    public async sendContactEmail(@Request() req, @Body() contactEmail: ContactEmailDto): Promise<{ message: string }> {
         return await this.contactService.sendContactEmail(req.user.id, contactEmail);
     }
 }

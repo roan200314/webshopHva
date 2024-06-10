@@ -151,7 +151,7 @@ export class UserService {
      * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
      */
     public async getUserById(id: number): Promise<User | undefined> {
-        return this.usersRepository.findOne({ where: { id } });
+        return this.usersRepository.findOne({ where: { id }, relations: ["emailConfirmation"] });
     }
 
     /**
