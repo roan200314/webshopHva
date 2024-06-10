@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { MailService } from "./MailService";
 import { ContactEmailDto } from "../Models/Dto/ContactEmailDto";
 import { UserService } from "./UserService";
@@ -14,7 +14,7 @@ export class ContactService {
     public async sendContactEmail(userId: number, contactEmailDto: ContactEmailDto): Promise<{ message: string }> {
         const user: User = await this.userService.getUserById(userId);
 
-        if (user.emailConfirmation.confirmed === false) throw new BadRequestException("Your email is not confirmed");
+        if (user.emailConfirmation.confirmed === false) throw new UnauthorizedException("Your email is not confirmed");
 
         await this.mailService.sendContactEmail(user.name, user.email, contactEmailDto);
         return { message: "Email sent successfully" };
