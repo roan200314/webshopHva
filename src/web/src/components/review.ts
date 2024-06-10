@@ -11,6 +11,7 @@ export class GameReviewComponent extends LitElement {
   public static styles = css`
     :host {
       display: flex;
+      flex-direction: column;
       max-width: 600px;
       margin: auto;
       padding: 20px;
@@ -82,6 +83,12 @@ export class GameReviewComponent extends LitElement {
   @state()
   private reviews: Review[] = [];
 
+  @state()
+  private reviewContent: string = "";
+
+  @state()
+  private rating: number = 0;
+
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
     await this.getUserInformation();
@@ -113,18 +120,33 @@ export class GameReviewComponent extends LitElement {
     return html`
       <form @submit=${this.handleSubmit}>
         <label for="reviewContent">Review Content:</label><br />
-        <textarea id="reviewContent" name="reviewContent" rows="4" cols="50" @input=${this.handleContentInput}></textarea><br />
+        <textarea
+          id="reviewContent"
+          name="reviewContent"
+          rows="4"
+          cols="50"
+          .value=${this.reviewContent}
+          @input=${this.handleContentInput}
+        ></textarea><br />
         <label for="rating">Rating:</label><br />
-        <input type="number" id="rating" name="rating" min="1" max="5" @change=${this.handleRatingChange} /><br />
+        <input
+          type="number"
+          id="rating"
+          name="rating"
+          min="1"
+          max="5"
+          .value=${this.rating}
+          @change=${this.handleRatingChange}
+        /><br />
         <button type="submit">Submit</button>
       </form>
       <div class="reviews">
         ${this.reviews.map(
           (review) => html`
             <div class="review-item">
-              <p><strong>Rating:</strong> ${review.rating}</p>
+                <p><strong>User:</strong> ${review.user?.name}</p>
+              <p><strong>Rating:</strong> ${review.rating}/5</p>
               <p><strong>Content:</strong> ${review.content}</p>
-              <p><strong>User:</strong> ${review.user?.name}</p>
             </div>
           `
         )}
@@ -143,15 +165,17 @@ export class GameReviewComponent extends LitElement {
   public async handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     try {
-      await this.reviewService.createReview(
-        event,
-        this.reviewContent,
-        this.rating,
-        this.userId,
-        this.gameId
-      );
-      this.resetForm();
-      await this.fetchReviews(); // Refresh reviews after submitting
+      if (this.gameId !== null && this.userId !== null) {
+        await this.reviewService.createReview(
+          event,
+          this.reviewContent,
+          this.rating,
+          this.userId,
+          this.gameId
+        );
+        this.resetForm();
+        await this.fetchReviews(); // Refresh reviews after submitting
+      }
     } catch (err) {
       console.error(err);
     }
@@ -171,7 +195,4 @@ export class GameReviewComponent extends LitElement {
     this.reviewContent = "";
     this.rating = 0;
   }
-
-  private reviewContent: string = "";
-  private rating: number = 0;
 }
