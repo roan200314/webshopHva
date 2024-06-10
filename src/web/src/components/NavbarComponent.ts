@@ -106,33 +106,32 @@ export class NavbarComponent extends LitElement {
                     <a href="/index.html" class="navbar-item">Home</a>
                     <a href="/products.html" class="navbar-item">Products</a>
                     ${this.isLoggedIn
-                            ? html`
-                                ${this.authorizedLevel === AuthorizationLevel.ADMIN
-                                        ? html`
-                                            <a href="/admin.html" class="navbar-item">Admin Page</a>
-                                            <a href="/contact.html" class="navbar-item">Contact</a>`
-                                        : nothing}
-                            `
-                            : nothing}
+                        ? html`
+                              ${this.authorizedLevel === AuthorizationLevel.ADMIN
+                                  ? html` <a href="/admin.html" class="navbar-item">Admin Page</a>
+                                        <a href="/contact.html" class="navbar-item">Contact</a>`
+                                  : nothing}
+                          `
+                        : nothing}
                 </nav>
                 <nav class="right-nav">
                     ${this.isLoggedIn
-                            ? html`
-                                <a href="/cart.html" class="navbar-item">
-                                    <img src="/assets/img/cart.png" alt="Cart" class="cart-icon"/>
-                                    <span>${this.cartItemCount}</span>
-                                </a>
-                                <span class="navbar-item">Hello, ${this.userData?.name}</span>
-                                <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
-                            `
-                            : html`
-                                <a href="/cart.html" class="navbar-item">
-                                    <img src="/assets/img/cart.png" alt="Cart" class="cart-icon"/>
-                                    <span>${this.cartItemCount}</span>
-                                </a>
-                                <a href="/login.html" class="navbar-item">Login</a>
-                                <a href="/register.html" class="navbar-item">Register</a>
-                            `}
+                        ? html`
+                              <a href="/cart.html" class="navbar-item">
+                                  <img src="/assets/img/cart.png" alt="Cart" class="cart-icon" />
+                                  <span>${this.cartItemCount}</span>
+                              </a>
+                              <span class="navbar-item">Hello, ${this.userData?.name}</span>
+                              <button @click="${this.handleLogout}" class="navbar-item logout">Logout</button>
+                          `
+                        : html`
+                              <a href="/cart.html" class="navbar-item">
+                                  <img src="/assets/img/cart.png" alt="Cart" class="cart-icon" />
+                                  <span>${this.cartItemCount}</span>
+                              </a>
+                              <a href="/login.html" class="navbar-item">Login</a>
+                              <a href="/register.html" class="navbar-item">Register</a>
+                          `}
                 </nav>
             </div>
         `;

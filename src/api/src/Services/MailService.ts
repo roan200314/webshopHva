@@ -55,7 +55,11 @@ export class MailService {
         }
     }
 
-    public async sendContactEmail(name: string, emailAddress: string, contactEmailDto: ContactEmailDto): Promise<void> {
+    public async sendContactEmail(
+        name: string,
+        emailAddress: string,
+        contactEmailDto: ContactEmailDto,
+    ): Promise<void> {
         try {
             const email: Email = {
                 to: [{ address: "bram-dekker@live.nl", name: "WebShop" }],

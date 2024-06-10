@@ -42,7 +42,7 @@ export class GameService {
 
         const game: Games = await response.json();
         console.log(game.id);
-        return game.id; 
+        return game.id;
     }
 
     // Example delete function for games

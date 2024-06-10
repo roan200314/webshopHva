@@ -12,13 +12,13 @@ export class ContactService {
         const token: string | undefined = this._tokenService.getToken();
 
         if (!token) {
-            return new Response("Unauthorized", {status: 401});
+            return new Response("Unauthorized", { status: 401 });
         }
 
         return await fetch(`${viteConfiguration.API_URL}contact/send`, {
             method: "post",
-            headers: {...headers, authorization: `Bearer ${token}`},
-            body: JSON.stringify(contactEmail)
+            headers: { ...headers, authorization: `Bearer ${token}` },
+            body: JSON.stringify(contactEmail),
         });
     }
 }

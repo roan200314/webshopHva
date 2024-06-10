@@ -22,7 +22,7 @@ import { ContactModule } from "./ContactModule";
         AddressModule,
         MailModule,
         GamesModule,
-        ContactModule
+        ContactModule,
     ],
     controllers: [AppController],
     providers: [AppService],
