@@ -7,6 +7,7 @@ import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
 import { Address, CartItem } from "@shared/types";
 import { IsNull } from "typeorm";
 import { MailService } from "./MailService";
+import { OrderItemType } from "src/Models/Enumerations/OrderItemType";
 
 @Injectable()
 export class OrderService {
@@ -150,5 +151,22 @@ export class OrderService {
                 await this.orderItemRepository.save(orderItem);
             }
         }
+    }
+    /**
+     * 
+     * @returns {Promise<OrderItem[]>}
+     * Retrieves all merchandise items
+     */
+    public async getMerchandiseItems(): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find( { where: { itemType: OrderItemType.Merchandise } });
+    }
+
+    /**
+     * 
+     * @returns {Promise<OrderItem[]>}
+     * Retrieves all game items
+     */
+    public async getGameItems(): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find( { where: { itemType: OrderItemType.Game } });
     }
 }

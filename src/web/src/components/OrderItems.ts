@@ -211,6 +211,16 @@ export class OrderItemsComponent extends LitElement {
         if (nameFilter) {
             nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
         }
+
+        const checkbox: HTMLInputElement | null = document.querySelector("#merchandise-filter");
+        if (checkbox) {
+            checkbox.addEventListener("change", () => this.filterByType());
+        }
+
+        const checkbox2: HTMLInputElement | null = document.querySelector("#game-filter");
+        if (checkbox2) {
+            checkbox2.addEventListener("change", () => this.filterByType());
+        }
     }
 
     private toggleSortOrder(type: "price" | "name"): void {
@@ -360,6 +370,35 @@ export class OrderItemsComponent extends LitElement {
         if (userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN) {
             this.employeeOrHigher = true;
         }
+    }
+
+    private async getMerchandiseItems(): Promise<void> {
+        const result: OrderItem[] | undefined = await this._orderItemService.getMerchandiseItems();
+        if (result) {
+            this.orderItems = result;
+        }
+    }
+
+    private async getGameItems(): Promise<void> {
+        const result: OrderItem[] | undefined = await this._orderItemService.getGameItems();
+        if (result) {
+            this.orderItems = result;
+        }
+    }
+
+    private async filterByType(): Promise<void>{
+        const merchandisecheckbox: HTMLInputElement | null = document.querySelector("#merchandise-filter");
+        const gamecheckbox: HTMLInputElement | null = document.querySelector("#game-filter");
+        if (merchandisecheckbox && gamecheckbox) {
+            if (merchandisecheckbox.checked) {
+                await this.getMerchandiseItems();
+            } else if (gamecheckbox.checked) {
+                await this.getGameItems();
+            } else {
+                return;
+            }
+        }
+        return;
     }
 
     private async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {

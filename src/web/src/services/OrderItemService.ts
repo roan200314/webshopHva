@@ -84,4 +84,32 @@ export class OrderItemService {
             }
         }
     }
+
+    public async getMerchandiseItems(): Promise<OrderItem[] | undefined> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/merchandise`, {
+            method: "get",
+        });
+
+        if (!response.ok) {
+            console.error(response);
+
+            return undefined;
+        }
+
+        return (await response.json()) as OrderItem[];
+    }
+
+    public async getGameItems(): Promise<OrderItem[] | undefined> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/game`, {
+            method: "get",
+        });
+
+        if (!response.ok) {
+            console.error(response);
+
+            return undefined;
+        }
+
+        return (await response.json()) as OrderItem[];
+    }
 }
