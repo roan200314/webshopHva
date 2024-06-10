@@ -5,7 +5,6 @@ import { Games } from "./Games";
 
 @Entity("OrderItem")
 export class OrderItem {
-
     public constructor(init?: Partial<OrderItem>) {
         Object.assign(this, init);
     }
@@ -31,7 +30,7 @@ export class OrderItem {
     @ManyToOne(() => Order, (order) => order.products)
     public order: Order;
 
-    @Column({type: "enum", enum: OrderItemType, nullable: true})
+    @Column({ type: "enum", enum: OrderItemType, nullable: true })
     public itemType?: OrderItemType;
 
     @ManyToOne(() => Games, { nullable: true, eager: true })

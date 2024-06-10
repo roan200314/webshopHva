@@ -15,6 +15,10 @@ export class GameItemSearch extends LitElement {
 
     private _gameService: GameService = new GameService();
 
+    /**
+     * Renders the search bar for game items
+     * @returns {TemplateResult}
+     */
     public render(): TemplateResult {
         return html`
             <form id="searchForm" @submit=${this.handleSearch}>

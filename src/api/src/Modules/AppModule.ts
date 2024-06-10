@@ -11,6 +11,7 @@ import { AddressModule } from "./AddressModule";
 import { MailModule } from "./MailModule";
 import { GamesModule } from "./GamesModule";
 import { ReviewModule } from "./ReviewModule";
+import { ContactModule } from "./ContactModule";
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { ReviewModule } from "./ReviewModule";
         AddressModule,
         MailModule,
         GamesModule,
+        ContactModule,
         ReviewModule,
     ],
     controllers: [AppController],

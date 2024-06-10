@@ -68,7 +68,7 @@ export class GameItems extends LitElement {
         if (result) {
             this.games = result;
         } else {
-          return;
+            return;
         }
     }
 

@@ -35,18 +35,18 @@ export class CreateOrderItemComponent extends LitElement {
         return html`
             <form @submit=${this.createOrderItem}>
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" @input=${this.updateName} required/>
+                <input type="text" id="name" name="name" @input=${this.updateName} required />
                 <label for="price">Price</label>
-                <input type="number" id="price" name="price" @input=${this.updatePrice} required/>
+                <input type="number" id="price" name="price" @input=${this.updatePrice} required />
                 <label for="description">Description</label>
                 <textarea
-                        id="description"
-                        name="description"
-                        @input=${this.updateDescription}
-                        required
+                    id="description"
+                    name="description"
+                    @input=${this.updateDescription}
+                    required
                 ></textarea>
                 <label for="image">ImageURL</label>
-                <input type="text" id="image" name="image" @input=${this.updateImage}/>
+                <input type="text" id="image" name="image" @input=${this.updateImage} />
                 <button type="submit">Create</button>
             </form>
         `;
@@ -67,7 +67,8 @@ export class CreateOrderItemComponent extends LitElement {
         this._isEmployee = !(
             !userData ||
             // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-            (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE)
+            (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN &&
+                userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE)
         );
     }
 
