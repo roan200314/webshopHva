@@ -201,7 +201,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/cart/${id}`, {
             method: "delete",
-            headers: {...headers, authorization: `Bearer ${token}`},
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
@@ -227,7 +227,7 @@ export class UserService {
 
         const response: Response = await fetch(`${viteConfiguration.API_URL}users/cart/${id}/${amount}`, {
             method: "post",
-            headers: {...headers, authorization: `Bearer ${token}`},
+            headers: { ...headers, authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {

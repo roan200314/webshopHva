@@ -59,7 +59,7 @@ export class OrderItemController {
     @ApiResponse({ status: 201, description: "Order Item created" })
     public async setOrderItemAsFeatured(
         @Param("id", ParseIntPipe) id: number,
-        @Param("setFeatured") setFeatured: string
+        @Param("setFeatured") setFeatured: string,
     ): Promise<void> {
         const setFeaturedAsBool: boolean = setFeatured.toLowerCase() === "true";
         await this.orderService.setOrderItemAsFeatured(id, setFeaturedAsBool);

@@ -1,5 +1,5 @@
 import { LitElement, html, TemplateResult, css, render } from "lit";
-import { customElement } from "lit/decorators.js";  // Correct path
+import { customElement } from "lit/decorators.js"; // Correct path
 import { GameService } from "../services/GameService";
 import { Games } from "@shared/types/games";
 
@@ -14,7 +14,6 @@ export class GameItemSearch extends LitElement {
     `;
 
     private _gameService: GameService = new GameService();
-
 
     /**
      * Renders the search bar for game items
@@ -54,14 +53,14 @@ export class GameItemSearch extends LitElement {
                 await this.getAllGameItems();
                 return;
             }
-    
+
             const response: Response = await fetch(`${viteConfiguration.API_URL}games/search/${name}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-    
+
             if (response.ok) {
                 const gameItems: Games[] = await response.json();
                 const gameItemsElement: any = document.querySelector("game-items");
@@ -70,12 +69,12 @@ export class GameItemSearch extends LitElement {
                     // Clear previous content
                     gameItemsElement.innerHTML = "";
                     // Render each game item
-                    gameItems.forEach(game => {
+                    gameItems.forEach((game) => {
                         const imageURL: any = game.images && game.images.length > 0 ? game.images[0] : "";
                         const gameTemplate: any = html`
                             <div class="product">
                                 <h3>${game.title}</h3>
-                                <img src="${imageURL}" alt="${game.authors}">
+                                <img src="${imageURL}" alt="${game.authors}" />
                                 <p>${game.descriptionMarkdown}</p>
                                 <div class="buttons">
                                     <span class="base-price">€ ${game.authors}</span>
@@ -84,7 +83,7 @@ export class GameItemSearch extends LitElement {
                             </div>
                         `;
                         render(gameTemplate, gameItemsElement);
-                            console.log(gameTemplate);
+                        console.log(gameTemplate);
                     });
                 }
             } else {
@@ -92,7 +91,4 @@ export class GameItemSearch extends LitElement {
             }
         }
     }
-    
-
-    
 }

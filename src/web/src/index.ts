@@ -6,6 +6,8 @@ export * from "./page-components/EmailConfirmationPage";
 export * from "./page-components/LoginPage";
 export * from "./page-components/RegisterPage";
 export * from "./page-components/ShoppingCartPage";
+export * from "./page-components/ContactPage";
+
 export * from "./components/GameItemSearch";
 export * from "./components/GameItems";
 export * from "./page-components/AccountPage";
