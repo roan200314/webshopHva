@@ -88,12 +88,12 @@ export class IndexPage extends LitElement {
 
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         const imageURL: string = orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
-
+        const shorterText: any = orderItem.description?.length > 150 ? orderItem.description?.substring(0, 150) + "..." : orderItem.description;
         return html`
             <div class="product">
                 <h3>${orderItem.name}</h3>
                 <img src="${imageURL}" alt="${orderItem.name}" />
-                <p>${orderItem.description}</p>
+                <p>${shorterText}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
                     <button class="add-to-cart-button">In cart</button>

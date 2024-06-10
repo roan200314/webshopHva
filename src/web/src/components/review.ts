@@ -6,8 +6,10 @@ import { UserData } from "@shared/types/UserData";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Review } from "@shared/types/review";
 
+// Custom element decorator
 @customElement("game-review")
 export class GameReviewComponent extends LitElement {
+  // Definieer de CSS-styling voor het component
   public static styles = css`
     :host {
       display: flex;
@@ -72,11 +74,13 @@ export class GameReviewComponent extends LitElement {
     }
   `;
 
+  // Service-instanties
   private userService: UserService = new UserService();
   private reviewService: ReviewService = new ReviewService();
-  private gameId: number | null = null;
-  private userId: number | null = null;
+  private gameId: number | null = null; // Game ID
+  private userId: number | null = null; // User ID
 
+  // State variabelen
   @state()
   private userData: UserData | undefined;
 
@@ -89,6 +93,7 @@ export class GameReviewComponent extends LitElement {
   @state()
   private rating: number = 0;
 
+  // Haal gebruikersinformatie op bij het laden van het component
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
     await this.getUserInformation();
@@ -100,12 +105,14 @@ export class GameReviewComponent extends LitElement {
     }
   }
 
+  // Haal de game ID uit de URL
   private getIdFromURL(): number | null {
     const urlParams: URLSearchParams = new URLSearchParams(window.location.search);
     const id: string | null = urlParams.get("id");
     return id ? Number(id) : null;
   }
 
+  // Haal de reviews op voor de game
   private async fetchReviews(): Promise<void> {
     if (this.gameId !== null) {
       try {
@@ -116,6 +123,7 @@ export class GameReviewComponent extends LitElement {
     }
   }
 
+  // Render de HTML voor het component
   public render(): ReturnType<LitElement["render"]> {
     return html`
       <form @submit=${this.handleSubmit}>
@@ -154,6 +162,7 @@ export class GameReviewComponent extends LitElement {
     `;
   }
 
+  // Haal gebruikersinformatie op van de server
   private async getUserInformation(): Promise<void> {
     const userInformation: UserHelloResponse | undefined = await this.userService.getWelcome();
     if (!userInformation || !userInformation.user) return;
@@ -162,6 +171,7 @@ export class GameReviewComponent extends LitElement {
     this.userId = userInformation.user.id;
   }
 
+  // Verwerk het indienen van het reviewformulier
   public async handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     try {
@@ -174,23 +184,26 @@ export class GameReviewComponent extends LitElement {
           this.gameId
         );
         this.resetForm();
-        await this.fetchReviews(); // Refresh reviews after submitting
+        await this.fetchReviews(); // Vernieuw de reviews na het indienen
       }
     } catch (err) {
       console.error(err);
     }
   }
 
+  // Verwerk de invoer van de reviewinhoud
   public handleContentInput(event: InputEvent): void {
     const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
     this.reviewContent = target.value;
   }
 
+  // Verwerk de wijziging van de beoordeling
   public handleRatingChange(event: Event): void {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     this.rating = parseInt(target.value);
   }
 
+  // Reset het formulier na het indienen
   private resetForm(): void {
     this.reviewContent = "";
     this.rating = 0;
