@@ -363,10 +363,9 @@ export class OrderItemsComponent extends LitElement {
 
         if (!userInformation.user.authorizationLevel) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
         if (
-            userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE ||
-            userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+            userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN
         ) {
             this.employeeOrHigher = true;
         }
