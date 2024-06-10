@@ -37,9 +37,11 @@ export class OrderService {
      * @returns {Promise<OrderItem[]>}
      */
     public async getAllOrderItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find({ where: {
-            order: IsNull()
-         }});
+        return await this.orderItemRepository.find({
+            where: {
+                order: IsNull(),
+            },
+        });
     }
 
     /**
@@ -52,9 +54,7 @@ export class OrderService {
     }
 
     public async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
-        const orderItem: OrderItem = await this.orderItemRepository.findOne(
-            { where: { id }
-        });
+        const orderItem: OrderItem = await this.orderItemRepository.findOne({ where: { id } });
 
         if (!orderItem) {
             throw new Error("Order item not found");

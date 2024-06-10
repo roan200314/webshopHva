@@ -1,4 +1,4 @@
 export enum OrderItemType {
     Game = "Game",
-    Merchandise = "Merchandise"
+    Merchandise = "Merchandise",
 }
