@@ -145,6 +145,16 @@ export class UserService {
     }
 
     /**
+     * Finds a user using their ID.
+     *
+     * @param {number} id - The ID of the user to find.
+     * @return {Promise<User | undefined>} - Returns user representation if user is found, undefined otherwise.
+     */
+    public async getUserById(id: number): Promise<User | undefined> {
+        return this.usersRepository.findOne({ where: { id } });
+    }
+
+    /**
      * Deletes a user by their ID.
      *
      * @param {number} id - The ID of the user to delete.
