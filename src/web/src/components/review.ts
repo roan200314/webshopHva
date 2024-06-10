@@ -122,11 +122,11 @@ export class GameReviewComponent extends LitElement {
         ${this.reviews.map(
           (review) => html`
             <div class="review-item">
-              <p><strong>User:</strong> ${review.user?.name}</p>
               <p><strong>Rating:</strong> ${review.rating}</p>
               <p><strong>Content:</strong> ${review.content}</p>
+              <p><strong>User:</strong> ${review.user?.name}</p>
             </div>
-          `,
+          `
         )}
       </div>
     `;
@@ -141,22 +141,29 @@ export class GameReviewComponent extends LitElement {
   }
 
   public async handleSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+    try {
+      await this.reviewService.createReview(
+        event,
+        this.reviewContent,
+        this.rating,
+        this.userId,
+        this.gameId
+      );
+      this.resetForm();
       await this.fetchReviews(); // Refresh reviews after submitting
-    this.reviewService
-      .createReview(event, this.reviewContent, this.rating, this.userId, this.gameId)
-      .then(() => {
-        this.resetForm();
-      })
-      .catch((err) => console.error(err));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public handleContentInput(event: InputEvent): void {
-    const target: any = event.target as HTMLTextAreaElement;
+    const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
     this.reviewContent = target.value;
   }
 
   public handleRatingChange(event: Event): void {
-    const target: any = event.target as HTMLInputElement;
+    const target: HTMLInputElement = event.target as HTMLInputElement;
     this.rating = parseInt(target.value);
   }
 
@@ -164,4 +171,7 @@ export class GameReviewComponent extends LitElement {
     this.reviewContent = "";
     this.rating = 0;
   }
+
+  private reviewContent: string = "";
+  private rating: number = 0;
 }
