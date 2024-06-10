@@ -68,13 +68,13 @@ export class GameItems extends LitElement {
         if (result) {
             this.games = result;
         } else {
-          return;
+            return;
         }
     }
 
     private renderGameItem(games: Games): TemplateResult {
         const gameText: any = games.descriptionMarkdown && games.descriptionMarkdown.length > 100 ? games.descriptionMarkdown.substring(0, 100) + "..." : games.descriptionMarkdown;
-        const imageURL:string = games.images && games.images.length > 0 ? games.images[0] : "";
+        const imageURL: string = games.images && games.images.length > 0 ? games.images[0] : "";
         return html`
             <div class="product">
                 <h3><a href="game.html?id=${games.id}">${games.title}</a></h3>

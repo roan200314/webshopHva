@@ -66,7 +66,7 @@ export class OrderItemsComponent extends LitElement {
 
     @state()
     private employeeOrHigher: boolean = false;
-    
+
     @property({ type: Array })
     public orderItems: OrderItem[] = [];
 
@@ -92,12 +92,12 @@ export class OrderItemsComponent extends LitElement {
     }
 
     private attachFilterListeners(): void {
-        const priceFilter:HTMLLIElement | null = document.querySelector("#price-filter");
+        const priceFilter: HTMLLIElement | null = document.querySelector("#price-filter");
         if (priceFilter) {
             priceFilter.addEventListener("click", () => this.toggleSortOrder("price"));
         }
 
-        const nameFilter:HTMLLIElement | null = document.querySelector("#name-filter");
+        const nameFilter: HTMLLIElement | null = document.querySelector("#name-filter");
         if (nameFilter) {
             nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
         }
@@ -133,19 +133,18 @@ export class OrderItemsComponent extends LitElement {
     }
 
     private updateFilterSelection(type: "price" | "name"): void {
-        const filters:any = document.querySelectorAll(".filter-option a");
+        const filters: any = document.querySelectorAll(".filter-option a");
         filters.forEach((filter: HTMLLIElement) => filter.classList.remove("selected"));
 
-        const selectedFilter:HTMLLIElement | null = document.querySelector(`#${type}-filter`);
+        const selectedFilter: HTMLLIElement | null = document.querySelector(`#${type}-filter`);
         if (selectedFilter) {
             selectedFilter.classList.add("selected");
         }
     }
 
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
-        const imageURL: string = orderItem.imageURLs && orderItem.imageURLs.length > 0
-            ? orderItem.imageURLs[0]
-            : "";
+        const imageURL: string =
+            orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
 
         const buttonLabel: string = orderItem.featured ? "Remove from Featured" : "Add to Featured";
         const newFeaturedState: boolean = !orderItem.featured;
@@ -157,14 +156,21 @@ export class OrderItemsComponent extends LitElement {
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
-                    <button class="add-to-cart-button"
-                            @click=${async (): Promise<void> => await this.addToCart(orderItem)}
-                    >In cart</button>
+                    <button
+                        class="add-to-cart-button"
+                        @click=${async (): Promise<void> => await this.addToCart(orderItem)}
+                    >
+                        In cart
+                    </button>
                     ${this.employeeOrHigher
-                            ? html`<button class="addFeature"
-                                           @click=${async (): Promise<void> => await this.setOrderItemAsFeatured(orderItem.id, newFeaturedState)}
-                            >${buttonLabel}</button>`
-                            : "" }
+                        ? html`<button
+                              class="addFeature"
+                              @click=${async (): Promise<void> =>
+                                  await this.setOrderItemAsFeatured(orderItem.id, newFeaturedState)}
+                          >
+                              ${buttonLabel}
+                          </button>`
+                        : ""}
                 </div>
             </div>
         `;
@@ -187,20 +193,21 @@ export class OrderItemsComponent extends LitElement {
             if (result) {
                 cartItems = result;
             }
-        }
-        else {
+        } else {
             try {
                 cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
             } catch (error) {
                 console.error("Error parsing cart items from localStorage", error);
             }
 
-            const cartItem: CartItem | undefined = cartItems.find((ci: CartItem) => ci.item.id === orderItem.id);
+            const cartItem: CartItem | undefined = cartItems.find(
+                (ci: CartItem) => ci.item.id === orderItem.id,
+            );
 
-            if(cartItem === undefined) {
+            if (cartItem === undefined) {
                 cartItems.push({
                     item: orderItem,
-                    amount: 1
+                    amount: 1,
                 });
             } else {
                 cartItem.amount++;
@@ -218,8 +225,8 @@ export class OrderItemsComponent extends LitElement {
                     cartItems,
                 },
                 bubbles: true,
-                composed: true
-            })
+                composed: true,
+            }),
         );
     }
 
@@ -231,8 +238,10 @@ export class OrderItemsComponent extends LitElement {
 
         if (!userInformation.user.authorizationLevel) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        if (userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN) {
+        if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+            userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN
+        ) {
             this.employeeOrHigher = true;
         }
     }

@@ -5,7 +5,6 @@ import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("index-page")
 export class IndexPage extends LitElement {
-    
     public static styles = css`
         .product-section {
             display: grid;
@@ -66,14 +65,15 @@ export class IndexPage extends LitElement {
             <h1 class="title">Welcome to the Index Page</h1>
             ${this.orderItems.length > 0
                 ? html`
-                <div class="wrapper">
-                    <section class="product-section" id="product-section">
-                        ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
-                    </section>
-                </div>
-                `
-                : html`<p>Loading items...</p>`
-            }
+                      <div class="wrapper">
+                          <section class="product-section" id="product-section">
+                              ${this.orderItems.map((orderItem: OrderItem) =>
+                                  this.renderOrderItem(orderItem),
+                              )}
+                          </section>
+                      </div>
+                  `
+                : html`<p>Loading items...</p>`}
         `;
     }
 
