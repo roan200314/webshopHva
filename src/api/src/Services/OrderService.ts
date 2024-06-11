@@ -167,6 +167,9 @@ export class OrderService {
      * Retrieves all game items
      */
     public async getGameItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find( { where: { itemType: OrderItemType.Game } });
+        return await this.orderItemRepository.find( {
+            where: {
+                itemType: OrderItemType.Game }
+        });
     }
 }

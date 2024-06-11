@@ -43,6 +43,22 @@ export class OrderItemController {
         return this.orderService.createOrderItem(orderItem);
     }
 
+    @Public()
+    @Get("merchandise")
+    @ApiOperation({ summary: "Retrieves all available merchandise" })
+    @ApiResponse({ status: 200, description: "Merchandise" })
+    public async getMerchandise(): Promise<OrderItem[]> {
+        return await this.orderService.getMerchandiseItems();
+    }
+
+    @Public()
+    @Get("games")
+    @ApiOperation({ summary: "Retrieves all available games" })
+    @ApiResponse({ status: 200, description: "Games" })
+    public async getGames(): Promise<OrderItem[]> {
+        return await this.orderService.getGameItems();
+    }
+
     @ApiBearerAuth()
     @EmployeeOnly()
     @Post("featured/:id/:setFeatured")
@@ -91,21 +107,5 @@ export class OrderItemController {
     @ApiResponse({ status: 200, description: "Order Item" })
     public async searchOrderItemByName(@Param("name") name: string): Promise<OrderItem[]> {
         return await this.orderService.searchOrderItemByName(name);
-    }
-
-    @Public()
-    @Get("merchandise")
-    @ApiOperation({ summary: "Retrieves all available merchandise" })
-    @ApiResponse({ status: 200, description: "Merchandise" })
-    public async getMerchandise(): Promise<OrderItem[]> {
-        return await this.orderService.getMerchandiseItems();
-    }
-
-    @Public()
-    @Get("games")
-    @ApiOperation({ summary: "Retrieves all available games" })
-    @ApiResponse({ status: 200, description: "Games" })
-    public async getGames(): Promise<OrderItem[]> {
-        return await this.orderService.getGameItems();
     }
 }
