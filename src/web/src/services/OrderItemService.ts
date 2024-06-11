@@ -104,7 +104,7 @@ export class OrderItemService {
     }
 
     public async getGameItems(): Promise<OrderItem[] | undefined> {
-        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/game`, {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/games`, {
             method: "get",
         });
 

@@ -224,7 +224,7 @@
             }
         }
 
-        private attachFilterListeners(): void {
+        private attachFilterListeners():void {
             const priceFilter: HTMLLIElement | null = document.querySelector("#price-filter");
             if (priceFilter) {
                 priceFilter.addEventListener("click", () => this.toggleSortOrder("price"));
@@ -236,15 +236,17 @@
             }   
 
             const merchandisecheckbox: HTMLInputElement | null = document.querySelector("#merchandise-filter");
-            const gamecheckbox: HTMLInputElement | null = document.querySelector("#game-filter");
+            const gamecheckbox: HTMLInputElement | null = document.querySelector("#games-filter");
             if (merchandisecheckbox && gamecheckbox) {
-                merchandisecheckbox.addEventListener("change", () => {
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                merchandisecheckbox.addEventListener("change", async () => {
                     this._merchandiseFilter = merchandisecheckbox.checked;
-                    console.log("sad", this._merchandiseFilter);
+                    await this.filterByType();
                 });
-                gamecheckbox.addEventListener("change", () => {
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                gamecheckbox.addEventListener("change", async() => {
                     this._gameFilter = gamecheckbox.checked;
-                    console.log(this._gameFilter);
+                    await this.filterByType();
                 });
             }
             
@@ -333,7 +335,6 @@
         }
 
         public render(): TemplateResult {
-            const sidebar: HTMLElement | null = document.querySelector(".sidebar");
             const slider: any = html`
                 <div class="slider-container">
                     <div class="slider">
@@ -344,8 +345,7 @@
                     <label for="min-price">Min Price: €${this._priceRange.min}</label>
                     <label for="max-price">Max Price: €${this._priceRange.max}</label>
                 </div>`;
-            if (sidebar) {
-            }
+        
             return html`
                 ${slider}
                 <section class="product-section" id="product-section">
@@ -431,21 +431,18 @@
             }
         }
 
-        private async filterByType(): Promise<void>{
-            const merchandisecheckbox: HTMLInputElement | null = document.querySelector("#merchandise-filter");
-            const gamecheckbox: HTMLInputElement | null = document.querySelector("#game-filter");
-            if (merchandisecheckbox && gamecheckbox) {
-                if (merchandisecheckbox.checked) {
-                    console.log("merchandise");
-                    await this.getMerchandiseItems();
-                } else if (gamecheckbox.checked) {
-                    console.log("game");
-                    await this.getGameItems();
-                } else {
-                    return;
-                }
+        private async filterByType(): Promise<void> {
+            if (this._merchandiseFilter && this._gameFilter) {
+                this.orderItems = this.unfilteredOrderItems;
+            } else if (this._merchandiseFilter && !this._gameFilter) {
+                await this.getMerchandiseItems();
+            } else if (this._gameFilter && !this._merchandiseFilter) {
+                await this.getGameItems();
+            } else {
+                this.orderItems = this.unfilteredOrderItems;
             }
-            return;
+        
+            this.requestUpdate();
         }
 
         private async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
