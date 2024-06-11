@@ -25,6 +25,7 @@ import { ContactModule } from "./ContactModule";
         GamesModule,
         ReviewModule,
         ContactModule,
+        ReviewModule,
     ],
     controllers: [AppController],
     providers: [AppService],
