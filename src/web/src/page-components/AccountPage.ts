@@ -20,6 +20,42 @@ export class AccountPage extends LitElement {
             margin: auto;
             margin-bottom: 100px;
         }
+
+        .order{
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+        }
+
+        li{
+            list-style: none;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #9f9f9f;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        table {
+            border-spacing: 30px;
+            width: 50%;
+        }
+
+        th {
+            font-size: 1.2em;
+            font-weight: bolder;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+        }
     `;
 
     private userService: UserService = new UserService();
@@ -56,21 +92,27 @@ export class AccountPage extends LitElement {
             <div class="orderHistory">
                 ${this.orders.map((order) => {
                     return html`
-                        <hr>
-                        <h2>Order ${order.id}:</h2>
-                        <ul>
-                            <li><b>Address:</b> ${order.street}, ${order.city}, ${order.country}</li>
-                            <li><b>Products:</b></li>
+                        <div class="order">
+                            <h2>Order #${order.id}</h2>
                             <ul>
-                                ${order.products.map((orderItem) => {
-                                    return html`
-                                        <li>
-                                            <b>${orderItem.name}</b> (&euro;${orderItem.price})
-                                        </li>
-                                    `;
-                                })}
+                                <li><b>Send to:</b> ${order.street}, ${order.city}, ${order.country}</li> <br>
+                                <li><b>Order status: ${order.status}</b></li>
+                                <table>
+                                    <tr>
+                                        <th>Product:</th>
+                                        <th>Price</th>
+                                    </tr>
+                                    ${order.products.map((orderItem) => {
+                                        return html`
+                                        <tr>
+                                                <td>${orderItem.name}</td>
+                                                <td>&euro;${orderItem.price}</td>
+                                        </tr>
+                                        `;
+                                        })}    
+                                </table>
                             </ul>
-                        </ul>
+                        </div>
                     `;
                 })}
             </div>
