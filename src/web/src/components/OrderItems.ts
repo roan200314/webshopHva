@@ -88,6 +88,12 @@ export class OrderItemsComponent extends LitElement {
             z-index: 1;
         }
 
+        #order-item-image {
+            height: 25vh;
+            object-fit: cover;
+            width: 30vh;
+        }
+
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
@@ -212,15 +218,7 @@ export class OrderItemsComponent extends LitElement {
             nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
         }
 
-        const checkbox: HTMLInputElement | null = document.querySelector("#merchandise-filter");
-        if (checkbox) {
-            checkbox.addEventListener("change", () => this.filterByType());
-        }
 
-        const checkbox2: HTMLInputElement | null = document.querySelector("#game-filter");
-        if (checkbox2) {
-            checkbox2.addEventListener("change", () => this.filterByType());
-        }
     }
 
     private toggleSortOrder(type: "price" | "name"): void {
@@ -262,17 +260,25 @@ export class OrderItemsComponent extends LitElement {
         }
     }
 
+    public getFirstSentence(text:string): string{
+        const endOfFirstSentence:any = text.indexOf(". ") + 1;
+        if (endOfFirstSentence === 0) {
+            return text;
+        }
+        return text.substring(0, endOfFirstSentence + 1);
+    }
+
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         const imageURL: string =
             orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
 
         const buttonLabel: string = orderItem.featured ? "Remove from Featured" : "Add to Featured";
         const newFeaturedState: boolean = !orderItem.featured;
-
+        orderItem.description = orderItem.description ? this.getFirstSentence   (orderItem.description) : "";
         return html`
             <div class="product">
                 <h3>${orderItem.name}</h3>
-                <img src="${imageURL}" alt="${orderItem.name}" />
+                <img src="${imageURL}" alt="${orderItem.name}" id="order-item-image" />
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>

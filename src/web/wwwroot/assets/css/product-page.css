@@ -18,7 +18,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 20%;
-    height: 25vh;
+    height: 30vh;
     position: fixed;
     top: 160px;
     left: 0;
@@ -95,6 +95,7 @@ body {
     justify-content: space-around;
     font-weight: bold;
     margin-right: 10px;
+    padding-top: 2vh;
 }
 
 .product-filter .filter-option a {
