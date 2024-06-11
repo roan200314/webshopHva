@@ -96,10 +96,10 @@ export class GameReviewComponent extends LitElement {
   // Haal gebruikersinformatie op bij het laden van het component
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
-    await this.getUserInformation();
     this.gameId = this.getIdFromURL();
     if (this.gameId !== null) {
       await this.fetchReviews();
+      await this.getUserInformation();
     } else {
       console.error("No game ID found in URL");
     }
@@ -125,6 +125,7 @@ export class GameReviewComponent extends LitElement {
 
   // Render de HTML voor het component
   public render(): ReturnType<LitElement["render"]> {
+    
     return html`
       <form @submit=${this.handleSubmit}>
         <label for="reviewContent">Review Content:</label><br />
