@@ -8,7 +8,6 @@ import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("shopping-cart-page")
 export class ShoppingCartPage extends LitElement {
-
     public static styles = css`
         header {
             background-color: #fbfbfa;
@@ -211,9 +210,7 @@ export class ShoppingCartPage extends LitElement {
 
     public render(): TemplateResult {
         if (this.cartItems.length === 0) {
-            return html`
-                <h1 class="title">Your shopping cart is empty!</h1>
-            `;
+            return html` <h1 class="title">Your shopping cart is empty!</h1> `;
         }
 
         if (this.shoppingCartStep === 1) {
@@ -292,25 +289,26 @@ export class ShoppingCartPage extends LitElement {
                             <td>${cartItem.item.price}</td>
                             <td>
                                 <input
-                                        type="number"
-                                        value=${cartItem.amount}
-                                        @change="${async (e: Event): Promise<void> => await this._changeCartAmount(e, cartItem)}"
+                                    type="number"
+                                    value=${cartItem.amount}
+                                    @change="${async (e: Event): Promise<void> =>
+                                        await this._changeCartAmount(e, cartItem)}"
                                 />
                             </td>
                             <td>
                                 <b
-                                >&euro;
+                                    >&euro;
                                     ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
-                                            2,
+                                        2,
                                     )}</b
                                 >
                             </td>
                             <td>
                                 <button
-                                        class="delete"
-                                        @click="${async (): Promise<void> => await this._deleteCart(cartItem)}"
+                                    class="delete"
+                                    @click="${async (): Promise<void> => await this._deleteCart(cartItem)}"
                                 >
-                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20"/>
+                                    <img src="/assets/img/bin.png" alt="delete" width="20" height="20" />
                                 </button>
                             </td>
                         </tr>
@@ -319,7 +317,7 @@ export class ShoppingCartPage extends LitElement {
             </table>
             <div class="nxtstep">
                 <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
-                <button class="button" type="submit" @click="${(): number => this.shoppingCartStep = 2}">
+                <button class="button" type="submit" @click="${(): number => (this.shoppingCartStep = 2)}">
                     Next Step
                 </button>
             </div>
@@ -330,13 +328,15 @@ export class ShoppingCartPage extends LitElement {
         const newAmount: number = Number.parseInt((e.target as HTMLInputElement).value);
 
         if (this._isLoggedIn) {
-            const result: CartItem[] | undefined = await this.userService.setCartItemAmount(cartItem.item.id, newAmount);
+            const result: CartItem[] | undefined = await this.userService.setCartItemAmount(
+                cartItem.item.id,
+                newAmount,
+            );
             if (result) {
                 this.cartItems = result;
                 this._cartItemsCount = this.cartItems.length;
             }
-        }
-        else {
+        } else {
             // Remove previous
             const index: number = this.cartItems.indexOf(cartItem);
             this.cartItems[index].amount = newAmount;
@@ -348,7 +348,9 @@ export class ShoppingCartPage extends LitElement {
 
     private async _deleteCart(cartItem: CartItem): Promise<void> {
         if (this._isLoggedIn) {
-            const result: CartItem[] | undefined = await this.userService.removeOrderItemFromCart(cartItem.item.id);
+            const result: CartItem[] | undefined = await this.userService.removeOrderItemFromCart(
+                cartItem.item.id,
+            );
             if (result) {
                 this.cartItems = result;
                 this._cartItemsCount = this.cartItems.length;
@@ -366,8 +368,8 @@ export class ShoppingCartPage extends LitElement {
                     cartItems: this.cartItems,
                 },
                 bubbles: true,
-                composed: true
-            })
+                composed: true,
+            }),
         );
     }
 
@@ -381,39 +383,36 @@ export class ShoppingCartPage extends LitElement {
             </div>
             <div class="adressInfo">
                 <form>
-                    ${
-                            this._isLoggedIn ?
-                                    html`<label>Name</label><input type="text" disabled value="${this._name}"/><br/>
-                                    <label>Email</label><input type="text" disabled value="${this._email}"/><br/>`
-                                    :
-                                    html`<label>Name</label><input type="text"/><br/>
-                                    <label>Email</label><input type="text"/><br/>`
-                    }
+                    ${this._isLoggedIn
+                        ? html`<label>Name</label><input type="text" disabled value="${this._name}" /><br />
+                              <label>Email</label><input type="text" disabled value="${this._email}" /><br />`
+                        : html`<label>Name</label><input type="text" /><br />
+                              <label>Email</label><input type="text" /><br />`}
 
                     <label>Street</label>
                     <input
-                            type="text"
-                            @change="${this._onChangeStreet}"
-                            value="${this._adressData.street}"
-                    /><br/>
+                        type="text"
+                        @change="${this._onChangeStreet}"
+                        value="${this._adressData.street}"
+                    /><br />
                     <label>City</label>
                     <input
-                            type="text"
-                            @change="${this._onChangeCity}"
-                            value="${this._adressData.city}"
-                    /><br/>
+                        type="text"
+                        @change="${this._onChangeCity}"
+                        value="${this._adressData.city}"
+                    /><br />
                     <label>Zip</label>
-                    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}"/><br/>
+                    <input type="text" @change="${this._onChangeZip}" value="${this._adressData.zip}" /><br />
                     <label>Country</label
                     ><input
                         type="text"
                         @change="${this._onChangeCountry}"
                         value="${this._adressData.country}"
-                /><br/>
+                    /><br />
                 </form>
             </div>
             <div class="nxtstep">
-                <button class="button" type="submit" @click="${(): number => this.shoppingCartStep = 4}">
+                <button class="button" type="submit" @click="${(): number => (this.shoppingCartStep = 4)}">
                     Next Step
                 </button>
             </div>
@@ -434,17 +433,16 @@ export class ShoppingCartPage extends LitElement {
             </div>
             <div class="infochoice">
                 <p>No account? No worries! You can just continue as a guest!</p>
-                <button class="button"
-                        @click=${(): void => {
-                            this.shoppingCartStep = 3;
-                        }}
+                <button
+                    class="button"
+                    @click=${(): void => {
+                        this.shoppingCartStep = 3;
+                    }}
                 >
                     Continue as a guest
                 </button>
                 <p>Or you can log in here:</p>
-                <button class="button" href="">
-                    Login
-                </button>
+                <button class="button" href="">Login</button>
             </div>
         `;
     }

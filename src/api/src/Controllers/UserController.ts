@@ -85,7 +85,11 @@ export class UserController {
     @ApiParam({ name: "amount", description: "The amount to set for the order item" })
     @ApiBearerAuth()
     @Post("cart/:id/:amount")
-    public async setCartItemAmount(@Request() req, @Param("id") id: number, @Param("amount") amount: number): Promise<CartItem[]> {
+    public async setCartItemAmount(
+        @Request() req,
+        @Param("id") id: number,
+        @Param("amount") amount: number,
+    ): Promise<CartItem[]> {
         return await this.cartItemService.setCartItemAmount(req.user.id, id, amount);
     }
 }

@@ -2,9 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { ApiFailReason, ApiFailResponse, PromiseReject, PromiseResolve } from "../Models/Interfaces/IEmail";
 import { Email } from "../Models/Entities/Email";
 import { AccountRegistration } from "../Models/EmailTemplates/AccountRegistration";
-import { EmailConfirmation } from "../Models/EmailTemplates/EmailConfirmation";
 import { OrderConfirmation } from "../Models/EmailTemplates/OrderConfirmation";
 import { CartItem } from "@shared/types";
+import { ContactEmailDto } from "../Models/Dto/ContactEmailDto";
+import { Contact } from "../Models/EmailTemplates/Contact";
+import { EmailConfirmation } from "../Models/EmailTemplates/EmailConfirmation";
 
 @Injectable()
 export class MailService {
@@ -45,6 +47,25 @@ export class MailService {
                 subject: "Order Confirmation",
                 from: { address: "noreply@webshop.com", name: "WebShop" },
                 html: new OrderConfirmation(name, cartItems).generate(),
+            };
+
+            await this.sendEmail(email);
+        } catch (reason) {
+            console.log(reason);
+        }
+    }
+
+    public async sendContactEmail(
+        name: string,
+        emailAddress: string,
+        contactEmailDto: ContactEmailDto,
+    ): Promise<void> {
+        try {
+            const email: Email = {
+                to: [{ address: "bram-dekker@live.nl", name: "WebShop" }],
+                subject: contactEmailDto.title,
+                from: { address: emailAddress, name: name },
+                html: new Contact(name, emailAddress, contactEmailDto.message).generate(),
             };
 
             await this.sendEmail(email);
