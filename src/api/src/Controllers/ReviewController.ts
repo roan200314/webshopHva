@@ -20,11 +20,11 @@ export class ReviewController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Gets all available reviews for the game' })
-    @ApiResponse({ status: 200, description: 'Successful retrieval of the reviews' })
+    @ApiOperation({ summary: "Gets all available reviews for the game" })
+    @ApiResponse({ status: 200, description: "Successful retrieval of the reviews" })
     @Public()
-    @Get('getAll')
-    public async getReviews(@Query('gameId') gameId: number): Promise<Review[]> {
+    @Get("getAll")
+    public async getReviews(@Query("gameId") gameId: number): Promise<Review[]> {
       return await this.reviewService.getReviews(gameId);
     }
 }

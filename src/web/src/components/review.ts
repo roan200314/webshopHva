@@ -193,6 +193,13 @@ export class GameReviewComponent extends LitElement {
   }
 
   // Verwerk de invoer van de reviewinhoud
+  
+  
+  
+  /**
+   * 
+   * @param event 
+   */
   public handleContentInput(event: InputEvent): void {
     const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
     this.reviewContent = target.value;

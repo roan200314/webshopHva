@@ -93,7 +93,7 @@ export class IndexPage extends LitElement {
             <div class="product">
                 <h3>${orderItem.name}</h3>
                 <img src="${imageURL}" alt="${orderItem.name}" />
-                <p>${orderItem.description}</p>
+                <p>${shorterText}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
                     <button class="add-to-cart-button">In cart</button>
