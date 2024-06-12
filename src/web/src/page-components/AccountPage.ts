@@ -16,6 +16,10 @@ export class AccountPage extends LitElement {
         }
 
         h2{
+            text-align: left;
+        }
+
+        h3{
             text-align: center;
         }
 
@@ -83,7 +87,9 @@ export class AccountPage extends LitElement {
 
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this.userService.getWelcome();
-        this.userData = result?.user;       
+        this.userData = result?.user;   
+
+        console.log(this.userData);
 
         if(result){
             this.name = this.userData?.name;
@@ -93,7 +99,7 @@ export class AccountPage extends LitElement {
     protected render(): TemplateResult {
         return html`
             <h1 class="title">Account Page of ${this.name}</h1>
-            <h2> Je hebt momenteel X aantal punten gespaard staan</h2>
+            <h3> Je hebt momenteel ${this.userData?.savedPoints} aantal punten gespaard staan</h3>
             <div class="orderHistory">
                 ${this.orders.map((order) => {
                     return html`
