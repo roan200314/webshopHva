@@ -2,9 +2,9 @@ import { LitElement, TemplateResult, css, html, render } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
-import { Games, UserData } from "@shared/types";
-import { GameService } from "../services/GameService";
+import { OrderItem, UserData } from "@shared/types";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
+import { OrderItemService } from "../services/OrderItemService";
 
 /**
  * Aangepast element gebaseerd op Lit voor de header van de webshop.
@@ -69,8 +69,8 @@ export class AdminPage extends LitElement {
     // Initialisatie van services
     private _userService: UserService = new UserService();
     private _getUsersService: UserService = new UserService();
-    private _getGamesService: GameService = new GameService();
     private _deleteUserService: UserService = new UserService();
+    private _orderItemService: OrderItemService = new OrderItemService();
     private selectedAuthorizationLevel: string = "";
     private isAdmin: boolean = false;
 
@@ -107,7 +107,7 @@ export class AdminPage extends LitElement {
      * Haal spellen op en toon ze
      */
     private async getGames(): Promise<void> {
-        const result: Games[] | undefined = await this._getGamesService.getGames();
+        const result: OrderItem[] | undefined = await this._orderItemService.getAll();
         if (!result || result.length === 0) {
             console.log("Geen spellen gevonden.");
             return;
@@ -126,15 +126,15 @@ export class AdminPage extends LitElement {
             render(
                 html`
                     <td>${gamedata.id}</td>
-                    <td>${gamedata.title}</td>
-                    <td><img src="${gamedata.thumbnail}" alt="${gamedata.title}" width="100" /></td>
-                    <td>${gamedata.descriptionMarkdown}</td>
-                    <td>${gamedata.tags}</td>
+                    <td>${gamedata.name}</td>
+                    <td><img src="${gamedata.imageURLs}" alt="${gamedata.featured}" width="100" /></td>
+                    <td>${gamedata.description}</td>
+                    <td>€${gamedata.price}</td>
                     <td>
                         <button
                             class="btn btn-danger delete-btn"
                             @click=${async (): Promise<void> => {
-                                await this._getGamesService.deleteGameFunction(gamedata.id);
+                                await this._orderItemService.deleteOrderFunction(gamedata.id);
                                 location.reload(); // Reload the page after deletion
                             }}
                         >

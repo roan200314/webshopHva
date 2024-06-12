@@ -82,10 +82,12 @@ public class HelloController {
             File csvFile = new File(filePath);
             DatabaseService.getInstance().returnConnection().thenAcceptAsync(connection -> {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO orderitem (id, name, description, price, imageURLs, orderId) VALUES (?, ?, ?, ?, ?, ?) " +
+                    "INSERT INTO orderitem (id, name, description, price, imageURLs, featured, itemType, itemId, orderId) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
                         "ON DUPLICATE KEY UPDATE " +
                         "name = VALUES(name), description = VALUES(description), " +
                         "price = VALUES(price), imageURLs = VALUES(imageURLs), " +
+                        "featured = VALUES(featured), " +
+                        "itemType = VALUES(itemType), itemId = VALUES(itemId), " +
                         "orderId = VALUES(orderId)")) {
                     try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
                         String line;
@@ -154,7 +156,7 @@ public class HelloController {
             .returnConnection()
             .thenAcceptAsync(connection -> {
                 try (Statement statement = connection.createStatement();
-                     ResultSet resultSet = statement.executeQuery("SELECT title FROM games WHERE 1")) {
+                     ResultSet resultSet = statement.executeQuery("SELECT * FROM orderitem")) {
 
                     // Bouw een StringBuilder op om de CSV-geformatteerde gegevens op te slaan
                     StringBuilder csvData = new StringBuilder();

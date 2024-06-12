@@ -52,6 +52,30 @@ export class OrderItemController {
         return this.orderService.createOrderItem(orderItem);
     }
 
+    @Public()
+    @Get("merchandise")
+    @ApiOperation({ summary: "Retrieves all available merchandise" })
+    @ApiResponse({ status: 200, description: "Merchandise" })
+    public async getMerchandise(): Promise<OrderItem[]> {
+        return await this.orderService.getMerchandiseItems();
+    }
+
+    @Public()
+    @Get("games")
+    @ApiOperation({ summary: "Retrieves all available games" })
+    @ApiResponse({ status: 200, description: "Games" })
+    public async getGames(): Promise<OrderItem[]> {
+        return await this.orderService.getGameItems();
+    }
+
+    @Public()
+    @Get("featured")
+    @ApiOperation({ summary: "Retrieves all featured items" })
+    @ApiResponse({ status: 200, description: "Featured items" })
+    public async getFeaturedItems(): Promise<OrderItem[]> {
+        return await this.orderService.getFeaturedItems();
+    }
+
     @ApiBearerAuth()
     @EmployeeOnly()
     @Post("featured/:id/:setFeatured")
@@ -100,5 +124,11 @@ export class OrderItemController {
     @ApiResponse({ status: 200, description: "Order Item" })
     public async searchOrderItemByName(@Param("name") name: string): Promise<OrderItem[]> {
         return await this.orderService.searchOrderItemByName(name);
+    }
+    @Get("/:id")
+    @ApiOperation({ summary: "Retrieves the game based on id" })
+    @ApiResponse({ status: 200, description: "Game fetched" })
+    public async fetchGame(@Param("id") id: number): Promise<OrderItem> {
+        return await this.orderService.getGameItemById(id);
     }
 }

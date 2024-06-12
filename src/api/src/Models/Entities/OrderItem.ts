@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Order } from "./Order";
 import { OrderItemType } from "../Enumerations/OrderItemType";
 import { Games } from "./Games";
+import { Review } from "./Review";
 
 @Entity("OrderItem")
 export class OrderItem {
@@ -29,6 +30,9 @@ export class OrderItem {
 
     @ManyToOne(() => Order, (order) => order.products)
     public order: Order;
+
+    @OneToMany(() => Review, review => review.orderItem)
+    public reviews: Review[];
 
     @Column({ type: "enum", enum: OrderItemType, nullable: true })
     public itemType?: OrderItemType;

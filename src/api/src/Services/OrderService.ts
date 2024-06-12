@@ -7,6 +7,7 @@ import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
 import { Address, CartItem } from "@shared/types";
 import { IsNull } from "typeorm";
 import { MailService } from "./MailService";
+import { OrderItemType } from "src/Models/Enumerations/OrderItemType";
 
 
 @Injectable()
@@ -138,9 +139,9 @@ export class OrderService {
             newOrder.usedPoints = usedPoints;
 
             if(!newOrder.usedPoints) {
-             
+
             }
-            
+
             await this.mailService.orderConfirmation(user.email, user.name, cartItems);
         }
 
@@ -163,4 +164,44 @@ export class OrderService {
     public async retrieveOrder(userId: number): Promise<Order[]> {
         return await this.orderRepository.find({ where: { user: { id: userId }}, relations: ["products"] });;
     }
+    /**
+     *
+     * @returns {Promise<OrderItem[]>}
+     * Retrieves all merchandise items
+     */
+    public async getMerchandiseItems(): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find( { where: { itemType: OrderItemType.Merchandise } });
+    }
+
+    /**
+     *
+     * @returns {Promise<OrderItem[]>}
+     * Retrieves all game items
+     */
+    public async getGameItems(): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find( {
+            where: {
+                itemType: OrderItemType.Game }
+        });
+    }
+
+    /**
+     *
+     * @returns {Promise<OrderItem[]>}
+     * Retrieves all featured items
+     */
+    public async getFeaturedItems(): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find( {
+            where: {
+                featured: true }
+        });
+    }
+            /**
+     * Retrieves an order item by its ID.
+     * @param id - The ID of the order item to retrieve.
+     * @returns {Promise<OrderItem>}
+     */
+            public async getGameItemById(id: number): Promise<OrderItem> {
+                return await this.orderItemRepository.findOne({ where: { id } });
+            }
 }

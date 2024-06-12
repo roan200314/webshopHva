@@ -50,4 +50,6 @@ export class GamesService {
     public async searchGameItemByName(name: string): Promise<Games[]> {
         return await this.gamesRepository.find({ where: { title: ILike(`%${name}%`) } });
     }
+
+    
 }

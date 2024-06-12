@@ -11,30 +11,29 @@ body {
 .wrapper {
     width: 80%;
     margin: auto;
+    position: relative;
 }
 
-.navbar {
+.sidebar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    background-color: #333;
-}
-
-.navbar-logo .logo {
-    height: 50px;
-}
-
-.navigation {
-    display: flex;
-    align-items: center;
-}
-
-.nav-search .search-bar {
-    padding: 5px;
-    margin-right: 20px;
-    border-radius: 5px;
+    flex-direction: column;
+    width: 20%;
+    height: 40vh;
+    position: fixed;
+    top: 160px;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding-left: 20px;
+    padding-top:0px;
+    margin-left: 10px;
     border: 1px solid #ccc;
+}
+
+
+.main-content {
+    width: 80%;
+    margin-left: 20%; 
 }
 
 .navbar-links {
@@ -88,11 +87,15 @@ body {
     margin: 0;
     padding: 0;
     margin-top: 10px;
+    flex-direction: column;
 }
 
 .product-filter .filter-title {
+    display: flex;
+    justify-content: space-around;
     font-weight: bold;
     margin-right: 10px;
+    padding-top: 2vh;
 }
 
 .product-filter .filter-option a {
@@ -130,6 +133,7 @@ body {
     border-radius: 5px;
     width: calc(25% - 20px);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
 }
 
 .product img {
@@ -193,3 +197,29 @@ footer {
 .footer-link:hover {
     text-decoration: underline;
 }
+
+.type-filter {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    flex-direction: column;
+}
+
+.type-filter .type-filter-title {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    margin-right: 10px;
+
+}
+
+.nav-search span {
+    padding-top:2vh;
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    margin-right: 10px;
+}
+

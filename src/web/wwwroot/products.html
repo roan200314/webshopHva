@@ -12,17 +12,32 @@
 <body>
   <navbar-component></navbar-component>
   <div class="wrapper">
-    <ul class="product-filter">
-      <li><span class="filter-title">Filter: </span></li>
-      <li class="filter-option"><a href="#" id="price-filter">Price</a></li>
-      <li class="filter-option"><a href="#" id="name-filter">Name</a></li>
-      <li class="filter-option"><a href="#" id="offer-filter">Offers</a></li>
-    </ul>
-    <form class="nav-search">
-      <order-item-search></order-item-search>
-    </form>
-    <order-items></order-items>
-    <create-order-item></create-order-item>
+    <div class="sidebar">
+      <ul class="product-filter filters">
+        <li><span class="filter-title">Sort by</span></li>
+        <li class="filter-option"><a id="price-filter">Price</a></li>
+        <li class="filter-option"><a id="name-filter">Name</a></li>
+      </ul>
+      <ul class="type-filter filters">
+        <li><span class="type-filter-title filter-title">Types</span></li>
+        <div class="merch">
+          <input type="checkbox" name="filter" id="merchandise-filter">
+          <label for="merchandise-filter">Merchandise</label>
+        </div>
+      <div class="games">
+        <input type="checkbox" name="filter" id="games-filter">
+        <label for="games-filter">Games</label>
+      </div>
+      </ul>
+      <form class="nav-search">
+        <span class="filter-title">Search</span>
+        <order-item-search></order-item-search>
+      </form>
+    </div>
+    <div class="main-content">
+      <order-items></order-items>
+      <create-order-item></create-order-item>
+    </div>
   </div>
   <footer> 
     <div class="footer-content">
