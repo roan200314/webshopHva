@@ -91,7 +91,7 @@ export class IndexPage extends LitElement {
         //const shorterText: any = orderItem.description?.length > 150 ? orderItem.description?.substring(0, 150) + "..." : orderItem.description;
         return html`
             <div class="product">
-                <h3>${orderItem.name}</h3>
+                <h3><a href="orderitem.html?id=${orderItem.id}">${orderItem.name}</a></h3>
                 <img src="${imageURL}" alt="${orderItem.name}" />
                 <p>${orderItem.description}</p>
                 <div class="buttons">

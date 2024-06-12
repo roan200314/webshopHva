@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css, HTMLTemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { ReviewService } from "../services/ReviewService";
 import { UserService } from "../services/UserService";
@@ -6,8 +6,8 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Review } from "@shared/types/review";
 
 // Custom element decorator
-@customElement("game-review")
-export class GameReviewComponent extends LitElement {
+@customElement("review-component")
+export class ReviewComponent extends LitElement {
   // Definieer de CSS-styling voor het component
   public static styles = css`
     :host {
@@ -76,8 +76,8 @@ export class GameReviewComponent extends LitElement {
   // Service-instanties
   private userService: UserService = new UserService();
   private reviewService: ReviewService = new ReviewService();
-  private gameId: number | null = null; // Game ID
-  private userId: number | null = null; // User ID
+  private orderId: number | null = null;
+  private userId: number | null = null;
 
   @state()
   private reviews: Review[] = [];
@@ -92,11 +92,11 @@ export class GameReviewComponent extends LitElement {
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
     await this.getUserInformation();
-    this.gameId = this.getIdFromURL();
-    if (this.gameId !== null) {
+    this.orderId = this.getIdFromURL();
+    if (this.orderId !== null) {
       await this.fetchReviews();
     } else {
-      console.error("No game ID found in URL");
+      console.error("No order ID found in URL");
     }
   }
 
@@ -109,9 +109,9 @@ export class GameReviewComponent extends LitElement {
 
   // Haal de reviews op voor de game
   private async fetchReviews(): Promise<void> {
-    if (this.gameId !== null) {
+    if (this.orderId !== null) {
       try {
-        this.reviews = await this.reviewService.getReviews(this.gameId);
+        this.reviews = await this.reviewService.getReviews(this.orderId);
       } catch (error) {
         console.error("Failed to fetch reviews:", error);
       }
@@ -119,7 +119,7 @@ export class GameReviewComponent extends LitElement {
   }
 
   // Render de HTML voor het component
-  public render(): ReturnType<LitElement["render"]> {
+  public render(): HTMLTemplateResult {
     return html`
       <form @submit=${this.handleSubmit}>
         <label for="reviewContent">Review Content:</label><br />
@@ -169,13 +169,13 @@ export class GameReviewComponent extends LitElement {
   public async handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     try {
-      if (this.gameId !== null && this.userId !== null) {
+      if (this.orderId !== null && this.userId !== null) {
         await this.reviewService.createReview(
           event,
           this.reviewContent,
           this.rating,
           this.userId,
-          this.gameId
+          this.orderId
         );
         this.resetForm();
         await this.fetchReviews(); // Vernieuw de reviews na het indienen

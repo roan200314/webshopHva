@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
-import { Games } from "./Games";
 import { User } from "./User";
+import { OrderItem } from "./OrderItem";
 
 @Entity("Review")
 export class Review {
@@ -16,8 +16,8 @@ export class Review {
     @ApiProperty()
     public rating: number;
 
-    @ManyToOne(() => Games, game => game.reviews)
-    public game: Games;
+    @ManyToOne(() => OrderItem, orderItem => orderItem.reviews)
+    public orderItem: OrderItem;
 
     @ManyToOne(() => User, user => user.reviews)
     public user: User;

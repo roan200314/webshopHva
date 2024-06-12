@@ -24,7 +24,7 @@ export class ReviewController {
     @ApiResponse({ status: 200, description: "Successful retrieval of the reviews" })
     @Public()
     @Get("getAll")
-    public async getReviews(@Query("gameId") gameId: number): Promise<Review[]> {
-      return await this.reviewService.getReviews(gameId);
+    public async getReviews(@Query("orderItemId") orderItemId: number): Promise<Review[]> {
+      return await this.reviewService.getReviews(orderItemId);
     }
 }

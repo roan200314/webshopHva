@@ -20,14 +20,14 @@ export class ReviewService {
         review.rating = createReviewDto.rating;
 
         // Validate relationships
-        if (!createReviewDto.userId || !createReviewDto.gameId) {
-            this.logger.error("Validation failed: UserId or GameId is missing", createReviewDto);
+        if (!createReviewDto.userId || !createReviewDto.orderItemId) {
+            this.logger.error("Validation failed: UserId or orderItemId is missing", createReviewDto);
             throw new Error("UserId and GameId are required");
         }
 
         // Assuming you have User and Games entities defined somewhere
         review.user = { id: createReviewDto.userId } as any;  
-        review.game = { id: createReviewDto.gameId } as any;  
+        review.orderItem = { id: createReviewDto.orderItemId } as any;
 
         const savedReview: Review = await this.reviewRepository.save(review);
         
@@ -42,13 +42,13 @@ export class ReviewService {
             content: review.content,
             rating: review.rating,
             userId: review.user.id,
-            gameId: review.game.id
+            orderItemId: review.orderItem.id
         };
     }
-    public async getReviews(gameId: number): Promise<Review[]> {
+    public async getReviews(orderItemId: number): Promise<Review[]> {
         return await this.reviewRepository.find({
-          where: { game: { id: gameId } },
-          relations: ["game", "user"],
+          where: { orderItem: { id: orderItemId } },
+          relations: ["orderItem", "user"],
         });
       }
 }

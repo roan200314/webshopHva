@@ -151,7 +151,7 @@ export class OrderItemsComponent extends LitElement {
 
         return html`
             <div class="product">
-                <h3><a href="game.html?id=${orderItem.id}">${orderItem.name}</a></h3>
+                <h3><a href="orderitem.html?id=${orderItem.id}">${orderItem.name}</a></h3>
                 <img src="${imageURL}" alt="${orderItem.name}" />
                 <p>${orderItem.description}</p>
                 <div class="buttons">
