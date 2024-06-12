@@ -310,13 +310,25 @@ export class OrderItemsComponent extends LitElement {
         }
     }
 
-    public getFirstSentence(text:string): string{
-        const endOfFirstSentence:any = text.indexOf(". ") + 1;
-        if (endOfFirstSentence === 0) {
-            return text;
+        public getFirstSentence(text: string): string {
+            const sentenceEndings:string[] = [".", "!", "?"];
+            let endOfFirstSentence:number = -1;
+
+            for (const ending of sentenceEndings) {
+                const index:any = text.indexOf(ending);
+                if (index !== -1 && (endOfFirstSentence === -1 || index < endOfFirstSentence)) {
+                    endOfFirstSentence = index;
+                }
+            }
+
+            if (endOfFirstSentence !== -1) {
+                return text.substring(0, endOfFirstSentence + 1).trim();
+            }
+
+            const words:any = text.split(/\s+/);
+            const firstTwentyWords:string = words.slice(0, 20).join(" ");
+            return firstTwentyWords.trim();
         }
-        return text.substring(0, endOfFirstSentence + 1);
-    }
 
     private async getMerchandiseItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getMerchandiseItems();
