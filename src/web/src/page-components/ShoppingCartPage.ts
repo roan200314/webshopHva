@@ -169,17 +169,30 @@ export class ShoppingCartPage extends LitElement {
             text-align: right;
         }
 
-        
-        .edit {
-            background-color: #49f560;
-            border: none;
-            border-radius: 5px;
-            padding: 5px;
+        .infotxt{
+            color: white;
+            background-color: #4b515d;
+            padding: 8px;
+            margin-top: 0;
+            margin-bottom: 0 ;
+        }
+
+        #points{
+            text-align: center;
+        }
+
+        #yes{
+        }
+
+        #no{
         }
 
     `;
+
     @state()
-    public _cartItemsCount: number = 0;
+    public _usedPoints: number | undefined;
+    @state()
+    public _cartItemsCount: number | undefined;
     @state()
     private shoppingCartStep: number = 1;
     @state()
@@ -382,13 +395,14 @@ export class ShoppingCartPage extends LitElement {
 
     private _renderInfoConfirmation(): HTMLTemplateResult {
         return html`
-            <h1 class="title">Confirm your information</h1>
+            <h1 class="title">Just a few steps left to go!</h1>
             <div id="steps">
                 <div class="stepnmbr" @click="${(): void => this.updateStep(1)}">Step 1</div>
                 <div class="stepnmbr" id="currentstep" @click="${(): void => this.updateStep(3)}">Step 2</div>
                 <div class="stepnmbr" @click="${(): void => this.updateStep(4)}">Step 3</div>
             </div>
             <div class="adressInfo">
+                <h2 class="infotxt">Please confirm your information</h2>
                 <form>
                     ${this._isLoggedIn
                         ? html`<label>Name</label> <input type="text" disabled value="${this._name}" /> <br>
@@ -416,6 +430,13 @@ export class ShoppingCartPage extends LitElement {
                         @change="${this._onChangeCountry}"
                         value="${this._adressData.country}"
                     /><br />
+                    <div id="points">
+                        <label>you currently have ${this._user.savedPoints} points saved, do you want to use them? </label> <br>
+                        <select @change="${this._usePoints}">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>                 
+                    </div>
                 </form>
             </div>
             <div class="nxtstep">
@@ -424,6 +445,13 @@ export class ShoppingCartPage extends LitElement {
                 </button>
             </div>
         `;
+    }
+
+    private _usePoints(e: Event) : void {
+        const result: string = (e.target as HTMLSelectElement).value;
+        if( result === "yes"){
+            this._usedPoints = this._user.savedPoints;
+        }
     }
 
     private _renderUserConfirmation(): HTMLTemplateResult {
@@ -454,10 +482,16 @@ export class ShoppingCartPage extends LitElement {
         `;
     }
 
+
+    private clearShoppingCart(): void {
+        localStorage.clear;
+    }
+
     private _renderOrderConfirmation(): HTMLTemplateResult {
         void this.order();
+        this.clearShoppingCart();
         return html` <h1 class="title">Thank you for ordering!</h1> 
-                    <h2> You have saved X amount of points with this order!</h2>
+                            <h2> A confirmation email of your order will be sent shortly</h2>
                     `;
     }
 
@@ -510,6 +544,6 @@ export class ShoppingCartPage extends LitElement {
     }
 
     private async order(): Promise<void> {
-        await this._orderService.order(this.cartItems, this._adressData);
+        await this._orderService.order(this.cartItems, this._adressData, this._usedPoints);
     }
 }
