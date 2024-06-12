@@ -58,7 +58,7 @@ export class OrderItemService {
         }
     }
 
-    public async order(cartItems: CartItem[], adressData: Address): Promise<void> {
+    public async order(cartItems: CartItem[], adressData: Address, usedPoints: number | undefined): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (token) {
@@ -68,6 +68,7 @@ export class OrderItemService {
                 body: JSON.stringify({
                     cartItem: cartItems,
                     adressData: adressData,
+                    usedPoints: usedPoints,
                 }),
             });
 
@@ -80,6 +81,7 @@ export class OrderItemService {
                 body: JSON.stringify({
                     cartItem: cartItems,
                     adressData: adressData,
+                    usedPoints: usedPoints,
                 }),
             });
 
