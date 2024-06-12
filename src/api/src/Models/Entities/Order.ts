@@ -33,4 +33,8 @@ export class Order {
 
     @ManyToOne(() => User, (user) => user.orders)
     public user: User;
+
+    @Column({ type: "integer", nullable: false})
+    public usedPoints: number;
 }
+

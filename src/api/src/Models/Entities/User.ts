@@ -40,6 +40,9 @@ export class User {
     @OneToMany((_) => Order, (order) => order.user)
     public orders: Order[];
 
+    @Column({ type: "integer", nullable: false})
+    public savedPoints: number;
+
     @Column({ type: "enum", enum: AuthorizationLevel, default: AuthorizationLevel.USER })
     public authorizationLevel: AuthorizationLevel;
 
