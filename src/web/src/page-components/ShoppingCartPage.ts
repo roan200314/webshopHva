@@ -58,10 +58,15 @@ export class ShoppingCartPage extends LitElement {
             margin-bottom: 5px;
         }
 
+        h2{
+            text-align: center;
+            color: #4b515d;
+        }
+
         table,
         th,
         td {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             border-collapse: collapse;
         }
 
@@ -76,6 +81,8 @@ export class ShoppingCartPage extends LitElement {
             font-size: 1.2em;
             font-weight: bolder;
             padding: 10px;
+            background-color: #4b515d; 
+            color: white; 
         }
 
         td {
@@ -95,13 +102,13 @@ export class ShoppingCartPage extends LitElement {
         }
 
         .stepnmbr {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             display: inline;
             padding: 10px;
         }
 
         #currentstep {
-            background-color: #373e98;
+            background-color: #4b515d;
             color: white;
         }
 
@@ -120,7 +127,7 @@ export class ShoppingCartPage extends LitElement {
         }
 
         .adressInfo {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             width: 50%;
             margin: auto;
             text-align: right;
@@ -137,7 +144,7 @@ export class ShoppingCartPage extends LitElement {
         }
 
         .delete {
-            background-color: #f03e3e;
+            background-color: #f56d6d;
             border: none;
             border-radius: 5px;
             padding: 5px;
@@ -151,6 +158,18 @@ export class ShoppingCartPage extends LitElement {
             cursor: pointer;
         }
 
+        .infochoice {
+            border: 2px solid #4b515d;
+            text-align: center;
+            width: 50%;
+            margin-left: 25%;
+        }
+
+        #total{
+            text-align: right;
+        }
+
+        
         .edit {
             background-color: #49f560;
             border: none;
@@ -158,12 +177,6 @@ export class ShoppingCartPage extends LitElement {
             padding: 5px;
         }
 
-        .infochoice {
-            border: 3px solid #373e98;
-            text-align: center;
-            width: 50%;
-            margin-left: 25%;
-        }
     `;
     @state()
     public _cartItemsCount: number = 0;
@@ -285,22 +298,16 @@ export class ShoppingCartPage extends LitElement {
                     return html`
                         <tr>
                             <td>${cartItem.item.name}</td>
-                            <td>${cartItem.amount}</td>
-                            <td>${cartItem.item.price}</td>
-                            <td>
-                                <input
+                            <td>   <input
                                     type="number"
                                     value=${cartItem.amount}
                                     @change="${async (e: Event): Promise<void> =>
                                         await this._changeCartAmount(e, cartItem)}"
-                                />
-                            </td>
+                                /></td>
+                            <td>${cartItem.item.price}</td>
                             <td>
-                                <b
-                                    >&euro;
-                                    ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
-                                        2,
-                                    )}</b
+                            <b>&euro;${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2,
+                                )}</b
                                 >
                             </td>
                             <td>
@@ -316,7 +323,7 @@ export class ShoppingCartPage extends LitElement {
                 })}
             </table>
             <div class="nxtstep">
-                <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
+                <h2 id="total">Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
                 <button class="button" type="submit" @click="${(): number => (this.shoppingCartStep = 2)}">
                     Next Step
                 </button>
@@ -384,10 +391,10 @@ export class ShoppingCartPage extends LitElement {
             <div class="adressInfo">
                 <form>
                     ${this._isLoggedIn
-                        ? html`<label>Name</label><input type="text" disabled value="${this._name}" /><br />
-                              <label>Email</label><input type="text" disabled value="${this._email}" /><br />`
-                        : html`<label>Name</label><input type="text" /><br />
-                              <label>Email</label><input type="text" /><br />`}
+                        ? html`<label>Name</label> <input type="text" disabled value="${this._name}" /> <br>
+                               <label>Email</label> <input type="text" disabled value="${this._email}" /> <br>`
+                        : html`<label>Name</label> <input type="text" /><br />
+                               <label>Email</label> <input type="text" /><br />`}
 
                     <label>Street</label>
                     <input
@@ -449,7 +456,9 @@ export class ShoppingCartPage extends LitElement {
 
     private _renderOrderConfirmation(): HTMLTemplateResult {
         void this.order();
-        return html` <h1 class="title">Thank you for ordering!</h1> `;
+        return html` <h1 class="title">Thank you for ordering!</h1> 
+                    <h2> You have saved X amount of points with this order!</h2>
+                    `;
     }
 
     private calculateTotalPrice(): number {
