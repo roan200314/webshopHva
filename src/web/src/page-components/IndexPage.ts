@@ -57,7 +57,7 @@ export class IndexPage extends LitElement {
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
-        await this.getOrderItems();
+        await this.getFeaturedItems();
     }
 
     public render(): TemplateResult {
@@ -79,6 +79,15 @@ export class IndexPage extends LitElement {
 
     private async getOrderItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getAll();
+        if (result) {
+            this.orderItems = result;
+        } else {
+            console.error("Failed to fetch order items");
+        }
+    }
+
+    public async getFeaturedItems(): Promise<void> {
+        const result: OrderItem[] | undefined = await this._orderItemService.getFeaturedItems();
         if (result) {
             this.orderItems = result;
         } else {

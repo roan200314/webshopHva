@@ -116,4 +116,18 @@ export class OrderItemService {
 
         return (await response.json()) as OrderItem[];
     }
+
+    public async getFeaturedItems(): Promise<OrderItem[] | undefined> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/featured`, {
+            method: "get",
+        });
+
+        if (!response.ok) {
+            console.error(response);
+
+            return undefined;
+        }
+
+        return (await response.json()) as OrderItem[];
+    }
 }

@@ -59,6 +59,14 @@ export class OrderItemController {
         return await this.orderService.getGameItems();
     }
 
+    @Public()
+    @Get("featured")
+    @ApiOperation({ summary: "Retrieves all featured items" })
+    @ApiResponse({ status: 200, description: "Featured items" })
+    public async getFeaturedItems(): Promise<OrderItem[]> {
+        return await this.orderService.getFeaturedItems();
+    }
+
     @ApiBearerAuth()
     @EmployeeOnly()
     @Post("featured/:id/:setFeatured")

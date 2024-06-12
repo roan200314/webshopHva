@@ -172,4 +172,16 @@ export class OrderService {
                 itemType: OrderItemType.Game }
         });
     }
+
+    /**
+     * 
+     * @returns {Promise<OrderItem[]>}
+     * Retrieves all featured items
+     */
+    public async getFeaturedItems(): Promise<OrderItem[]> {
+        return await this.orderItemRepository.find( { 
+            where: {
+                featured: true }
+        });
+    }
 }
