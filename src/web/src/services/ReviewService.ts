@@ -47,7 +47,18 @@ export class ReviewService {
         if (!response.ok) {
           throw new Error("Failed to fetch reviews");
         }
-    
-        return await response.json();
+
+        // eslint-disable-next-line @typescript-eslint/typedef
+        const jsonData = await response.json();
+
+        // Map the response to the shared type Review
+        return jsonData.map((item: any) => ({
+            id: item.id,
+            content: item.content,
+            rating: item.rating,
+            userId: item.user.id, // Assuming `user` is a object with `id`
+            username: item.user.name, // Assuming `user` is a object with `name`
+            gameId: item.game.id // Assuming `game` is a object with `id`
+        }));
     }
 }

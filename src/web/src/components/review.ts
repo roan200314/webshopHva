@@ -2,7 +2,6 @@ import { LitElement, html, css } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { ReviewService } from "../services/ReviewService";
 import { UserService } from "../services/UserService";
-import { UserData } from "@shared/types/UserData";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { Review } from "@shared/types/review";
 
@@ -80,10 +79,6 @@ export class GameReviewComponent extends LitElement {
   private gameId: number | null = null; // Game ID
   private userId: number | null = null; // User ID
 
-  // State variabelen
-  @state()
-  private userData: UserData | undefined;
-
   @state()
   private reviews: Review[] = [];
 
@@ -150,9 +145,9 @@ export class GameReviewComponent extends LitElement {
       </form>
       <div class="reviews">
         ${this.reviews.map(
-          (review) => html`
+          (review: Review) => html`
             <div class="review-item">
-                <p><strong>User:</strong> ${review.user?.name}</p>
+                <p><strong>User:</strong> ${review.username}</p>
               <p><strong>Rating:</strong> ${review.rating}/5</p>
               <p><strong>Content:</strong> ${review.content}</p>
             </div>
@@ -167,7 +162,6 @@ export class GameReviewComponent extends LitElement {
     const userInformation: UserHelloResponse | undefined = await this.userService.getWelcome();
     if (!userInformation || !userInformation.user) return;
 
-    this.userData = userInformation.user;
     this.userId = userInformation.user.id;
   }
 

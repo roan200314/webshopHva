@@ -37,11 +37,12 @@ export class ReviewService {
 
     private mapToReviewType(review: Review): ReviewType {
         return {
+            username: "",
             id: review.id,
             content: review.content,
             rating: review.rating,
             userId: review.user.id,
-            gameId: review.game.id,
+            gameId: review.game.id
         };
     }
     public async getReviews(gameId: number): Promise<Review[]> {
