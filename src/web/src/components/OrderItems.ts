@@ -132,10 +132,10 @@
         private _priceRange: { min: number, max: number } = { min: 0, max: 1000 };
 
         @state()
-        private _sliderMin: number = 0; 
+        private _sliderMin: number = 0;
 
         @state()
-        private _sliderMax: number = 1000; 
+        private _sliderMax: number = 1000;
 
         @state()
         private _merchandiseFilter: boolean = false;
@@ -215,7 +215,7 @@
             if (result) {
                 this.unfilteredOrderItems = result;
                 this.orderItems = result;
-                
+
                 // Calculate the minimum and maximum prices
                 const prices: number[] = result.map(item => item.price);
                 this._sliderMin = Math.min(...prices);
@@ -233,7 +233,7 @@
             const nameFilter: HTMLLIElement | null = document.querySelector("#name-filter");
             if (nameFilter) {
                 nameFilter.addEventListener("click", () => this.toggleSortOrder("name"));
-            }   
+            }
 
             const merchandisecheckbox: HTMLInputElement | null = document.querySelector("#merchandise-filter");
             const gamecheckbox: HTMLInputElement | null = document.querySelector("#games-filter");
@@ -249,8 +249,8 @@
                     await this.filterByType();
                 });
             }
-            
-            
+
+
         }
 
         private toggleSortOrder(type: "price" | "name"): void {
@@ -292,24 +292,16 @@
             }
         }
 
-        public getFirstSentence(text:string): string{
-            const endOfFirstSentence:any = text.indexOf(". ") + 1;
-            if (endOfFirstSentence === 0) {
-                return text;
-            }
-            return text.substring(0, endOfFirstSentence + 1);
-        }
-
-        private renderOrderItem(orderItem: OrderItem): TemplateResult {
-            const imageURL: string =
-                orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
+    private renderOrderItem(orderItem: OrderItem): TemplateResult {
+        const imageURL: string =
+            orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
 
             const buttonLabel: string = orderItem.featured ? "Remove from Featured" : "Add to Featured";
             const newFeaturedState: boolean = !orderItem.featured;
             orderItem.description = orderItem.description ? this.getFirstSentence   (orderItem.description) : "";
             return html`
                 <div class="product">
-                    <h3>${orderItem.name}</h3>
+                    <h3><a href="orderitem.html?id=${orderItem.id}">${orderItem.name}</a></h3>
                     <img src="${imageURL}" alt="${orderItem.name}" id="order-item-image" />
                     <p>${orderItem.description}</p>
                     <div class="buttons">
@@ -334,119 +326,78 @@
             `;
         }
 
-        public render(): TemplateResult {
-            const slider: any = html`
-                <div class="slider-container">
-                    <div class="slider">
-                        <div id="min-handle" class="slider-handle" style="left: 0;"></div>
-                        <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
-                        <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
-                    </div>
-                    <label for="min-price">Min Price: €${this._priceRange.min}</label>
-                    <label for="max-price">Max Price: €${this._priceRange.max}</label>
-                </div>`;
-        
-            return html`
-                ${slider}
-                <section class="product-section" id="product-section">
-                    ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
-                </section>
-            `;
-        }
+    public render(): TemplateResult {
+        return html`
+            <section class="product-section" id="product-section">
+                ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
+            </section>
+        `;
+    }
 
+    private async addToCart(orderItem: OrderItem): Promise<void> {
+        let cartItems: CartItem[] = [];
 
-        private async addToCart(orderItem: OrderItem): Promise<void> {
-            let cartItems: CartItem[] = [];
+        if (this.loggedIn) {
+            const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
 
-            if (this.loggedIn) {
-                const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
-
-                if (result) {
-                    cartItems = result;
-                }
-            } else {
-                try {
-                    cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-                } catch (error) {
-                    console.error("Error parsing cart items from localStorage", error);
-                }
-
-                const cartItem: CartItem | undefined = cartItems.find(
-                    (ci: CartItem) => ci.item.id === orderItem.id,
-                );
-
-                if (cartItem === undefined) {
-                    cartItems.push({
-                        item: orderItem,
-                        amount: 1,
-                    });
-                } else {
-                    cartItem.amount++;
-                }
-
-                localStorage.setItem("cart", JSON.stringify(cartItems));
+            if (result) {
+                cartItems = result;
             }
-            this.dispatchCartUpdatedEvent(cartItems);
-        }
+        } else {
+            try {
+                cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+            } catch (error) {
+                console.error("Error parsing cart items from localStorage", error);
+            }
 
-        private dispatchCartUpdatedEvent(cartItems: CartItem[]): void {
-            this.dispatchEvent(
-                new CustomEvent("cart-updated", {
-                    detail: {
-                        cartItems,
-                    },
-                    bubbles: true,
-                    composed: true,
-                }),
+            const cartItem: CartItem | undefined = cartItems.find(
+                (ci: CartItem) => ci.item.id === orderItem.id,
             );
-        }
 
-        private async getUserInformation(): Promise<void> {
-            const userInformation: UserHelloResponse | undefined = await this._userService.getWelcome();
-            if (!userInformation || !userInformation.user) return;
-
-            this.loggedIn = true;
-
-            if (!userInformation.user.authorizationLevel) return;
-
-            if (
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-                userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN
-            ) {
-                this.employeeOrHigher = true;
-            }
-        }
-
-        private async getMerchandiseItems(): Promise<void> {
-            const result: OrderItem[] | undefined = await this._orderItemService.getMerchandiseItems();
-            if (result) {
-                this.orderItems = result;
-            }
-        }
-
-        private async getGameItems(): Promise<void> {
-            const result: OrderItem[] | undefined = await this._orderItemService.getGameItems();
-            if (result) {
-                this.orderItems = result;
-            }
-        }
-
-        private async filterByType(): Promise<void> {
-            if (this._merchandiseFilter && this._gameFilter) {
-                this.orderItems = this.unfilteredOrderItems;
-            } else if (this._merchandiseFilter && !this._gameFilter) {
-                await this.getMerchandiseItems();
-            } else if (this._gameFilter && !this._merchandiseFilter) {
-                await this.getGameItems();
+            if (cartItem === undefined) {
+                cartItems.push({
+                    item: orderItem,
+                    amount: 1,
+                });
             } else {
-                this.orderItems = this.unfilteredOrderItems;
+                cartItem.amount++;
             }
-        
-            this.requestUpdate();
-        }
 
-        private async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
-            await this._orderItemService.setOrderAsFeatured(id, setFeatured);
-            await this.getOrderItems();
+            localStorage.setItem("cart", JSON.stringify(cartItems));
+        }
+        this.dispatchCartUpdatedEvent(cartItems);
+    }
+
+    private dispatchCartUpdatedEvent(cartItems: CartItem[]): void {
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems,
+                },
+                bubbles: true,
+                composed: true,
+            }),
+        );
+    }
+
+    private async getUserInformation(): Promise<void> {
+        const userInformation: UserHelloResponse | undefined = await this._userService.getWelcome();
+        if (!userInformation || !userInformation.user) return;
+
+        this.loggedIn = true;
+
+        if (!userInformation.user.authorizationLevel) return;
+
+        if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+            userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN
+        ) {
+            this.employeeOrHigher = true;
         }
     }
+
+    private async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
+        await this._orderItemService.setOrderAsFeatured(id, setFeatured);
+        await this.getOrderItems();
+    }
+}

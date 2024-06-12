@@ -184,4 +184,12 @@ export class OrderService {
                 featured: true }
         });
     }
+            /**
+     * Retrieves an order item by its ID.
+     * @param id - The ID of the order item to retrieve.
+     * @returns {Promise<OrderItem>}
+     */
+            public async getGameItemById(id: number): Promise<OrderItem> {
+                return await this.orderItemRepository.findOne({ where: { id } });
+            }
 }

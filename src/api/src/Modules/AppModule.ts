@@ -10,6 +10,7 @@ import { OrderModule } from "./OrderModule";
 import { AddressModule } from "./AddressModule";
 import { MailModule } from "./MailModule";
 import { GamesModule } from "./GamesModule";
+import { ReviewModule } from "./ReviewModule";
 import { ContactModule } from "./ContactModule";
 
 @Module({
@@ -22,7 +23,9 @@ import { ContactModule } from "./ContactModule";
         AddressModule,
         MailModule,
         GamesModule,
+        ReviewModule,
         ContactModule,
+        ReviewModule,
     ],
     controllers: [AppController],
     providers: [AppService],
