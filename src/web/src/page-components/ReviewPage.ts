@@ -1,14 +1,13 @@
-import { LitElement, TemplateResult, html, css } from "lit";
 import { customElement } from "lit/decorators.js";
-import { Games } from "@shared/types/games";
+import { css, html, HTMLTemplateResult, LitElement } from "lit";
 import { OrderItemService } from "../services/OrderItemService";
 import { OrderItem } from "@shared/types";
 
-@customElement("game-item-root")
-export class GamePage extends LitElement {
+@customElement("review-item-root")
+export class ReviewPage extends LitElement {
     private _getOrderItem: OrderItemService = new OrderItemService();
-    private gameData: Games | undefined;
-    private ids: number | null = null;
+    private orderItemData: OrderItem | null = null;
+    private orderItemId: number | null = null;
 
     public static styles = css`
         :host {
@@ -110,19 +109,21 @@ export class GamePage extends LitElement {
 
     public connectedCallback(): void {
         super.connectedCallback();
-        this.ids = this.getIdFromURL();
-        if (this.id !== null) {
+
+        this.orderItemId = this.getIdFromURL();
+
+        if (this.orderItemId !== null) {
             void this.getGameItem();
         } else {
             console.error("No ID found in URL");
         }
     }
 
-    public render(): TemplateResult {
-        if (!this.gameData) {
+    public render(): HTMLTemplateResult {
+        if (!this.orderItemData) {
             return html`<p>Loading...</p>`;
         }
-        return this.renderGameItem(this.gameData);
+        return this.renderGameItem(this.orderItemData);
     }
 
     private getIdFromURL(): number | null {
@@ -132,14 +133,15 @@ export class GamePage extends LitElement {
     }
 
     private async getGameItem(): Promise<void> {
-        if (this.id === null) {
+        if (this.orderItemId === null) {
             console.error("No ID found in URL");
             return;
         }
+
         try {
-            const result: OrderItem | undefined = await this._getOrderItem.getOneGame(this.ids);
+            const result: OrderItem | undefined = await this._getOrderItem.getOneGame(this.orderItemId);
             if (result) {
-                this.gameData = result;
+                this.orderItemData = result;
                 this.requestUpdate();
             } else {
                 console.error("No game data found");
@@ -149,7 +151,7 @@ export class GamePage extends LitElement {
         }
     }
 
-    private renderGameItem(game: OrderItem): TemplateResult {
+    private renderGameItem(game: OrderItem): HTMLTemplateResult {
         const imageURL: string = game.imageURLs && game.imageURLs.length > 0 ? game.imageURLs[0] : "";
         const oldPrice: any = 2 * game.price;
         return html`

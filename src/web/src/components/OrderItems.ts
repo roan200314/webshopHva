@@ -7,7 +7,7 @@ import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 import { UserService } from "../services/UserService";
 
-@customElement("order-itemsa")
+@customElement("order-items")
 export class OrderItemsComponent extends LitElement {
     public static styles = css`
         .product-section {
@@ -151,7 +151,7 @@ export class OrderItemsComponent extends LitElement {
 
         return html`
             <div class="product">
-                <h3>${orderItem.name}</h3>
+                <h3><a href="orderitem.html?id=${orderItem.id}">${orderItem.name}</a></h3>
                 <img src="${imageURL}" alt="${orderItem.name}" />
                 <p>${orderItem.description}</p>
                 <div class="buttons">

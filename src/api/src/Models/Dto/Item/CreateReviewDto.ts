@@ -20,5 +20,5 @@ export class CreateReviewDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    public gameId: number;
+    public orderItemId: number;
 }
