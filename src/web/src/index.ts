@@ -8,16 +8,12 @@ export * from "./page-components/RegisterPage";
 export * from "./page-components/ShoppingCartPage";
 export * from "./page-components/ContactPage";
 
-export * from "./components/GameItemSearch";
-export * from "./components/GameItems";
-
 // Product Page
 export * from "./components/OrderItemSearch";
 export * from "./components/OrderItems";
 export * from "./components/CreateOrderItem";
 
-// Game Page
-export * from "./page-components/product-page";
+// Review Page
 export * from "./components/review";
 
 
