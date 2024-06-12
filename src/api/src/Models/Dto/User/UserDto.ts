@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, MinLength } from "class-validator";
+import { IsInt, IsNotEmpty, MinLength} from "class-validator";
 import { Expose } from "class-transformer";
 
 export class UserDto {
@@ -16,6 +16,11 @@ export class UserDto {
     @IsNotEmpty()
     @Expose()
     public name: string;
+
+    @IsInt()
+    @IsNotEmpty()
+    @Expose()
+    public savedPoints: number;
 
     @Expose()
     public authorizationLevel: string;
