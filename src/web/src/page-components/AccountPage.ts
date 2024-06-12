@@ -15,6 +15,10 @@ export class AccountPage extends LitElement {
             margin: 3%;
         }
 
+        h2{
+            text-align: center;
+        }
+
         .orderHistory {
             max-width: 800px;
             margin: auto;
@@ -89,6 +93,7 @@ export class AccountPage extends LitElement {
     protected render(): TemplateResult {
         return html`
             <h1 class="title">Account Page of ${this.name}</h1>
+            <h2> Je hebt momenteel X aantal punten gespaard staan</h2>
             <div class="orderHistory">
                 ${this.orders.map((order) => {
                     return html`
