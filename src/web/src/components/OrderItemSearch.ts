@@ -16,8 +16,9 @@ export class OrderItemSearchComponent extends LitElement {
             display: flex;
             align-items: center;
         }
-        .no-results {
-            color:red;
+
+        .noresults {
+            color:red !important;
         }
     `;
 
@@ -27,7 +28,7 @@ export class OrderItemSearchComponent extends LitElement {
     private _search: string = "";
 
     @state()
-    private _noResults: boolean = false;
+    private _noResults: boolean = true;
 
     private _timer: number | undefined;
 
@@ -60,7 +61,7 @@ export class OrderItemSearchComponent extends LitElement {
                 />
             </form>
             <div id="search-result-wrap">Search results: &nbsp
-                <p id=search_result class="${this._noResults ? "no-results" : ""}"></p>${this._search}</p>
+                <p class="search_result ${this._noResults ? "noresults" : ""}">${this._search}</p>
             </div>
         `;
     }
