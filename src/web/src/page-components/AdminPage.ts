@@ -3,7 +3,6 @@ import { customElement, state } from "lit/decorators.js";
 import { UserService } from "../services/UserService";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 import { OrderItem, UserData } from "@shared/types";
-import { GameService } from "../services/GameService";
 import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 import { OrderItemService } from "../services/OrderItemService";
 
@@ -70,7 +69,6 @@ export class AdminPage extends LitElement {
     // Initialisatie van services
     private _userService: UserService = new UserService();
     private _getUsersService: UserService = new UserService();
-    private _getGamesService: GameService = new GameService();
     private _deleteUserService: UserService = new UserService();
     private _orderItemService: OrderItemService = new OrderItemService();
     private selectedAuthorizationLevel: string = "";

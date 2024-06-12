@@ -88,7 +88,8 @@ export class IndexPage extends LitElement {
 
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         const imageURL: string = orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         const shorterText: any = orderItem.description?.length > 150 ? orderItem.description?.substring(0, 150) + "..." : orderItem.description;
         return html`
             <div class="product">
