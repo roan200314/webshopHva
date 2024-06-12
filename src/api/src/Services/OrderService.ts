@@ -8,6 +8,7 @@ import { Address, CartItem } from "@shared/types";
 import { IsNull } from "typeorm";
 import { MailService } from "./MailService";
 
+
 @Injectable()
 export class OrderService {
     public constructor(
@@ -118,6 +119,7 @@ export class OrderService {
     public async order(body: any, user?): Promise<void> {
         const addressData: Address = body.adressData;
         const cartItems: CartItem[] = body.cartItem;
+        const usedPoints: number = body.usedPoints;
 
         console.log(body);
 
@@ -133,11 +135,17 @@ export class OrderService {
         if (user) {
             newOrder.email = user.email;
             newOrder.name = user.name;
+            newOrder.usedPoints = usedPoints;
 
+            if(!newOrder.usedPoints) {
+             
+            }
+            
             await this.mailService.orderConfirmation(user.email, user.name, cartItems);
         }
 
         const savedOrder: any = await this.orderRepository.save(newOrder);
+
 
         for (const cartItem of cartItems) {
             for (let i: number = 0; i < cartItem.amount; i++) {
