@@ -26,11 +26,11 @@ export class ReviewService {
         }
 
         // Assuming you have User and Games entities defined somewhere
-        review.user = { id: createReviewDto.userId } as any;  
+        review.user = { id: createReviewDto.userId } as any;
         review.orderItem = { id: createReviewDto.orderItemId } as any;
 
         const savedReview: Review = await this.reviewRepository.save(review);
-        
+
         // Map the entity to the shared type
         return this.mapToReviewType(savedReview);
     }
@@ -42,13 +42,13 @@ export class ReviewService {
             content: review.content,
             rating: review.rating,
             userId: review.user.id,
-            orderItemId: review.orderItem.id
+            orderItemId: review.orderItem.id,
         };
     }
     public async getReviews(orderItemId: number): Promise<Review[]> {
         return await this.reviewRepository.find({
-          where: { orderItem: { id: orderItemId } },
-          relations: ["orderItem", "user"],
+            where: { orderItem: { id: orderItemId } },
+            relations: ["orderItem", "user"],
         });
-      }
+    }
 }

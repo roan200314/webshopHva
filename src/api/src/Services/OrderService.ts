@@ -170,7 +170,7 @@ export class OrderService {
      * Retrieves all merchandise items
      */
     public async getMerchandiseItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find( { where: { itemType: OrderItemType.Merchandise } });
+        return await this.orderItemRepository.find({ where: { itemType: OrderItemType.Merchandise } });
     }
 
     /**
@@ -179,9 +179,10 @@ export class OrderService {
      * Retrieves all game items
      */
     public async getGameItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find( {
+        return await this.orderItemRepository.find({
             where: {
-                itemType: OrderItemType.Game }
+                itemType: OrderItemType.Game,
+            },
         });
     }
 
@@ -191,17 +192,18 @@ export class OrderService {
      * Retrieves all featured items
      */
     public async getFeaturedItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find( {
+        return await this.orderItemRepository.find({
             where: {
-                featured: true }
+                featured: true,
+            },
         });
     }
-            /**
+    /**
      * Retrieves an order item by its ID.
      * @param id - The ID of the order item to retrieve.
      * @returns {Promise<OrderItem>}
      */
-            public async getGameItemById(id: number): Promise<OrderItem> {
-                return await this.orderItemRepository.findOne({ where: { id } });
-            }
+    public async getGameItemById(id: number): Promise<OrderItem> {
+        return await this.orderItemRepository.findOne({ where: { id } });
+    }
 }
