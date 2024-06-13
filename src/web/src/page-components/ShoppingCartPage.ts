@@ -275,6 +275,7 @@ export class ShoppingCartPage extends LitElement {
 
         if (result) {
             this._user = result.user;
+            this._user.savedPoints = result.savedPoints;
             this.cartItems = result.cartItems ? result.cartItems : [];
             this._email = result.user.email;
             this._name = result.user.name;
@@ -460,12 +461,15 @@ export class ShoppingCartPage extends LitElement {
         if( result === "yes"){
             this._usedPoints = this._user.savedPoints;
         }
+        else {
+            this._usedPoints = undefined;
+        }
     }
 
     private yourDiscount(): number | undefined{
         const points: number | undefined = this._user.savedPoints ;
         if(points){
-            const discount: number = points / 1000;
+            const discount: number = points / 100;
             return discount;
         }
         return undefined;
@@ -509,6 +513,7 @@ export class ShoppingCartPage extends LitElement {
 
 
     private clearShoppingCart(): void {
+        localStorage.removeItem("cart");
     }
 
     private _renderOrderConfirmation(): HTMLTemplateResult {
@@ -569,5 +574,21 @@ export class ShoppingCartPage extends LitElement {
 
     private async order(): Promise<void> {
         await this._orderService.order(this.cartItems, this._adressData, this._usedPoints);
+
+        const amount: any = this.calculateNewPoints();
+        await this.userService.setSavedPointsAmount(amount).then(() => this._user.savedPoints = amount);
+    }
+
+    private calculateNewPoints(): number {
+        if(this._user.savedPoints) {
+            if(this._usedPoints){
+                return this.newSavedPoints();
+            }
+            else{
+                return this._user.savedPoints + this.newSavedPoints();
+            }
+        } else {
+            return this._usedPoints || this.newSavedPoints();
+        }
     }
 }
