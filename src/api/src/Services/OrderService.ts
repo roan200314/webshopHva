@@ -121,7 +121,8 @@ export class OrderService {
     public async searchOrderItemByName(name: string): Promise<OrderItem[]> {
         return await this.orderItemRepository.find({where: {name: ILike(`%${name}%`)}});
     }
-
+    // TODO: usedpoints worden meegegeven zodat je kan zien wat de korting was in de database, 
+    // maar moet ook bij de savedPoints eraf gehaald worden bij de user. Omdat het met de order en user table zit kreeg ik t niet werkend. 
     public async order(body: any, user?): Promise<void> {
         const addressData: Address = body.adressData;
         const cartItems: CartItem[] = body.cartItem;
