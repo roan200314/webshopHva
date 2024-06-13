@@ -239,7 +239,7 @@ export class UserService {
         return (await response.json()) as CartItem[];
     }
 
-    public async setSavedPointsAmount(amount: number): Promise<void>{
+    public async setSavedPointsAmount(amount: number): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (!token) {

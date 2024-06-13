@@ -44,10 +44,7 @@ export class UserController {
     @ApiBearerAuth()
     @ApiOperation({ summary: "Updates the current users saved points" })
     @ApiResponse({ status: 200, description: "User's saved points updated" })
-    public async updateSavedPoints(
-        @Param("amount") amount: number,
-        @Request() req,
-    ): Promise<void> {
+    public async updateSavedPoints(@Param("amount") amount: number, @Request() req): Promise<void> {
         await this.userService.setSavedPointsAmount(req.user.email, amount);
     }
 

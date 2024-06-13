@@ -246,11 +246,11 @@ export class UserService {
         await this.usersRepository.save(user);
     }
 
-    public async getSavedPoint(id: number):  Promise<number> {
+    public async getSavedPoint(id: number): Promise<number> {
         const user: User = await this.usersRepository.findOne({
             where: { id },
         });
-        
+
         return user.savedPoints;
     }
 }

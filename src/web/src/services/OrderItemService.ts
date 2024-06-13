@@ -58,7 +58,11 @@ export class OrderItemService {
         }
     }
 
-    public async order(cartItems: CartItem[], adressData: Address, usedPoints: number | undefined): Promise<void> {
+    public async order(
+        cartItems: CartItem[],
+        adressData: Address,
+        usedPoints: number | undefined,
+    ): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (token) {
@@ -102,12 +106,12 @@ export class OrderItemService {
             method: "GET",
             headers: { ...headers, authorization: `Bearer ${token}` },
         });
-    
+
         if (!response.ok) {
             console.error(response);
             return undefined;
         }
-    
+
         return (await response.json()) as Order[];
     }
 
