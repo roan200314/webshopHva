@@ -19,7 +19,7 @@
         "preview": "run-p preview:api preview:web",
         "preview:api": "npm run preview -w src/api",
         "preview:web": "npm run preview -w src/web",
-        "test": "npm run test -w src/tests",
+        "test": "npm run test -w src/api",
         "typedoc": "typedoc"
     },
     "devDependencies": {

@@ -17,7 +17,7 @@ hic:
             - node_modules/
     script:
         - npm install
-#        - npm run test
+        - npm run test
         - npm run build
         - lftp -e "
             set net:max-retries 3;

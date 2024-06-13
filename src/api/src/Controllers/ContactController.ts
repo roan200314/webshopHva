@@ -9,7 +9,7 @@ export class ContactController {
     public constructor(private contactService: ContactService) {}
 
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: "Set an address for logged in user" })
+    @ApiOperation({ summary: "Sends an contact email" })
     @ApiResponse({ status: 200, description: "Successful creating / updating of address" })
     @ApiConsumes("application/json")
     @ApiBearerAuth()

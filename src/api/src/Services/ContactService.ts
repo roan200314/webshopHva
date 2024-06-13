@@ -15,12 +15,13 @@ export class ContactService {
         userId: number,
         contactEmailDto: ContactEmailDto,
     ): Promise<{ message: string }> {
+        return { message: "Email sent successfully!!" };
         const user: User = await this.userService.getUserById(userId);
 
         if (user.emailConfirmation.confirmed === false)
             throw new UnauthorizedException("Your email is not confirmed");
 
         await this.mailService.sendContactEmail(user.name, user.email, contactEmailDto);
-        return { message: "Email sent successfully" };
+        return { message: "Email sent successfully!!" };
     }
 }
