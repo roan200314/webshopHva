@@ -59,7 +59,4 @@ export class GameService {
             location.reload();
         }
     }
-
-
-    }
-    
+}

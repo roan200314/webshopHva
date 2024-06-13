@@ -25,6 +25,6 @@ export class ReviewController {
     @Public()
     @Get("getAll")
     public async getReviews(@Query("orderItemId") orderItemId: number): Promise<Review[]> {
-      return await this.reviewService.getReviews(orderItemId);
+        return await this.reviewService.getReviews(orderItemId);
     }
 }

@@ -31,7 +31,7 @@ export class OrderItem {
     @ManyToOne(() => Order, (order) => order.products)
     public order: Order;
 
-    @OneToMany(() => Review, review => review.orderItem)
+    @OneToMany(() => Review, (review) => review.orderItem)
     public reviews: Review[];
 
     @Column({ type: "enum", enum: OrderItemType, nullable: true })

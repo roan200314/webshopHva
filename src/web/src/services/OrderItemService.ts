@@ -131,15 +131,15 @@ export class OrderItemService {
         return (await response.json()) as OrderItem[];
     }
 
-        public async getOneGame(id: number): Promise<OrderItem | undefined> {
-            const response: Response = await fetch(`${viteConfiguration.API_URL}orderitems/${id}`, {
-                method: "GET",
-            });
-            if (response.ok) {
-                return response.json() as Promise<OrderItem>;
-            } else {
-                console.error("Failed to fetch game data:", response.statusText);
-                return undefined;
-            }
+    public async getOneGame(id: number): Promise<OrderItem | undefined> {
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderitems/${id}`, {
+            method: "GET",
+        });
+        if (response.ok) {
+            return response.json() as Promise<OrderItem>;
+        } else {
+            console.error("Failed to fetch game data:", response.statusText);
+            return undefined;
         }
+    }
 }

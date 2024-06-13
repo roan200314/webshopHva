@@ -157,7 +157,7 @@ export class ReviewPage extends LitElement {
         return html`
             <div class="product">
                 <h3>${game.name}</h3>
-                <img class="gameFoto" src="${imageURL}" alt="${game.id}">
+                <img class="gameFoto" src="${imageURL}" alt="${game.id}" />
                 <p>${game.description}</p>
                 <div class="price-info">
                     <div class="old-price">€${oldPrice}</div>
@@ -167,10 +167,10 @@ export class ReviewPage extends LitElement {
                 <div class="delivery-info">delivery price is included, only with LucaStars</div>
                 <div class="stock-status">in stock</div>
                 <button class="add-to-cart-button">In cart</button>
-                <div class="orderText">                   
-                ✓Collection from a LucaStars collection point possible<br>
-                ✓30 days' reflection period and free returns<br>
-                ✓Day and night customer service
+                <div class="orderText">
+                    ✓Collection from a LucaStars collection point possible<br />
+                    ✓30 days' reflection period and free returns<br />
+                    ✓Day and night customer service
                 </div>
             </div>
         `;
