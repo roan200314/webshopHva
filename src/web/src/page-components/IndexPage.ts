@@ -2,6 +2,10 @@ import { customElement, state } from "lit/decorators.js";
 import { html, LitElement, TemplateResult, css } from "lit";
 import { OrderItem } from "@shared/types/OrderItem";
 import { OrderItemService } from "../services/OrderItemService";
+import { CartItem } from "@shared/types";
+import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
+import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
+import { UserService } from "../services/UserService";
 
 @customElement("index-page")
 export class IndexPage extends LitElement {
@@ -199,12 +203,20 @@ export class IndexPage extends LitElement {
     `;
 
     private _orderItemService: OrderItemService = new OrderItemService();
+    private _userService: UserService = new UserService();
+
+    @state()
+    private loggedIn: boolean = false;
+    @state()
+    private employeeOrHigher: boolean = false;
 
     @state()
     private orderItems: OrderItem[] = [];
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+
+        await this.getUserInformation();
         await this.getFeaturedItems();
     }
 
@@ -297,9 +309,6 @@ export class IndexPage extends LitElement {
             </div>
         `;
     }
-    
-    
-    
 
     public async getFeaturedItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getFeaturedItems();
@@ -313,22 +322,121 @@ export class IndexPage extends LitElement {
     private renderOrderItem(orderItem: OrderItem): TemplateResult {
         const imageURL: string = orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        const shorterText: any = orderItem.description?.length > 150
-                ? orderItem.description?.substring(0, 150) + "..."
-                : orderItem.description;
-
+        const buttonLabel: string = orderItem.featured ? "Remove from Featured" : "Add to Featured";
+        const newFeaturedState: boolean = !orderItem.featured;
+        orderItem.description = orderItem.description ? this.getFirstSentence(orderItem.description) : "";
         return html`
             <div class="product">
                 <h3><a href="orderitem.html?id=${orderItem.id}">${orderItem.name}</a></h3>
-                <img id="order-item-image" src="${imageURL}" alt="${orderItem.name}" />
-                <p>${shorterText}</p>
+                <img src="${imageURL}" alt="${orderItem.name}" id="order-item-image"/>
+                <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
-                    <button class="add-to-cart-button">In cart</button>
+                    <button
+                            class="add-to-cart-button"
+                            @click=${async (): Promise<void> => await this.addToCart(orderItem)}
+                    >
+                        In cart
+                    </button>
+                    ${this.employeeOrHigher
+                            ? html`
+                                <button
+                                        class="addFeature"
+                                        @click=${async (): Promise<void> =>
+                                    await this.setOrderItemAsFeatured(orderItem.id, newFeaturedState)}
+                                >
+                                    ${buttonLabel}
+                                </button>`
+                            : ""}
                 </div>
             </div>
         `;
+    }
+
+    public getFirstSentence(text: string): string {
+        const sentenceEndings:string[] = [".", "!", "?"];
+        let endOfFirstSentence:number = -1;
+
+        for (const ending of sentenceEndings) {
+            const index:any = text.indexOf(ending);
+            if (index !== -1 && (endOfFirstSentence === -1 || index < endOfFirstSentence)) {
+                endOfFirstSentence = index;
+            }
+        }
+
+        if (endOfFirstSentence !== -1) {
+            return text.substring(0, endOfFirstSentence + 1).trim();
+        }
+
+        const words:any = text.split(/\s+/);
+        const firstTwentyWords:string = words.slice(0, 20).join(" ");
+        return firstTwentyWords.trim();
+    }
+
+    private async addToCart(orderItem: OrderItem): Promise<void> {
+        let cartItems: CartItem[] = [];
+
+        if (this.loggedIn) {
+            const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+
+            if (result) {
+                cartItems = result;
+            }
+        } else {
+            try {
+                cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+            } catch (error) {
+                console.error("Error parsing cart items from localStorage", error);
+            }
+
+            const cartItem: CartItem | undefined = cartItems.find(
+                (ci: CartItem) => ci.item.id === orderItem.id,
+            );
+
+            if (cartItem === undefined) {
+                cartItems.push({
+                    item: orderItem,
+                    amount: 1,
+                });
+            } else {
+                cartItem.amount++;
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cartItems));
+        }
+        this.dispatchCartUpdatedEvent(cartItems);
+    }
+
+    private dispatchCartUpdatedEvent(cartItems: CartItem[]): void {
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems,
+                },
+                bubbles: true,
+                composed: true,
+            }),
+        );
+    }
+
+    private async getUserInformation(): Promise<void> {
+        const userInformation: UserHelloResponse | undefined = await this._userService.getWelcome();
+        if (!userInformation || !userInformation.user) return;
+
+        this.loggedIn = true;
+
+        if (!userInformation.user.authorizationLevel) return;
+
+        if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+            userInformation.user.authorizationLevel === AuthorizationLevel.EMPLOYEE || userInformation.user.authorizationLevel === AuthorizationLevel.ADMIN
+        ) {
+            this.employeeOrHigher = true;
+        }
+    }
+
+    private async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
+        await this._orderItemService.setOrderAsFeatured(id, setFeatured);
+        await this.getFeaturedItems();
     }
 }
