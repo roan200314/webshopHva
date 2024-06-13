@@ -181,11 +181,15 @@ export class ShoppingCartPage extends LitElement {
             text-align: center;
         }
 
-        #yes{
+        p{
+            margin-top: 0;
         }
 
-        #no{
+        #discountOption{
+            margin-bottom: 10px;
         }
+
+
 
     `;
 
@@ -393,7 +397,10 @@ export class ShoppingCartPage extends LitElement {
         );
     }
 
+    
+
     private _renderInfoConfirmation(): HTMLTemplateResult {
+        const discount: number | undefined= this.yourDiscount();
         return html`
             <h1 class="title">Just a few steps left to go!</h1>
             <div id="steps">
@@ -432,7 +439,8 @@ export class ShoppingCartPage extends LitElement {
                     /><br />
                     <div id="points">
                         <label>you currently have ${this._user.savedPoints} points saved, do you want to use them? </label> <br>
-                        <select @change="${this._usePoints}">
+                        <p>You will save &euro;${discount} with this transaction</p>
+                        <select id="discountOption" @change="${this._usePoints}">
                             <option value="no">No</option>
                             <option value="yes">Yes</option>
                         </select>                 
@@ -452,6 +460,15 @@ export class ShoppingCartPage extends LitElement {
         if( result === "yes"){
             this._usedPoints = this._user.savedPoints;
         }
+    }
+
+    private yourDiscount(): number | undefined{
+        const points: number | undefined = this._user.savedPoints ;
+        if(points){
+            const discount: number = points / 100;
+            return discount;
+        }
+        return undefined;
     }
 
     private _renderUserConfirmation(): HTMLTemplateResult {
@@ -491,7 +508,7 @@ export class ShoppingCartPage extends LitElement {
         void this.order();
         this.clearShoppingCart();
         return html` <h1 class="title">Thank you for ordering!</h1> 
-                            <h2> A confirmation email of your order will be sent shortly</h2>
+                            <h2> A confirmation email for your order will be sent shortly</h2>
                     `;
     }
 
