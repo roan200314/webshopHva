@@ -61,6 +61,7 @@ export class CreateOrderItemComponent extends LitElement {
     }
     `;
 
+
     @state()
     private orderItem: any = {
         name: "",
@@ -87,29 +88,23 @@ export class CreateOrderItemComponent extends LitElement {
         if (!this._isLoggedIn || !this._isEmployee) return html``;
 
         return html`
-            <form @submit=${this.createOrderItem}>
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" @input=${this.updateName} required />
-                <label for="price">Price</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    id="price"
-                    name="price"
-                    @input=${this.updatePrice}
-                    required
-                />
-                <label for="description">Description</label>
-                <textarea
-                    id="description"
-                    name="description"
-                    @input=${this.updateDescription}
-                    required
-                ></textarea>
-                <label for="image">ImageURL</label>
-                <input type="text" id="image" name="image" @input=${this.updateImage} />
-                <button type="submit">Create</button>
-            </form>
+       <form @submit=${this.createOrderItem} class="order-form">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" @input=${this.updateName} required />
+            <label for="price">Price</label>
+            <input type="number" step="0.01" id="price" name="price" @input=${this.updatePrice} required/>
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                name="description"
+                @input=${this.updateDescription}
+                required
+            ></textarea>
+            <label for="image">ImageURL</label>
+            <input type="text" id="image" name="image" @input=${this.updateImage} />
+            <button type="submit">Create</button>
+        </form>
+
         `;
     }
 
