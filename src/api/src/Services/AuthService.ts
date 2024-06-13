@@ -54,7 +54,7 @@ export class AuthService {
                 email: loginResult.email,
                 name: loginResult.name,
                 authorizationLevel: loginResult.authorizationLevel,
-                savedPoints: loginResult.savedPoints
+                savedPoints: loginResult.savedPoints,
             };
 
             this.Logger.log(`User ${loginResult.email} logged in successfully`);

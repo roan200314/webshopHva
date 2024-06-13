@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, MinLength} from "class-validator";
+import { IsInt, IsNotEmpty, MinLength } from "class-validator";
 import { Expose } from "class-transformer";
 
 export class UserDto {

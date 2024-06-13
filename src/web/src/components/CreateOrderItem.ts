@@ -9,58 +9,57 @@ import { AuthorizationLevel } from "../models/interfaces/AuthorizationLevel";
 export class CreateOrderItemComponent extends LitElement {
     public static styles = css`
         .order-form {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 600px;
-        margin: 20px auto; 
-        padding: 20px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .order-form label {
-        margin-bottom: 8px;
-        font-weight: bold;
-        color: #333;
-    }
+        .order-form label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
 
-    .order-form input[type="text"],
-    .order-form input[type="number"],
-    .order-form textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-        color: #333;
-    }
+        .order-form input[type="text"],
+        .order-form input[type="number"],
+        .order-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #333;
+        }
 
-    .order-form textarea {
-        resize: vertical;
-        height: 100px;
-    }
+        .order-form textarea {
+            resize: vertical;
+            height: 100px;
+        }
 
-    .order-form button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        color: white;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-    }
+        .order-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
 
-    .order-form button:hover {
-        background-color: #0056b3;
-    }
+        .order-form button:hover {
+            background-color: #0056b3;
+        }
     `;
-
 
     @state()
     private orderItem: any = {
@@ -126,9 +125,7 @@ export class CreateOrderItemComponent extends LitElement {
         if (!userData) return;
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        this._isEmployee = !(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-            !userData || (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE)
+        this._isEmployee = !((!userData || (userData.user.authorizationLevel !== AuthorizationLevel.ADMIN && userData.user.authorizationLevel !== AuthorizationLevel.EMPLOYEE))
         );
     }
 

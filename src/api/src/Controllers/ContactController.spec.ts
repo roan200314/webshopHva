@@ -10,7 +10,7 @@ describe("ContactController", () => {
     beforeEach(async () => {
         const moduleRef: TestingModule = await Test.createTestingModule({
             controllers: [ContactController],
-            providers: [{ provide: ContactService, useValue: { sendContactEmail: jest.fn() }}],
+            providers: [{ provide: ContactService, useValue: { sendContactEmail: jest.fn() } }],
         }).compile();
 
         contactService = moduleRef.get<ContactService>(ContactService);
@@ -31,7 +31,10 @@ describe("ContactController", () => {
 
             jest.spyOn(contactService, "sendContactEmail").mockResolvedValue(result);
 
-            const response: { message: string } = await contactController.sendContactEmail({ user: { id: 1 } }, {} as ContactEmailDto);
+            const response: { message: string } = await contactController.sendContactEmail(
+                { user: { id: 1 } },
+                {} as ContactEmailDto,
+            );
             expect(response).toEqual(result);
         });
 

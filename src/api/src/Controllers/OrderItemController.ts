@@ -18,7 +18,7 @@ export class OrderItemController {
     public async getAllOrderItems(): Promise<OrderItem[]> {
         return this.orderService.getAllOrderItems();
     }
-    
+
     @ApiOperation({ summary: "Retrieves order history" })
     @ApiResponse({ status: 200, description: "Successful retrieval of order history" })
     @ApiBearerAuth()

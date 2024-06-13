@@ -10,7 +10,6 @@ import { OrderItemType } from "src/Models/Enumerations/OrderItemType";
 import { UserService } from "./UserService";
 import { User } from "../Models/Entities/User";
 
-
 @Injectable()
 export class OrderService {
     public constructor(
@@ -20,8 +19,7 @@ export class OrderService {
         private orderItemRepository: Repository<OrderItem>,
         private readonly userService: UserService,
         private readonly mailService: MailService,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates an order item.
@@ -58,10 +56,9 @@ export class OrderService {
     }
 
     public async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
-        const orderItem: OrderItem = await this.orderItemRepository.findOne(
-            {
-                where: {id}
-            });
+        const orderItem: OrderItem = await this.orderItemRepository.findOne({
+            where: { id },
+        });
 
         if (!orderItem) {
             throw new Error("Order item not found");
@@ -78,7 +75,7 @@ export class OrderService {
      * @returns {Promise<OrderItem>}
      */
     public async getOrderItemById(id: number): Promise<OrderItem> {
-        return await this.orderItemRepository.findOne({where: {id}});
+        return await this.orderItemRepository.findOne({ where: { id } });
     }
 
     /**
@@ -87,14 +84,13 @@ export class OrderService {
      * @returns {Promise<void>}
      */
     public async deleteOrderItemById(id: number): Promise<{ message: string }> {
-        const orderItem: any = await this.orderItemRepository.findOne({where: {id}});
-
+        const orderItem: any = await this.orderItemRepository.findOne({ where: { id } });
 
         if (!orderItem) {
-            return {message: "Order item not found"};
+            return { message: "Order item not found" };
         }
         await this.orderItemRepository.delete(id);
-        return {message: "Order removed successfully"};
+        return { message: "Order removed successfully" };
     }
 
     /**
@@ -105,7 +101,7 @@ export class OrderService {
      */
     public async updateOrderItem(id: number, orderItem: OrderItem): Promise<OrderItem> {
         // Retrieve the order item by its ID
-        const orderToUpdate: any = await this.orderItemRepository.findOne({where: {id}});
+        const orderToUpdate: any = await this.orderItemRepository.findOne({ where: { id } });
 
         // Check if the order item exists
         if (!orderToUpdate) {
@@ -113,7 +109,7 @@ export class OrderService {
         }
         // Update the order item
         await this.orderItemRepository.update(id, orderItem);
-        return await this.orderItemRepository.findOne({where: {id}});
+        return await this.orderItemRepository.findOne({ where: { id } });
     }
 
     /**
@@ -122,10 +118,10 @@ export class OrderService {
      * @returns {Promise<OrderItem[]>}
      */
     public async searchOrderItemByName(name: string): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find({where: {name: ILike(`%${name}%`)}});
+        return await this.orderItemRepository.find({ where: { name: ILike(`%${name}%`) } });
     }
-    // TODO: usedpoints worden meegegeven zodat je kan zien wat de korting was in de database, 
-    // maar moet ook bij de savedPoints eraf gehaald worden bij de user. Omdat het met de order en user table zit kreeg ik t niet werkend. 
+    // TODO: usedpoints worden meegegeven zodat je kan zien wat de korting was in de database,
+    // maar moet ook bij de savedPoints eraf gehaald worden bij de user. Omdat het met de order en user table zit kreeg ik t niet werkend.
     public async order(body: any, user?): Promise<void> {
         const addressData: Address = body.adressData;
         const cartItems: CartItem[] = body.cartItem;
@@ -175,9 +171,9 @@ export class OrderService {
     public async retrieveOrder(userId: number): Promise<Order[]> {
         return await this.orderRepository.find({
             where: {
-                user: {id: userId}
+                user: { id: userId },
             },
-            relations: ["products"]
+            relations: ["products"],
         });
     }
 
@@ -189,8 +185,8 @@ export class OrderService {
     public async getMerchandiseItems(): Promise<OrderItem[]> {
         return await this.orderItemRepository.find({
             where: {
-                itemType: OrderItemType.Merchandise
-            }
+                itemType: OrderItemType.Merchandise,
+            },
         });
     }
 
@@ -227,7 +223,7 @@ export class OrderService {
      */
     public async getGameItemById(id: number): Promise<OrderItem> {
         return await this.orderItemRepository.findOne({
-            where: {id}
+            where: { id },
         });
     }
 }

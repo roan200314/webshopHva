@@ -58,7 +58,7 @@ export class ShoppingCartPage extends LitElement {
             margin-bottom: 5px;
         }
 
-        h2{
+        h2 {
             text-align: center;
             color: #4b515d;
         }
@@ -81,8 +81,8 @@ export class ShoppingCartPage extends LitElement {
             font-size: 1.2em;
             font-weight: bolder;
             padding: 10px;
-            background-color: #4b515d; 
-            color: white; 
+            background-color: #4b515d;
+            color: white;
         }
 
         td {
@@ -165,32 +165,29 @@ export class ShoppingCartPage extends LitElement {
             margin-left: 25%;
         }
 
-        #total{
+        #total {
             text-align: right;
         }
 
-        .infotxt{
+        .infotxt {
             color: white;
             background-color: #4b515d;
             padding: 8px;
             margin-top: 0;
-            margin-bottom: 0 ;
+            margin-bottom: 0;
         }
 
-        #points{
+        #points {
             text-align: center;
         }
 
-        p{
+        p {
             margin-top: 0;
         }
 
-        #discountOption{
+        #discountOption {
             margin-bottom: 10px;
         }
-
-
-
     `;
 
     @state()
@@ -315,16 +312,20 @@ export class ShoppingCartPage extends LitElement {
                     return html`
                         <tr>
                             <td>${cartItem.item.name}</td>
-                            <td>   <input
+                            <td>
+                                <input
                                     type="number"
                                     value=${cartItem.amount}
                                     @change="${async (e: Event): Promise<void> =>
                                         await this._changeCartAmount(e, cartItem)}"
-                                /></td>
+                                />
+                            </td>
                             <td>${cartItem.item.price}</td>
                             <td>
-                            <b>&euro;${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2,
-                                )}</b
+                                <b
+                                    >&euro;${(
+                                        Math.round(cartItem.item.price * cartItem.amount * 100) / 100
+                                    ).toFixed(2)}</b
                                 >
                             </td>
                             <td>
@@ -397,10 +398,8 @@ export class ShoppingCartPage extends LitElement {
         );
     }
 
-    
-
     private _renderInfoConfirmation(): HTMLTemplateResult {
-        const discount: number | undefined= this.yourDiscount();
+        const discount: number | undefined = this.yourDiscount();
         return html`
             <h1 class="title">Just a few steps left to go!</h1>
             <div id="steps">
@@ -412,10 +411,11 @@ export class ShoppingCartPage extends LitElement {
                 <h2 class="infotxt">Please confirm your information</h2>
                 <form>
                     ${this._isLoggedIn
-                        ? html`<label>Name</label> <input type="text" disabled value="${this._name}" /> <br>
-                               <label>Email</label> <input type="text" disabled value="${this._email}" /> <br>`
+                        ? html`<label>Name</label> <input type="text" disabled value="${this._name}" /> <br />
+                              <label>Email</label> <input type="text" disabled value="${this._email}" />
+                              <br />`
                         : html`<label>Name</label> <input type="text" /><br />
-                               <label>Email</label> <input type="text" /><br />`}
+                              <label>Email</label> <input type="text" /><br />`}
 
                     <label>Street</label>
                     <input
@@ -438,12 +438,16 @@ export class ShoppingCartPage extends LitElement {
                         value="${this._adressData.country}"
                     /><br />
                     <div id="points">
-                        <label>you currently have ${this._user.savedPoints} points saved, do you want to use them? </label> <br>
+                        <label
+                            >you currently have ${this._user.savedPoints} points saved, do you want to use
+                            them?
+                        </label>
+                        <br />
                         <p>You will save &euro;${discount} with this transaction</p>
                         <select id="discountOption" @change="${this._usePoints}">
                             <option value="no">No</option>
                             <option value="yes">Yes</option>
-                        </select>                 
+                        </select>
                     </div>
                 </form>
             </div>
@@ -455,19 +459,18 @@ export class ShoppingCartPage extends LitElement {
         `;
     }
 
-    private _usePoints(e: Event) : void {
+    private _usePoints(e: Event): void {
         const result: string = (e.target as HTMLSelectElement).value;
-        if( result === "yes"){
+        if (result === "yes") {
             this._usedPoints = this._user.savedPoints;
-        }
-        else {
+        } else {
             this._usedPoints = undefined;
         }
     }
 
-    private yourDiscount(): number | undefined{
-        const points: number | undefined = this._user.savedPoints ;
-        if(points){
+    private yourDiscount(): number | undefined {
+        const points: number | undefined = this._user.savedPoints;
+        if (points) {
             const discount: number = points / 100;
             return discount;
         }
@@ -476,10 +479,9 @@ export class ShoppingCartPage extends LitElement {
 
     private newSavedPoints(): number {
         const totalAmount: number = this.calculateTotalPrice();
-        const newPoints :number = Math.trunc(totalAmount);
+        const newPoints: number = Math.trunc(totalAmount);
 
         return newPoints;
-
     }
 
     private _renderUserConfirmation(): HTMLTemplateResult {
@@ -510,7 +512,6 @@ export class ShoppingCartPage extends LitElement {
         `;
     }
 
-
     private clearShoppingCart(): void {
         localStorage.removeItem("cart");
     }
@@ -518,9 +519,10 @@ export class ShoppingCartPage extends LitElement {
     private _renderOrderConfirmation(): HTMLTemplateResult {
         void this.order();
         this.clearShoppingCart();
-        return html` <h1 class="title">Thank you for ordering!</h1> 
-                            <h2> A confirmation email for your order will be sent shortly</h2>
-                    `;
+        return html`
+            <h1 class="title">Thank you for ordering!</h1>
+            <h2>A confirmation email for your order will be sent shortly</h2>
+        `;
     }
 
     private calculateTotalPrice(): number {
@@ -575,15 +577,14 @@ export class ShoppingCartPage extends LitElement {
         await this._orderService.order(this.cartItems, this._adressData, this._usedPoints);
 
         const amount: any = this.calculateNewPoints();
-        await this.userService.setSavedPointsAmount(amount).then(() => this._user.savedPoints = amount);
+        await this.userService.setSavedPointsAmount(amount).then(() => (this._user.savedPoints = amount));
     }
 
     private calculateNewPoints(): number {
-        if(this._user.savedPoints) {
-            if(this._usedPoints){
+        if (this._user.savedPoints) {
+            if (this._usedPoints) {
                 return this.newSavedPoints();
-            }
-            else{
+            } else {
                 return this._user.savedPoints + this.newSavedPoints();
             }
         } else {

@@ -7,7 +7,6 @@ import { OrderItemService } from "../services/OrderItemService";
 
 @customElement("account-page")
 export class AccountPage extends LitElement {
-
     public static styles = css`
         .title {
             color: #ecae20;
@@ -88,7 +87,7 @@ export class AccountPage extends LitElement {
     protected render(): TemplateResult {
         return html`
             <h1 class="title">Account Page of ${this.name}</h1>
-            <h3> Je hebt momenteel ${this.userData?.savedPoints} aantal punten gespaard staan</h3>
+            <h3>Je hebt momenteel ${this.userData?.savedPoints} aantal punten gespaard staan</h3>
             <div class="orderHistory">
                 ${this.orders.map((order) => {
                     return html`
@@ -96,7 +95,7 @@ export class AccountPage extends LitElement {
                             <h2>Order #${order.id}</h2>
                             <ul>
                                 <li><b>Send to:</b> ${order.street}, ${order.city}, ${order.country}</li>
-                                <br>
+                                <br />
                                 <li><b>Order status: ${order.status}</b></li>
                                 <table>
                                     <tr>
@@ -140,6 +139,3 @@ export class AccountPage extends LitElement {
         }
     }
 }
-
-      
-
