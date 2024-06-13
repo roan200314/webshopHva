@@ -8,5 +8,5 @@ export type Games = {
     url: string;
     authors: string;
     tags: string;
-    price: number
+    price: number;
 };

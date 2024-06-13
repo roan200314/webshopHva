@@ -25,7 +25,6 @@ export class OrderItemsComponent extends LitElement {
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             flex-direction: column;
-
         }
 
         .product h3 {
@@ -105,11 +104,10 @@ export class OrderItemsComponent extends LitElement {
             object-fit: cover;
             width: 40vh;
         }
-
     `;
-    @property({type: Array})
+    @property({ type: Array })
     public orderItems: OrderItem[] = [];
-    @property({type: Array})
+    @property({ type: Array })
     public unfilteredOrderItems: OrderItem[] = [];
     private _orderItemService: OrderItemService = new OrderItemService();
     private _userService: UserService = new UserService();
@@ -124,7 +122,7 @@ export class OrderItemsComponent extends LitElement {
     private _isNameAscending: boolean = false;
 
     @state()
-    private _priceRange: { min: number, max: number } = {min: 0, max: 1000};
+    private _priceRange: { min: number; max: number } = { min: 0, max: 1000 };
 
     @state()
     private _sliderMin: number = 0;
@@ -151,7 +149,18 @@ export class OrderItemsComponent extends LitElement {
     }
 
     public render(): TemplateResult {
+        const slider: any = html` <div class="slider-container">
+            <div class="slider">
+                <div id="min-handle" class="slider-handle" style="left: 0;"></div>
+                <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
+                <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
+            </div>
+            <label for="min-price">Min Price: €${this._priceRange.min}</label>
+            <label for="max-price">Max Price: €${this._priceRange.max}</label>
+        </div>`;
+
         return html`
+            ${slider}
             <section class="product-section" id="product-section">
                 ${this.orderItems.map((orderItem: OrderItem) => this.renderOrderItem(orderItem))}
             </section>
@@ -171,15 +180,15 @@ export class OrderItemsComponent extends LitElement {
         const min: number = parseFloat(this._minHandle?.style.left || "0");
         const max: number = parseFloat(this._maxHandle?.style.left || "100");
         this._priceRange = {
-            min: Math.round(min * (this._sliderMax - this._sliderMin) / 100 + this._sliderMin),
-            max: Math.round(max * (this._sliderMax - this._sliderMin) / 100 + this._sliderMin)
+            min: Math.round((min * (this._sliderMax - this._sliderMin)) / 100 + this._sliderMin),
+            max: Math.round((max * (this._sliderMax - this._sliderMin)) / 100 + this._sliderMin),
         };
         this.filterByPriceRange();
     }
 
     private filterByPriceRange(): void {
-        this.orderItems = this.unfilteredOrderItems.filter(item =>
-            item.price >= this._priceRange.min && item.price <= this._priceRange.max
+        this.orderItems = this.unfilteredOrderItems.filter(
+            (item) => item.price >= this._priceRange.min && item.price <= this._priceRange.max,
         );
         this.requestUpdate();
     }
@@ -188,8 +197,10 @@ export class OrderItemsComponent extends LitElement {
         event.preventDefault();
 
         const handleMouseMove: any = (moveEvent: MouseEvent): void => {
-            const sliderRect: DOMRect = (this.shadowRoot?.querySelector(".slider") as HTMLElement).getBoundingClientRect();
-            let newPosition: number = (moveEvent.clientX - sliderRect.left) / sliderRect.width * 100;
+            const sliderRect: DOMRect = (
+                this.shadowRoot?.querySelector(".slider") as HTMLElement
+            ).getBoundingClientRect();
+            let newPosition: number = ((moveEvent.clientX - sliderRect.left) / sliderRect.width) * 100;
 
             if (handleType === "min") {
                 newPosition = Math.min(newPosition, parseFloat(this._maxHandle?.style.left || "100") - 5);
@@ -223,10 +234,10 @@ export class OrderItemsComponent extends LitElement {
             this.orderItems = result;
 
             // Calculate the minimum and maximum prices
-            const prices: number[] = result.map(item => item.price);
+            const prices: number[] = result.map((item) => item.price);
             this._sliderMin = Math.min(...prices);
             this._sliderMax = Math.max(...prices);
-            this._priceRange = {min: this._sliderMin, max: this._sliderMax};
+            this._priceRange = { min: this._sliderMin, max: this._sliderMax };
         }
     }
 
@@ -310,25 +321,25 @@ export class OrderItemsComponent extends LitElement {
         }
     }
 
-        public getFirstSentence(text: string): string {
-            const sentenceEndings:string[] = [".", "!", "?"];
-            let endOfFirstSentence:number = -1;
+    public getFirstSentence(text: string): string {
+        const sentenceEndings: string[] = [".", "!", "?"];
+        let endOfFirstSentence: number = -1;
 
-            for (const ending of sentenceEndings) {
-                const index:any = text.indexOf(ending);
-                if (index !== -1 && (endOfFirstSentence === -1 || index < endOfFirstSentence)) {
-                    endOfFirstSentence = index;
-                }
+        for (const ending of sentenceEndings) {
+            const index: any = text.indexOf(ending);
+            if (index !== -1 && (endOfFirstSentence === -1 || index < endOfFirstSentence)) {
+                endOfFirstSentence = index;
             }
-
-            if (endOfFirstSentence !== -1) {
-                return text.substring(0, endOfFirstSentence + 1).trim();
-            }
-
-            const words:any = text.split(/\s+/);
-            const firstTwentyWords:string = words.slice(0, 20).join(" ");
-            return firstTwentyWords.trim();
         }
+
+        if (endOfFirstSentence !== -1) {
+            return text.substring(0, endOfFirstSentence + 1).trim();
+        }
+
+        const words: any = text.split(/\s+/);
+        const firstTwentyWords: string = words.slice(0, 20).join(" ");
+        return firstTwentyWords.trim();
+    }
 
     private async getMerchandiseItems(): Promise<void> {
         const result: OrderItem[] | undefined = await this._orderItemService.getMerchandiseItems();
@@ -354,26 +365,25 @@ export class OrderItemsComponent extends LitElement {
         return html`
             <div class="product">
                 <h3><a href="orderitem.html?id=${orderItem.id}">${orderItem.name}</a></h3>
-                <img src="${imageURL}" alt="${orderItem.name}" id="order-item-image"/>
+                <img src="${imageURL}" alt="${orderItem.name}" id="order-item-image" />
                 <p>${orderItem.description}</p>
                 <div class="buttons">
                     <span class="base-price">€ ${orderItem.price}</span>
                     <button
-                            class="add-to-cart-button"
-                            @click=${async (): Promise<void> => await this.addToCart(orderItem)}
+                        class="add-to-cart-button"
+                        @click=${async (): Promise<void> => await this.addToCart(orderItem)}
                     >
                         In cart
                     </button>
                     ${this.employeeOrHigher
-                            ? html`
-                                <button
-                                        class="addFeature"
-                                        @click=${async (): Promise<void> =>
-                                                await this.setOrderItemAsFeatured(orderItem.id, newFeaturedState)}
-                                >
-                                    ${buttonLabel}
-                                </button>`
-                            : ""}
+                        ? html` <button
+                              class="addFeature"
+                              @click=${async (): Promise<void> =>
+                                  await this.setOrderItemAsFeatured(orderItem.id, newFeaturedState)}
+                          >
+                              ${buttonLabel}
+                          </button>`
+                        : ""}
                 </div>
             </div>
         `;

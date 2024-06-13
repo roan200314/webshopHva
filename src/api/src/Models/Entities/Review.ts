@@ -16,9 +16,9 @@ export class Review {
     @ApiProperty()
     public rating: number;
 
-    @ManyToOne(() => OrderItem, orderItem => orderItem.reviews)
+    @ManyToOne(() => OrderItem, (orderItem) => orderItem.reviews)
     public orderItem: OrderItem;
 
-    @ManyToOne(() => User, user => user.reviews)
+    @ManyToOne(() => User, (user) => user.reviews)
     public user: User;
 }

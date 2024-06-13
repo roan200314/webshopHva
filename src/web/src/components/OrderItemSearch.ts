@@ -18,7 +18,7 @@ export class OrderItemSearchComponent extends LitElement {
         }
 
         .noresults {
-            color:red !important;
+            color: red !important;
         }
     `;
 
@@ -60,18 +60,19 @@ export class OrderItemSearchComponent extends LitElement {
                     @input=${this.handleInputChange}
                 />
             </form>
-            <div id="search-result-wrap">Search results: &nbsp
+            <div id="search-result-wrap">
+                Search results: &nbsp
                 <p class="search_result ${this._noResults ? "noresults" : ""}">${this._search}</p>
             </div>
         `;
     }
     /**
-     * 
-     * @param event 
+     *
+     * @param event
      * Prevents the form from submitting
      */
     private handleFormSubmit(event: Event): void {
-        event.preventDefault(); 
+        event.preventDefault();
     }
 
     /**
@@ -99,12 +100,15 @@ export class OrderItemSearchComponent extends LitElement {
             return;
         }
 
-        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/search/${this._search}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+        const response: Response = await fetch(
+            `${viteConfiguration.API_URL}orderItems/search/${this._search}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             },
-        });
+        );
 
         if (response.ok) {
             const orderItems: OrderItem[] = await response.json();
