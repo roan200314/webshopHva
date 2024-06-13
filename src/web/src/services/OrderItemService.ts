@@ -118,7 +118,6 @@ export class OrderItemService {
 
         if (!response.ok) {
             console.error(response);
-
             return undefined;
         }
 

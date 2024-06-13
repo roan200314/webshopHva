@@ -7,6 +7,8 @@ import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
 import { Address, CartItem } from "@shared/types";
 import { MailService } from "./MailService";
 import { OrderItemType } from "src/Models/Enumerations/OrderItemType";
+import { UserService } from "./UserService";
+import { User } from "../Models/Entities/User";
 
 
 @Injectable()
@@ -16,6 +18,7 @@ export class OrderService {
         private orderRepository: Repository<Order>,
         @InjectRepository(OrderItem)
         private orderItemRepository: Repository<OrderItem>,
+        private readonly userService: UserService,
         private readonly mailService: MailService,
     ) {
     }
@@ -140,19 +143,21 @@ export class OrderService {
         newOrder.name = "Harry";
 
         if (user) {
+            const dbUser: User = await this.userService.getUserById(user.id);
+
+            if (!dbUser) {
+                throw new Error("User not found");
+            }
+
+            newOrder.user = dbUser;
             newOrder.email = user.email;
             newOrder.name = user.name;
             newOrder.usedPoints = usedPoints;
-
-            if (!newOrder.usedPoints) {
-
-            }
 
             await this.mailService.orderConfirmation(user.email, user.name, cartItems);
         }
 
         const savedOrder: any = await this.orderRepository.save(newOrder);
-
 
         for (const cartItem of cartItems) {
             for (let i: number = 0; i < cartItem.amount; i++) {
