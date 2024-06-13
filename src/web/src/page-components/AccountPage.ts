@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, css, html } from "lit";
+import { css, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { Order, UserData } from "@shared/types";
 import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
@@ -15,11 +15,11 @@ export class AccountPage extends LitElement {
             margin: 3%;
         }
 
-        h2{
+        h2 {
             text-align: left;
         }
 
-        h3{
+        h3 {
             text-align: center;
         }
 
@@ -29,7 +29,7 @@ export class AccountPage extends LitElement {
             margin-bottom: 100px;
         }
 
-        .order{
+        .order {
             background-color: #fff;
             padding: 10px;
             border: 1px solid #ccc;
@@ -38,7 +38,7 @@ export class AccountPage extends LitElement {
             margin: 15px;
         }
 
-        li{
+        li {
             list-style: none;
         }
 
@@ -69,7 +69,6 @@ export class AccountPage extends LitElement {
     private userService: UserService = new UserService();
     private _orderService: OrderItemService = new OrderItemService();
 
-
     @state()
     private userData: UserData | undefined;
 
@@ -81,23 +80,9 @@ export class AccountPage extends LitElement {
 
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+
         await this.getWelcome();
         await this.getOrderHistory();
-    }
-
-    private async getWelcome(): Promise<void> {
-        const result: UserHelloResponse | undefined = await this.userService.getWelcome();
-        this.userData = result?.user; 
-
-        if(this.userData) {
-            this.userData.savedPoints = result?.savedPoints;  
-        }
-
-        console.log(this.userData);
-
-        if(result){
-            this.name = this.userData?.name;
-        }
     }
 
     protected render(): TemplateResult {
@@ -110,7 +95,8 @@ export class AccountPage extends LitElement {
                         <div class="order">
                             <h2>Order #${order.id}</h2>
                             <ul>
-                                <li><b>Send to:</b> ${order.street}, ${order.city}, ${order.country}</li> <br>
+                                <li><b>Send to:</b> ${order.street}, ${order.city}, ${order.country}</li>
+                                <br>
                                 <li><b>Order status: ${order.status}</b></li>
                                 <table>
                                     <tr>
@@ -119,12 +105,12 @@ export class AccountPage extends LitElement {
                                     </tr>
                                     ${order.products.map((orderItem) => {
                                         return html`
-                                        <tr>
+                                            <tr>
                                                 <td>${orderItem.name}</td>
                                                 <td>&euro;${orderItem.price}</td>
-                                        </tr>
+                                            </tr>
                                         `;
-                                        })}    
+                                    })}
                                 </table>
                             </ul>
                         </div>
@@ -132,6 +118,19 @@ export class AccountPage extends LitElement {
                 })}
             </div>
         `;
+    }
+
+    private async getWelcome(): Promise<void> {
+        const result: UserHelloResponse | undefined = await this.userService.getWelcome();
+        this.userData = result?.user;
+
+        if (this.userData) {
+            this.userData.savedPoints = result?.savedPoints;
+        }
+
+        if (result) {
+            this.name = this.userData?.name;
+        }
     }
 
     private async getOrderHistory(): Promise<void> {

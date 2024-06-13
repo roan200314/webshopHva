@@ -248,7 +248,6 @@ export class ShoppingCartPage extends LitElement {
         } else if (this.shoppingCartStep === 2) {
             return this._renderUserConfirmation();
         } else if (this.shoppingCartStep === 3) {
-            console.log("hi");
             return this._renderInfoConfirmation();
         } else if (this.shoppingCartStep === 4) {
             return this._renderOrderConfirmation();
