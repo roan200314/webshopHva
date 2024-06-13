@@ -87,7 +87,11 @@ export class AccountPage extends LitElement {
 
     private async getWelcome(): Promise<void> {
         const result: UserHelloResponse | undefined = await this.userService.getWelcome();
-        this.userData = result?.user;   
+        this.userData = result?.user; 
+
+        if(this.userData) {
+            this.userData.savedPoints = result?.savedPoints;  
+        }
 
         console.log(this.userData);
 
