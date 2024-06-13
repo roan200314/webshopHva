@@ -52,7 +52,7 @@ export class OrderItemsComponent extends LitElement {
         .more-info-button,
         .add-to-cart-button {
             padding: 5px 10px;
-            background-color: #f0c040;
+            background-color: #ffaa00;
             border: none;
             color: white;
             cursor: pointer;
@@ -104,6 +104,10 @@ export class OrderItemsComponent extends LitElement {
             height: 25vh;
             object-fit: cover;
             width: 40vh;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #b17704;
         }
 
     `;

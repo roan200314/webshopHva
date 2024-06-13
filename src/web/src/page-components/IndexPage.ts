@@ -49,7 +49,7 @@ export class IndexPage extends LitElement {
 
     .add-to-cart-button {
         padding: 8px 16px;
-        background-color: #f0c040;
+        background-color: #ffaa00;
         border: none;
         color: white;
         cursor: pointer;
@@ -58,7 +58,7 @@ export class IndexPage extends LitElement {
     }
 
     .add-to-cart-button:hover {
-        background-color: #ffaa00;
+        background-color: #b17704;
     }
 
     .base-price {
