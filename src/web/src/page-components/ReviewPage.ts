@@ -1,13 +1,18 @@
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { css, html, HTMLTemplateResult, LitElement } from "lit";
 import { OrderItemService } from "../services/OrderItemService";
-import { OrderItem } from "@shared/types";
+import { CartItem, OrderItem } from "@shared/types";
+import { UserService } from "../services/UserService";
 
 @customElement("review-item-root")
 export class ReviewPage extends LitElement {
     private _getOrderItem: OrderItemService = new OrderItemService();
     private orderItemData: OrderItem | null = null;
     private orderItemId: number | null = null;
+    private userService: UserService = new UserService();
+
+    @state()
+    private loggedIn: boolean = false;
 
     public static styles = css`
         :host {
@@ -166,7 +171,12 @@ export class ReviewPage extends LitElement {
                 </div>
                 <div class="delivery-info">delivery price is included, only with LucaStars</div>
                 <div class="stock-status">in stock</div>
-                <button class="add-to-cart-button">In cart</button>
+                <button
+                    class="add-to-cart-button"
+                    @click=${async (): Promise<void> => await this.addToCart(game)}
+                >
+                    In cart
+                </button>
                 <div class="orderText">
                     ✓Collection from a LucaStars collection point possible<br />
                     ✓30 days' reflection period and free returns<br />
@@ -174,5 +184,51 @@ export class ReviewPage extends LitElement {
                 </div>
             </div>
         `;
+    }
+
+    private async addToCart(orderItem: OrderItem): Promise<void> {
+        let cartItems: CartItem[] = [];
+
+        if (this.loggedIn) {
+            const result: CartItem[] | undefined = await this.userService.addOrderItemToCart(orderItem.id);
+
+            if (result) {
+                cartItems = result;
+            }
+        } else {
+            try {
+                cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+            } catch (error) {
+                console.error("Error parsing cart items from localStorage", error);
+            }
+
+            const cartItem: CartItem | undefined = cartItems.find(
+                (ci: CartItem) => ci.item.id === orderItem.id,
+            );
+
+            if (cartItem === undefined) {
+                cartItems.push({
+                    item: orderItem,
+                    amount: 1,
+                });
+            } else {
+                cartItem.amount++;
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cartItems));
+        }
+        this.dispatchCartUpdatedEvent(cartItems);
+    }
+
+    private dispatchCartUpdatedEvent(cartItems: CartItem[]): void {
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems,
+                },
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 }

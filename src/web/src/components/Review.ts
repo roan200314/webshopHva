@@ -186,6 +186,8 @@ export class ReviewComponent extends LitElement {
         }
     }
 
+
+
     // Verwerk de invoer van de reviewinhoud
     public handleContentInput(event: InputEvent): void {
         const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
