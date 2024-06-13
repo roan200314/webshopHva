@@ -1,11 +1,18 @@
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { css, html, HTMLTemplateResult, LitElement } from "lit";
 import { OrderItemService } from "../services/OrderItemService";
-import { OrderItem } from "@shared/types";
+import { CartItem, OrderItem } from "@shared/types";
+import { UserService } from "../services/UserService";
+import { UserHelloResponse } from "@shared/responses/UserHelloResponse";
 
 @customElement("review-item-root")
 export class ReviewPage extends LitElement {
     private _getOrderItem: OrderItemService = new OrderItemService();
+    private _userService: UserService = new UserService();
+
+    @state()
+    private loggedIn: boolean = false;
+
     private orderItemData: OrderItem | null = null;
     private orderItemId: number | null = null;
 
@@ -107,8 +114,9 @@ export class ReviewPage extends LitElement {
         }
     `;
 
-    public connectedCallback(): void {
+    public async connectedCallback(): Promise<void> {
         super.connectedCallback();
+        await this.getUserInformation();
 
         this.orderItemId = this.getIdFromURL();
 
@@ -124,6 +132,14 @@ export class ReviewPage extends LitElement {
             return html`<p>Loading...</p>`;
         }
         return this.renderGameItem(this.orderItemData);
+    }
+
+    private async getUserInformation(): Promise<void> {
+        const user: UserHelloResponse | undefined = await this._userService.getWelcome();
+
+        if (user) {
+            this.loggedIn = true;
+        }
     }
 
     private getIdFromURL(): number | null {
@@ -151,22 +167,27 @@ export class ReviewPage extends LitElement {
         }
     }
 
-    private renderGameItem(game: OrderItem): HTMLTemplateResult {
-        const imageURL: string = game.imageURLs && game.imageURLs.length > 0 ? game.imageURLs[0] : "";
-        const oldPrice: any = 2 * game.price;
+    private renderGameItem(orderItem: OrderItem): HTMLTemplateResult {
+        const imageURL: string = orderItem.imageURLs && orderItem.imageURLs.length > 0 ? orderItem.imageURLs[0] : "";
+        const oldPrice: any = 2 * orderItem.price;
         return html`
             <div class="product">
-                <h3>${game.name}</h3>
-                <img class="gameFoto" src="${imageURL}" alt="${game.id}" />
-                <p>${game.description}</p>
+                <h3>${orderItem.name}</h3>
+                <img class="gameFoto" src="${imageURL}" alt="${orderItem.id}" />
+                <p>${orderItem.description}</p>
                 <div class="price-info">
                     <div class="old-price">€${oldPrice}</div>
                     <div class="discount">Super high discount!</div>
-                    <div class="base-price">€${game.price}</div>
+                    <div class="base-price">€${orderItem.price}</div>
                 </div>
                 <div class="delivery-info">delivery price is included, only with LucaStars</div>
                 <div class="stock-status">in stock</div>
-                <button class="add-to-cart-button">In cart</button>
+                <button
+                        class="add-to-cart-button"
+                        @click=${async (): Promise<void> => await this.addToCart(orderItem)}
+                >
+                    In cart
+                </button>
                 <div class="orderText">
                     ✓Collection from a LucaStars collection point possible<br />
                     ✓30 days' reflection period and free returns<br />
@@ -174,5 +195,51 @@ export class ReviewPage extends LitElement {
                 </div>
             </div>
         `;
+    }
+
+    private async addToCart(orderItem: OrderItem): Promise<void> {
+        let cartItems: CartItem[] = [];
+
+        if (this.loggedIn) {
+            const result: CartItem[] | undefined = await this._userService.addOrderItemToCart(orderItem.id);
+
+            if (result) {
+                cartItems = result;
+            }
+        } else {
+            try {
+                cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+            } catch (error) {
+                console.error("Error parsing cart items from localStorage", error);
+            }
+
+            const cartItem: CartItem | undefined = cartItems.find(
+                (ci: CartItem) => ci.item.id === orderItem.id,
+            );
+
+            if (cartItem === undefined) {
+                cartItems.push({
+                    item: orderItem,
+                    amount: 1,
+                });
+            } else {
+                cartItem.amount++;
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cartItems));
+        }
+        this.dispatchCartUpdatedEvent(cartItems);
+    }
+
+    private dispatchCartUpdatedEvent(cartItems: CartItem[]): void {
+        this.dispatchEvent(
+            new CustomEvent("cart-updated", {
+                detail: {
+                    cartItems,
+                },
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 }
