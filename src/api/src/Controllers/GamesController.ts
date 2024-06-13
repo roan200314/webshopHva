@@ -45,6 +45,4 @@ export class GamesController {
     public async searchOrderItemByName(@Param("name") name: string): Promise<Games[]> {
         return await this.gamesService.searchGameItemByName(name);
     }
-
-
 }

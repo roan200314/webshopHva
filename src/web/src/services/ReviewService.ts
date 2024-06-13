@@ -4,7 +4,13 @@ import { TokenService } from "./TokenService";
 export class ReviewService {
     private _tokenService: TokenService = new TokenService();
 
-    public async createReview(event: Event, reviewContent: string, rating: number, userId: number, orderItemId: number): Promise<void> {
+    public async createReview(
+        event: Event,
+        reviewContent: string,
+        rating: number,
+        userId: number,
+        orderItemId: number,
+    ): Promise<void> {
         event.preventDefault();
         const token: string | undefined = this._tokenService.getToken();
 
@@ -17,13 +23,13 @@ export class ReviewService {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 content: reviewContent,
                 rating: rating,
                 userId: userId,
-                orderItemId: orderItemId
+                orderItemId: orderItemId,
             }),
         });
 
@@ -36,15 +42,18 @@ export class ReviewService {
         }
     }
     public async getReviews(orderItemId: number): Promise<Review[]> {
-        const response: Response = await fetch(`${viteConfiguration.API_URL}reviews/getAll?orderItemId=${orderItemId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-    
+        const response: Response = await fetch(
+            `${viteConfiguration.API_URL}reviews/getAll?orderItemId=${orderItemId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+
         if (!response.ok) {
-          throw new Error("Failed to fetch reviews");
+            throw new Error("Failed to fetch reviews");
         }
 
         // eslint-disable-next-line @typescript-eslint/typedef
@@ -56,7 +65,7 @@ export class ReviewService {
             content: item.content,
             rating: item.rating,
             userId: item.user.id,
-            username: item.user.name
+            username: item.user.name,
         }));
     }
 }
