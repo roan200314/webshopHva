@@ -465,10 +465,18 @@ export class ShoppingCartPage extends LitElement {
     private yourDiscount(): number | undefined{
         const points: number | undefined = this._user.savedPoints ;
         if(points){
-            const discount: number = points / 100;
+            const discount: number = points / 1000;
             return discount;
         }
         return undefined;
+    }
+
+    private newSavedPoints(): number {
+        const totalAmount: number = this.calculateTotalPrice();
+        const newPoints :number = Math.trunc(totalAmount);
+
+        return newPoints;
+
     }
 
     private _renderUserConfirmation(): HTMLTemplateResult {
@@ -501,7 +509,6 @@ export class ShoppingCartPage extends LitElement {
 
 
     private clearShoppingCart(): void {
-        localStorage.clear;
     }
 
     private _renderOrderConfirmation(): HTMLTemplateResult {
