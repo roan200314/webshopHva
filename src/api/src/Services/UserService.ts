@@ -48,6 +48,7 @@ export class UserService {
         user.firstName = createUserDto.firstname;
         user.lastName = createUserDto.lastname;
         user.password = createUserDto.password;
+        user.savedPoints = 0;
 
         // Generate a hash of the password
         user.password = await this.generateHash(user.password);
