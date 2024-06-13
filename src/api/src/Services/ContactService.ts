@@ -11,11 +11,7 @@ export class ContactService {
         private mailService: MailService,
     ) {}
 
-    public async sendContactEmail(
-        userId: number,
-        contactEmailDto: ContactEmailDto,
-    ): Promise<{ message: string }> {
-        return { message: "Email sent successfully!!" };
+    public async sendContactEmail(userId: number, contactEmailDto: ContactEmailDto): Promise<{ message: string }> {
         const user: User = await this.userService.getUserById(userId);
 
         if (user.emailConfirmation.confirmed === false)
