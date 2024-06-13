@@ -39,6 +39,18 @@ export class UserController {
         return { message: "User " + id + " authorization level updated successfully" };
     }
 
+    @HttpCode(HttpStatus.OK)
+    @Post("setSavedPoints/:amount")
+    @ApiBearerAuth()
+    @ApiOperation({ summary: "Updates the current users saved points" })
+    @ApiResponse({ status: 200, description: "User's saved points updated" })
+    public async updateSavedPoints(
+        @Param("amount") amount: number,
+        @Request() req,
+    ): Promise<void> {
+        await this.userService.setSavedPointsAmount(req.user.email, amount);
+    }
+
     // gets name, cart items and email
     @ApiOperation({ summary: "Get a welcome message for the user" })
     @ApiResponse({ status: 200, description: "Successful retrieval of welcome message" })
@@ -47,6 +59,7 @@ export class UserController {
     public async getWelcome(@Request() req): Promise<UserHelloResponse> {
         return {
             user: req.user,
+            savedPoints: await this.userService.getSavedPoint(req.user.id),
             cartItems: await this.cartItemService.getCartItems(req.user.id),
             email: req.user.email,
         };

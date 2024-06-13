@@ -1,4 +1,4 @@
-import { Address, CartItem, OrderItem } from "@shared/types";
+import { Address, CartItem, Order, OrderItem } from "@shared/types";
 import { TokenService } from "./TokenService";
 
 const headers: { "Content-Type": string } = {
@@ -58,7 +58,7 @@ export class OrderItemService {
         }
     }
 
-    public async order(cartItems: CartItem[], adressData: Address): Promise<void> {
+    public async order(cartItems: CartItem[], adressData: Address, usedPoints: number | undefined): Promise<void> {
         const token: string | undefined = this._tokenService.getToken();
 
         if (token) {
@@ -68,6 +68,7 @@ export class OrderItemService {
                 body: JSON.stringify({
                     cartItem: cartItems,
                     adressData: adressData,
+                    usedPoints: usedPoints,
                 }),
             });
 
@@ -80,6 +81,7 @@ export class OrderItemService {
                 body: JSON.stringify({
                     cartItem: cartItems,
                     adressData: adressData,
+                    usedPoints: usedPoints,
                 }),
             });
 
@@ -87,6 +89,26 @@ export class OrderItemService {
                 console.error(response);
             }
         }
+    }
+
+    public async retrieveOrders(): Promise<Order[] | undefined> {
+        const token: string | undefined = this._tokenService.getToken();
+
+        if (!token) {
+            return undefined;
+        }
+
+        const response: Response = await fetch(`${viteConfiguration.API_URL}orderItems/history`, {
+            method: "GET",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+    
+        if (!response.ok) {
+            console.error(response);
+            return undefined;
+        }
+    
+        return (await response.json()) as Order[];
     }
 
     public async getMerchandiseItems(): Promise<OrderItem[] | undefined> {

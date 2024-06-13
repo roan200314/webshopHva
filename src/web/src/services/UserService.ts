@@ -238,4 +238,17 @@ export class UserService {
 
         return (await response.json()) as CartItem[];
     }
+
+    public async setSavedPointsAmount(amount: number): Promise<void>{
+        const token: string | undefined = this._tokenService.getToken();
+
+        if (!token) {
+            return undefined;
+        }
+
+        await fetch(`${viteConfiguration.API_URL}users/setSavedPoints/${amount}`, {
+            method: "post",
+            headers: { ...headers, authorization: `Bearer ${token}` },
+        });
+    }
 }

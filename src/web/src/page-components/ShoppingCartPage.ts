@@ -58,10 +58,15 @@ export class ShoppingCartPage extends LitElement {
             margin-bottom: 5px;
         }
 
+        h2{
+            text-align: center;
+            color: #4b515d;
+        }
+
         table,
         th,
         td {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             border-collapse: collapse;
         }
 
@@ -76,6 +81,8 @@ export class ShoppingCartPage extends LitElement {
             font-size: 1.2em;
             font-weight: bolder;
             padding: 10px;
+            background-color: #4b515d; 
+            color: white; 
         }
 
         td {
@@ -95,13 +102,13 @@ export class ShoppingCartPage extends LitElement {
         }
 
         .stepnmbr {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             display: inline;
             padding: 10px;
         }
 
         #currentstep {
-            background-color: #373e98;
+            background-color: #4b515d;
             color: white;
         }
 
@@ -120,7 +127,7 @@ export class ShoppingCartPage extends LitElement {
         }
 
         .adressInfo {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             width: 50%;
             margin: auto;
             text-align: right;
@@ -137,7 +144,7 @@ export class ShoppingCartPage extends LitElement {
         }
 
         .delete {
-            background-color: #f03e3e;
+            background-color: #f56d6d;
             border: none;
             border-radius: 5px;
             padding: 5px;
@@ -151,22 +158,45 @@ export class ShoppingCartPage extends LitElement {
             cursor: pointer;
         }
 
-        .edit {
-            background-color: #49f560;
-            border: none;
-            border-radius: 5px;
-            padding: 5px;
-        }
-
         .infochoice {
-            border: 3px solid #373e98;
+            border: 2px solid #4b515d;
             text-align: center;
             width: 50%;
             margin-left: 25%;
         }
+
+        #total{
+            text-align: right;
+        }
+
+        .infotxt{
+            color: white;
+            background-color: #4b515d;
+            padding: 8px;
+            margin-top: 0;
+            margin-bottom: 0 ;
+        }
+
+        #points{
+            text-align: center;
+        }
+
+        p{
+            margin-top: 0;
+        }
+
+        #discountOption{
+            margin-bottom: 10px;
+        }
+
+
+
     `;
+
     @state()
-    public _cartItemsCount: number = 0;
+    public _usedPoints: number | undefined;
+    @state()
+    public _cartItemsCount: number | undefined;
     @state()
     private shoppingCartStep: number = 1;
     @state()
@@ -245,6 +275,7 @@ export class ShoppingCartPage extends LitElement {
 
         if (result) {
             this._user = result.user;
+            this._user.savedPoints = result.savedPoints;
             this.cartItems = result.cartItems ? result.cartItems : [];
             this._email = result.user.email;
             this._name = result.user.name;
@@ -285,22 +316,16 @@ export class ShoppingCartPage extends LitElement {
                     return html`
                         <tr>
                             <td>${cartItem.item.name}</td>
-                            <td>${cartItem.amount}</td>
-                            <td>${cartItem.item.price}</td>
-                            <td>
-                                <input
+                            <td>   <input
                                     type="number"
                                     value=${cartItem.amount}
                                     @change="${async (e: Event): Promise<void> =>
                                         await this._changeCartAmount(e, cartItem)}"
-                                />
-                            </td>
+                                /></td>
+                            <td>${cartItem.item.price}</td>
                             <td>
-                                <b
-                                    >&euro;
-                                    ${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(
-                                        2,
-                                    )}</b
+                            <b>&euro;${(Math.round(cartItem.item.price * cartItem.amount * 100) / 100).toFixed(2,
+                                )}</b
                                 >
                             </td>
                             <td>
@@ -316,7 +341,7 @@ export class ShoppingCartPage extends LitElement {
                 })}
             </table>
             <div class="nxtstep">
-                <h2>Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
+                <h2 id="total">Your total is: &euro; ${totalAmount.toFixed(2)}</h2>
                 <button class="button" type="submit" @click="${(): number => (this.shoppingCartStep = 2)}">
                     Next Step
                 </button>
@@ -373,21 +398,25 @@ export class ShoppingCartPage extends LitElement {
         );
     }
 
+    
+
     private _renderInfoConfirmation(): HTMLTemplateResult {
+        const discount: number | undefined= this.yourDiscount();
         return html`
-            <h1 class="title">Confirm your information</h1>
+            <h1 class="title">Just a few steps left to go!</h1>
             <div id="steps">
                 <div class="stepnmbr" @click="${(): void => this.updateStep(1)}">Step 1</div>
                 <div class="stepnmbr" id="currentstep" @click="${(): void => this.updateStep(3)}">Step 2</div>
                 <div class="stepnmbr" @click="${(): void => this.updateStep(4)}">Step 3</div>
             </div>
             <div class="adressInfo">
+                <h2 class="infotxt">Please confirm your information</h2>
                 <form>
                     ${this._isLoggedIn
-                        ? html`<label>Name</label><input type="text" disabled value="${this._name}" /><br />
-                              <label>Email</label><input type="text" disabled value="${this._email}" /><br />`
-                        : html`<label>Name</label><input type="text" /><br />
-                              <label>Email</label><input type="text" /><br />`}
+                        ? html`<label>Name</label> <input type="text" disabled value="${this._name}" /> <br>
+                               <label>Email</label> <input type="text" disabled value="${this._email}" /> <br>`
+                        : html`<label>Name</label> <input type="text" /><br />
+                               <label>Email</label> <input type="text" /><br />`}
 
                     <label>Street</label>
                     <input
@@ -409,6 +438,14 @@ export class ShoppingCartPage extends LitElement {
                         @change="${this._onChangeCountry}"
                         value="${this._adressData.country}"
                     /><br />
+                    <div id="points">
+                        <label>you currently have ${this._user.savedPoints} points saved, do you want to use them? </label> <br>
+                        <p>You will save &euro;${discount} with this transaction</p>
+                        <select id="discountOption" @change="${this._usePoints}">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>                 
+                    </div>
                 </form>
             </div>
             <div class="nxtstep">
@@ -417,6 +454,33 @@ export class ShoppingCartPage extends LitElement {
                 </button>
             </div>
         `;
+    }
+
+    private _usePoints(e: Event) : void {
+        const result: string = (e.target as HTMLSelectElement).value;
+        if( result === "yes"){
+            this._usedPoints = this._user.savedPoints;
+        }
+        else {
+            this._usedPoints = undefined;
+        }
+    }
+
+    private yourDiscount(): number | undefined{
+        const points: number | undefined = this._user.savedPoints ;
+        if(points){
+            const discount: number = points / 100;
+            return discount;
+        }
+        return undefined;
+    }
+
+    private newSavedPoints(): number {
+        const totalAmount: number = this.calculateTotalPrice();
+        const newPoints :number = Math.trunc(totalAmount);
+
+        return newPoints;
+
     }
 
     private _renderUserConfirmation(): HTMLTemplateResult {
@@ -447,9 +511,17 @@ export class ShoppingCartPage extends LitElement {
         `;
     }
 
+
+    private clearShoppingCart(): void {
+        localStorage.removeItem("cart");
+    }
+
     private _renderOrderConfirmation(): HTMLTemplateResult {
         void this.order();
-        return html` <h1 class="title">Thank you for ordering!</h1> `;
+        this.clearShoppingCart();
+        return html` <h1 class="title">Thank you for ordering!</h1> 
+                            <h2> A confirmation email for your order will be sent shortly</h2>
+                    `;
     }
 
     private calculateTotalPrice(): number {
@@ -501,6 +573,22 @@ export class ShoppingCartPage extends LitElement {
     }
 
     private async order(): Promise<void> {
-        await this._orderService.order(this.cartItems, this._adressData);
+        await this._orderService.order(this.cartItems, this._adressData, this._usedPoints);
+
+        const amount: any = this.calculateNewPoints();
+        await this.userService.setSavedPointsAmount(amount).then(() => this._user.savedPoints = amount);
+    }
+
+    private calculateNewPoints(): number {
+        if(this._user.savedPoints) {
+            if(this._usedPoints){
+                return this.newSavedPoints();
+            }
+            else{
+                return this._user.savedPoints + this.newSavedPoints();
+            }
+        } else {
+            return this._usedPoints || this.newSavedPoints();
+        }
     }
 }

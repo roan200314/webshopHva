@@ -17,6 +17,7 @@ export type UserData = {
     lastName?: string;
     addresses?: Address[];
     orders?: Order[];
+    savedPoints?: number;
     authorizationLevel?: AuthorizationLevel;
     cart?: CartItem[];
 };

@@ -234,4 +234,22 @@ export class UserService {
     private async comparePassword(password: string, hash: string): Promise<boolean> {
         return await bcrypt.compare(password, hash);
     }
+
+    public async setSavedPointsAmount(email: string, amount: number): Promise<void> {
+        const user: User = await this.usersRepository.findOne({
+            where: { email },
+        });
+
+        user.savedPoints = amount;
+
+        await this.usersRepository.save(user);
+    }
+
+    public async getSavedPoint(id: number):  Promise<number> {
+        const user: User = await this.usersRepository.findOne({
+            where: { id },
+        });
+        
+        return user.savedPoints;
+    }
 }

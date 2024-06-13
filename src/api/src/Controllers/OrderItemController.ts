@@ -4,6 +4,7 @@ import { OrderService } from "../Services/OrderService";
 import { Public } from "../Auth/Decorators/public.decorator";
 import { OrderItem } from "../Models/Entities/OrderItem";
 import { EmployeeOnly } from "../Auth/Decorators/employee.decorator";
+import { Order } from "../Models/Entities/Order";
 
 @ApiTags("OrderItems")
 @Controller("orderItems")
@@ -16,6 +17,14 @@ export class OrderItemController {
     @ApiResponse({ status: 200, description: "Order Items" })
     public async getAllOrderItems(): Promise<OrderItem[]> {
         return this.orderService.getAllOrderItems();
+    }
+    
+    @ApiOperation({ summary: "Retrieves order history" })
+    @ApiResponse({ status: 200, description: "Successful retrieval of order history" })
+    @ApiBearerAuth()
+    @Get("history")
+    public async getOrderHistory(@Request() req): Promise<Order[]> {
+        return await this.orderService.retrieveOrder(req.user.id);
     }
 
     @Public()

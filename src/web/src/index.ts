@@ -7,6 +7,7 @@ export * from "./page-components/LoginPage";
 export * from "./page-components/RegisterPage";
 export * from "./page-components/ShoppingCartPage";
 export * from "./page-components/ContactPage";
+export * from "./page-components/AccountPage";
 export * from "./page-components/ReviewPage";
 
 // Product Page
