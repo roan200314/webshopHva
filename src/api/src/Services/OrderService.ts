@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Repository } from "typeorm";
+import { ILike, IsNull, Repository } from "typeorm";
 import { Order } from "../Models/Entities/Order";
 import { OrderItem } from "../Models/Entities/OrderItem";
 import { CreateOrderItemDto } from "../Models/Dto/Item/CreateOrderItemDto";
 import { Address, CartItem } from "@shared/types";
-import { IsNull } from "typeorm";
 import { MailService } from "./MailService";
 import { OrderItemType } from "src/Models/Enumerations/OrderItemType";
 
@@ -18,7 +17,8 @@ export class OrderService {
         @InjectRepository(OrderItem)
         private orderItemRepository: Repository<OrderItem>,
         private readonly mailService: MailService,
-    ) {}
+    ) {
+    }
 
     /**
      * Creates an order item.
@@ -55,7 +55,10 @@ export class OrderService {
     }
 
     public async setOrderItemAsFeatured(id: number, setFeatured: boolean): Promise<void> {
-        const orderItem: OrderItem = await this.orderItemRepository.findOne({ where: { id } });
+        const orderItem: OrderItem = await this.orderItemRepository.findOne(
+            {
+                where: {id}
+            });
 
         if (!orderItem) {
             throw new Error("Order item not found");
@@ -72,7 +75,7 @@ export class OrderService {
      * @returns {Promise<OrderItem>}
      */
     public async getOrderItemById(id: number): Promise<OrderItem> {
-        return await this.orderItemRepository.findOne({ where: { id } });
+        return await this.orderItemRepository.findOne({where: {id}});
     }
 
     /**
@@ -81,12 +84,14 @@ export class OrderService {
      * @returns {Promise<void>}
      */
     public async deleteOrderItemById(id: number): Promise<{ message: string }> {
-        const orderItem: any = await this.orderItemRepository.findOne({ where: { id } });
+        const orderItem: any = await this.orderItemRepository.findOne({where: {id}});
+
+
         if (!orderItem) {
-            return { message: "Order item not found" };
+            return {message: "Order item not found"};
         }
         await this.orderItemRepository.delete(id);
-        return { message: "Order removed successfully" };
+        return {message: "Order removed successfully"};
     }
 
     /**
@@ -97,7 +102,7 @@ export class OrderService {
      */
     public async updateOrderItem(id: number, orderItem: OrderItem): Promise<OrderItem> {
         // Retrieve the order item by its ID
-        const orderToUpdate: any = await this.orderItemRepository.findOne({ where: { id } });
+        const orderToUpdate: any = await this.orderItemRepository.findOne({where: {id}});
 
         // Check if the order item exists
         if (!orderToUpdate) {
@@ -105,7 +110,7 @@ export class OrderService {
         }
         // Update the order item
         await this.orderItemRepository.update(id, orderItem);
-        return await this.orderItemRepository.findOne({ where: { id } });
+        return await this.orderItemRepository.findOne({where: {id}});
     }
 
     /**
@@ -114,7 +119,7 @@ export class OrderService {
      * @returns {Promise<OrderItem[]>}
      */
     public async searchOrderItemByName(name: string): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find({ where: { name: ILike(`%${name}%`) } });
+        return await this.orderItemRepository.find({where: {name: ILike(`%${name}%`)}});
     }
 
     public async order(body: any, user?): Promise<void> {
@@ -138,7 +143,7 @@ export class OrderService {
             newOrder.name = user.name;
             newOrder.usedPoints = usedPoints;
 
-            if(!newOrder.usedPoints) {
+            if (!newOrder.usedPoints) {
 
             }
 
@@ -162,15 +167,25 @@ export class OrderService {
     }
 
     public async retrieveOrder(userId: number): Promise<Order[]> {
-        return await this.orderRepository.find({ where: { user: { id: userId }}, relations: ["products"] });;
+        return await this.orderRepository.find({
+            where: {
+                user: {id: userId}
+            },
+            relations: ["products"]
+        });
     }
+
     /**
      *
      * @returns {Promise<OrderItem[]>}
      * Retrieves all merchandise items
      */
     public async getMerchandiseItems(): Promise<OrderItem[]> {
-        return await this.orderItemRepository.find({ where: { itemType: OrderItemType.Merchandise } });
+        return await this.orderItemRepository.find({
+            where: {
+                itemType: OrderItemType.Merchandise
+            }
+        });
     }
 
     /**
@@ -198,12 +213,15 @@ export class OrderService {
             },
         });
     }
+
     /**
      * Retrieves an order item by its ID.
      * @param id - The ID of the order item to retrieve.
      * @returns {Promise<OrderItem>}
      */
     public async getGameItemById(id: number): Promise<OrderItem> {
-        return await this.orderItemRepository.findOne({ where: { id } });
+        return await this.orderItemRepository.findOne({
+            where: {id}
+        });
     }
 }
