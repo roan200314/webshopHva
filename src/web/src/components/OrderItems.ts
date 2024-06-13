@@ -149,15 +149,16 @@ export class OrderItemsComponent extends LitElement {
     }
 
     public render(): TemplateResult {
-        const slider: any = html` <div class="slider-container">
-            <div class="slider">
-                <div id="min-handle" class="slider-handle" style="left: 0;"></div>
-                <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
-                <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
-            </div>
-            <label for="min-price">Min Price: €${this._priceRange.min}</label>
-            <label for="max-price">Max Price: €${this._priceRange.max}</label>
-        </div>`;
+        const slider: any = html`
+            <div class="slider-container">
+                <div class="slider">
+                    <div id="min-handle" class="slider-handle" style="left: 0;"></div>
+                    <div id="max-handle" class="slider-handle" style="left: 100%;"></div>
+                    <div id="slider-range" class="slider-range" style="left: 0%; right: 0%;"></div>
+                </div>
+                <label for="min-price">Min Price: €${this._priceRange.min}</label>
+                <label for="max-price">Max Price: €${this._priceRange.max}</label>
+            </div>`;
 
         return html`
             ${slider}
